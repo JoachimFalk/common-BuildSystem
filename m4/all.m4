@@ -2,7 +2,7 @@ dnl vim: set sw=2 ts=8 syn=config:
 dnl
 dnl Copyright (C) Joachim Falk <joachim.falk@gmx.de> $Date: 2003/01/24 13:23:54 $
 dnl
-dnl acinclude.m4 is part of the jflibs distribution of Joachim Falk;
+dnl all.m4 is part of the SysteMoC distribution of Joachim Falk;
 dnl you can redistribute it and/or modify it under the terms of the
 dnl GNU General Public License as published by the Free Software Foundation;
 dnl either version 2 of the License, or (at your option) any later version.
@@ -16,20 +16,6 @@ dnl You should have received a copy of the GNU General Public
 dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
-dnl
-dnl $Log: acinclude.m4,v $
-dnl Revision 1.4  2003/01/24 13:23:54  joachim
-dnl Update for new autoconf version
-dnl
-dnl Revision 1.3  2001/09/01 17:51:54  joachim
-dnl Fixed ACJF_CHECK_TYPE to work on SuSe Linux too
-dnl
-dnl Revision 1.2  2001/08/14 15:55:24  joachim
-dnl added AC_ARG_DEBUG macro
-dnl
-dnl Revision 1.1  2001/03/25 16:45:19  joachim
-dnl Initial revision
-dnl
 
 m4_define([_ACJF_M4_OPENSQUAREBRACKET],
   m4_changequote(<,>)<m4_changequote(<,>)<[>m4_changequote([,])>m4_changequote([,]))dnl
