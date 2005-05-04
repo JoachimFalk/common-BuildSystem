@@ -15,7 +15,7 @@ clean-pkginclude:
 clean-am: clean-pkginclude
 
 compileheader.mk: $(HEADERS)
-	@$(ac_aux_dir)/mkcompileheaderobj.sh $?
+	@$(ac_abs_aux_dir)/mkcompileheaderobj.sh $?
 
 -include compileheader.mk
 
