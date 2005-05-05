@@ -170,7 +170,7 @@ m4_define([ACJF_M4_ONCECODE],
   [m4_define([__oncecode__$1], [Yes])$2])])dnl
   
 dnl ACJF_INIT
-AC_DEFUN(ACJF_INIT,[
+AC_DEFUN([ACJF_INIT],[
 AH_TOP(
 [/* vim: set sw=2 ts=8 syn=c: */
 
@@ -179,7 +179,7 @@ AH_TOP(
 ])])
 
 dnl ACJF_DONE
-AC_DEFUN(ACJF_DONE,[
+AC_DEFUN([ACJF_DONE],[
 AC_SUBST([ac_aux_dir])
 AH_BOTTOM(
 [#endif /* _INCLUDED_CONFIG_H */
@@ -191,7 +191,7 @@ AC_DEFUN([ACJF_APPEND_CXXFLAGS], [CXXFLAGS="$CXXFLAGS $1"])
 dnl ACJF_ARG_DEBUG(<default yes|no>,
 dnl		   <CFLAG option added if yes>,
 dnl		   <CFLAG option added if no>)
-AC_DEFUN(ACJF_ARG_DEBUG,
+AC_DEFUN([ACJF_ARG_DEBUG],
 [AC_BEFORE([$0],  [ACJF_APPEND_CFLAGS])AC_BEFORE([$0], [ACJF_APPEND_CXXFLAGS])dnl
 AC_MSG_CHECKING([whether to build with debug])
 AC_ARG_ENABLE(
@@ -266,7 +266,7 @@ dnl ACJF_CHECK_TYPE( <typename>,
 dnl		     <includes>,
 dnl		     <action if yes>,
 dnl		     <action if no> )
-AC_DEFUN(ACJF_CHECK_TYPE,
+AC_DEFUN([ACJF_CHECK_TYPE],
 [acjf_check_type_headers=""
 AC_FOREACH(acjf_header,[$2],
  [AC_CHECK_HEADER(acjf_header,
@@ -294,7 +294,7 @@ else
 fi])
 
 dnl check for stdint
-AC_DEFUN(ACJF_CHECK_STDINT,
+AC_DEFUN([ACJF_CHECK_STDINT],
 [acjflib_miss_stdint=no
 ACJF_CHECK_TYPE(int8_t,
   [stdlib.h stddef.h sys/types.h stdint.h],,
@@ -318,7 +318,7 @@ if test "x$acjflib_miss_stdint" != "xno"; then
 fi])
 
 dnl checking for size_t and ssize_t and make sure they exist
-AC_DEFUN(ACJF_TYPE_SIZE_T,
+AC_DEFUN([ACJF_TYPE_SIZE_T],
 [acjflib_miss_size_t=""
 acjflib_miss_ssize_t=""
 ACJF_CHECK_TYPE(size_t,
@@ -392,7 +392,7 @@ if test "x$acjflib_miss_ssize_t" != "x"; then
 fi])
 
 dnl check for va_copy __va_copy or role your own
-AC_DEFUN(ACJF_CHECK_VA_COPY,
+AC_DEFUN([ACJF_CHECK_VA_COPY],
 [AC_CACHE_CHECK(
  [for va_copy],
  [ac_cv_func_va_copy],
@@ -449,7 +449,7 @@ AH_BOTTOM([/*
 dnl check for cross tool
 dnl ACJF_CHECK_CROSSTOOL( <toolname>,
 dnl			  <default name> )
-AC_DEFUN(ACJF_CHECK_CROSSTOOL,
+AC_DEFUN([ACJF_CHECK_CROSSTOOL],
 [m4_pattern_allow([$1_FOR_BUILD])
 if test "x$host" != "x$build"; then
   dnl Supporting Canadian Cross in Configure Scripts

@@ -20,7 +20,7 @@ dnl Boston, MA 02111-1307, USA.
 dnl ACJF_ARG_DEBUG(<default yes|no>,
 dnl		   <CFLAG option added if yes>,
 dnl		   <CFLAG option added if no>)
-AC_DEFUN(ACJF_SYSTEMC,
+AC_DEFUN([ACJF_SYSTEMC],
 [dnl
 AC_LANG_PUSH([C++])
 WITH_SYSTEMC_INCLUDE=

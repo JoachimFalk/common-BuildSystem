@@ -17,7 +17,7 @@
 #				the tclConfig.sh file
 #------------------------------------------------------------------------
 
-AC_DEFUN(SC_PATH_TCLCONFIG, [
+AC_DEFUN([SC_PATH_TCLCONFIG], [
     #
     # Ok, lets find the tcl configuration
     # First, look for one uninstalled.
@@ -123,7 +123,7 @@ AC_DEFUN(SC_PATH_TCLCONFIG, [
 #				the tkConfig.sh file
 #------------------------------------------------------------------------
 
-AC_DEFUN(SC_PATH_TKCONFIG, [
+AC_DEFUN([SC_PATH_TKCONFIG], [
     #
     # Ok, lets find the tk configuration
     # First, look for one uninstalled.
@@ -231,7 +231,7 @@ AC_DEFUN(SC_PATH_TKCONFIG, [
 #
 #------------------------------------------------------------------------
 
-AC_DEFUN(SC_LOAD_TCLCONFIG, [
+AC_DEFUN([SC_LOAD_TCLCONFIG], [
     AC_MSG_CHECKING([for existence of $TCL_BIN_DIR/tclConfig.sh])
 
     if test -f "$TCL_BIN_DIR/tclConfig.sh" ; then
@@ -300,7 +300,7 @@ AC_DEFUN(SC_LOAD_TCLCONFIG, [
 #		TK_BIN_DIR
 #------------------------------------------------------------------------
 
-AC_DEFUN(SC_LOAD_TKCONFIG, [
+AC_DEFUN([SC_LOAD_TKCONFIG], [
     AC_MSG_CHECKING([for existence of $TK_BIN_DIR/tkConfig.sh])
 
     if test -f "$TK_BIN_DIR/tkConfig.sh" ; then
