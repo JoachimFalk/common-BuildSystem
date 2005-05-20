@@ -1,3 +1,5 @@
+# vim: set noet sw=2 sts=0 ts=8:
+
 pkgincludebacktrack=$(shell echo "$(pkgincludeprefix)" | sed -e 's@[^/][^/]*\(/\|$$\)@../@g')
 pkgincludedir=$(includedir)/$(pkgincludeprefix)
 
@@ -15,7 +17,9 @@ clean-pkginclude:
 clean-am: clean-pkginclude
 
 compileheader.mk: $(HEADERS)
-	@$(ac_abs_aux_dir)/mkcompileheaderobj.sh $?
+	@if test -n "$?"; then					\
+		$(ac_abs_aux_dir)/mkcompileheaderobj.sh $?;	\
+	fi
 
 -include compileheader.mk
 
