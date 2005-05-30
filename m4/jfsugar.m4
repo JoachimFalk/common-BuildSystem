@@ -158,7 +158,6 @@ dnl Result:
 dnl   [[_sa_data],[_sb_data],[_sc_data]]
 AC_DEFUN([ACJF_M4_MAP],
 [ACJF_M4_QUOTE(ACJF_M4_JOINLIST( [$1], [$2], [, ]))])dnl
-
 dnl
 dnl String manipulation Macros
 dnl
@@ -193,8 +192,7 @@ dnl erase leading and trailing spaces from args
 dnl replace spaces between the words with a single '_'
 dnl than upcase the stuff
 AC_DEFUN([ACJF_M4_CANON_DN],
-  [m4_translit(ACJF_M4_CANON_CV([$*]),[a-z],[A-Z])])
-
+  [m4_translit(ACJF_M4_CANON_CV([$*]),[a-z],[A-Z])])dnl
 dnl ACJF_M4_ONCECODE( <protection m4_define>, <code> )
 AC_DEFUN([ACJF_M4_ONCECODE],
 [m4_ifdef([__oncecode__$1],
