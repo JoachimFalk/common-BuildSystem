@@ -35,12 +35,11 @@ AC_ARG_WITH(systemc-lib,
   [WITH_SYSTEMC_LIB="$withval"])
 
 if test x"$WITH_SYSTEMC_INCLUDE" != "x"; then
-  WITH_SYSTEMC_BASE="$WITH_SYSTEMC_INCLUDE/.."
+  WITH_SYSTEMC_BASE=`echo $WITH_SYSTEMC_INCLUDE | sed -e 's@^\(.*\)[/\\]include[/\\].*$@\1@'`
 elif test x"$WITH_SYSTEMC_LIB" != "x"; then
-  WITH_SYSTEMC_BASE="$WITH_SYSTEMC_LIB/.."
+  WITH_SYSTEMC_BASE=`echo $WITH_SYSTEMC_LIB | sed -e 's@^\(.*\)[/\\]lib[/\\].*$@\1@'`
 fi
-  
-acjf_CPPFLAGS="$CPPFLAGS"; acjf_found=no
+
 acjf_list=""
 if test x"$WITH_SYSTEMC_INCLUDE" != x; then
   acjf_list="$acjf_list $WITH_SYSTEMC_INCLUDE";
@@ -52,25 +51,16 @@ if test x"$SYSTEMC_BASE" != x; then
   acjf_list="$acjf_list $SYSTEMC_BASE/include";
 fi
 acjf_list="$acjf_list `pwd`"
-for acjf_include in $acjf_list; do
-  CPPFLAGS="-I$acjf_include $acjf_CPPFLAGS"
-  AC_MSG_CHECKING([for systemc.h in $acjf_include])
-  AC_TRY_COMPILE(
-    [#include <systemc.h>],
-    [SC_MODULE(foo) { SC_CTOR(foo) {} } bar("bar")],
-    [AC_MSG_RESULT([yes])
-     SYSTEMC_INCLUDE="-I$acjf_include"
-     acjf_found=yes
-     break],
-    [AC_MSG_RESULT([no])])
-done
-CPPFLAGS="$acjf_CPPFLAGS"
-if test $acjf_found = no; then
-  AC_MSG_ERROR([cannot find systemc.h, bailing out])
-fi
-AC_SUBST([SYSTEMC_INCLUDE])
 
-LIBS="-lsystemc $LIBS"
+ACJF_CHECK_HEADER(
+  [SystemC], [
+#include <systemc.h>
+#define  main _main
+
+int sc_main(int argc, char *argv[]) { return 0; }],
+  [SC_MODULE(foo) { SC_CTOR(foo) {} } bar("bar")],
+  [$acjf_list])
+
 acjf_LDFLAGS="$LDFLAGS"; acjf_CPPFLAGS="$CPPFLAGS"; acjf_found=no
 acjf_list=""
 if test x"$WITH_SYSTEMC_LIB" != x; then
@@ -84,11 +74,14 @@ if test x"$SYSTEMC_BASE" != x; then
 fi
 acjf_list="$acjf_list `pwd`"
 for acjf_ldflags in $acjf_list; do
-  LDFLAGS="-L$acjf_ldflags $acjf_LDFLAGS"
   CPPFLAGS="$SYSTEMC_INCLUDE $acjf_CPPFLAGS"
+  LDFLAGS="-L$acjf_ldflags $acjf_LDFLAGS -lsystemc"
   AC_MSG_CHECKING([for -lsystemc in $acjf_ldflags])
-  AC_TRY_LINK(
-    [#include <systemc.h>],
+  AC_TRY_LINK([
+#include <systemc.h>
+#define  main _main
+
+int sc_main(int argc, char *argv[]) { return 0; }],
     [SC_MODULE(foo) { SC_CTOR(foo) {} } bar("bar")],
     [AC_MSG_RESULT([yes])
      SYSTEMC_LDFLAGS="-L$acjf_ldflags"

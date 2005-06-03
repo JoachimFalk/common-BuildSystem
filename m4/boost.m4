@@ -17,34 +17,6 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-dnl ACJF_CHECK_HEADER(
-dnl   <name of header check>,
-dnl   <actual include directives>,
-dnl   <code in main routine for compilation check>,
-dnl   <code if found>,
-dnl   <code if not found>)
-AC_DEFUN([ACJF_CHECK_HEADER],
-[dnl
-acjf_CPPFLAGS="$CPPFLAGS"; acjf_found=no
-for acjf_include in $4; do
-  CPPFLAGS="-I$acjf_include $acjf_CPPFLAGS"
-  AC_MSG_CHECKING([for $1 headers in $acjf_include])
-  AC_TRY_COMPILE(
-    [$2],
-    [$3],
-    [AC_MSG_RESULT([yes])]
-     ACJF_M4_CANON_DN([$1])[_INCLUDE="-I$acjf_include"
-     acjf_found=yes
-     break],
-    [AC_MSG_RESULT([no])])
-done
-CPPFLAGS="$acjf_CPPFLAGS"
-if test $acjf_found = no; then
-  AC_MSG_ERROR([cannot find $1 headers, bailing out])
-fi
-AC_SUBST(ACJF_M4_CANON_DN([$1])[_INCLUDE])
-])
-
 dnl ACJF_ARG_DEBUG(<default yes|no>,
 dnl		   <CFLAG option added if yes>,
 dnl		   <CFLAG option added if no>)
@@ -63,9 +35,9 @@ AC_ARG_WITH(boost-lib,
   [WITH_BOOST_LIB="$withval"])
 
 if test x"$WITH_BOOST_INCLUDE" != "x"; then
-  WITH_BOOST_BASE="$WITH_BOOST_INCLUDE/.."
+  WITH_BOOST_BASE=`echo $WITH_BOOST_INCLUDE | sed -e 's@^\(.*\)[/\\]include[/\\].*$@\1@'`
 elif test x"$WITH_BOOST_LIB" != "x"; then
-  WITH_BOOST_BASE="$WITH_BOOST_LIB/.."
+  WITH_BOOST_BASE=`echo $WITH_BOOST_LIB | sed -e 's@^\(.*\)[/\\]lib[/\\].*$@\1@'`
 fi
   
 acjf_list=""
