@@ -61,7 +61,8 @@ int sc_main(int argc, char *argv[]) { return 0; }],
   [SC_MODULE(foo) { SC_CTOR(foo) {} } bar("bar")],
   [$acjf_list])
 
-acjf_LDFLAGS="$LDFLAGS"; acjf_CPPFLAGS="$CPPFLAGS"; acjf_found=no
+acjf_LDFLAGS="$LDFLAGS"; acjf_CPPFLAGS="$CPPFLAGS"; acjf_LIBS="$LIBS"
+acjf_found=no
 acjf_list=""
 if test x"$WITH_SYSTEMC_LIB" != x; then
   acjf_list="$acjf_list $WITH_SYSTEMC_LIB";
@@ -75,7 +76,8 @@ fi
 acjf_list="$acjf_list `pwd`"
 for acjf_ldflags in $acjf_list; do
   CPPFLAGS="$SYSTEMC_INCLUDE $acjf_CPPFLAGS"
-  LDFLAGS="-L$acjf_ldflags $acjf_LDFLAGS -lsystemc"
+  LDFLAGS="-L$acjf_ldflags $acjf_LDFLAGS";
+  LIBS="-lsystemc $acjf_LIBS";
   AC_MSG_CHECKING([for -lsystemc in $acjf_ldflags])
   AC_TRY_LINK([
 #include <systemc.h>
@@ -89,7 +91,7 @@ int sc_main(int argc, char *argv[]) { return 0; }],
      break],
     [AC_MSG_RESULT([no])])
 done
-LDFLAGS="$acjf_LDFLAGS"; CPPFLAGS="$acjf_CPPFLAGS"
+LDFLAGS="$acjf_LDFLAGS"; CPPFLAGS="$acjf_CPPFLAGS"; LIBS="$acjf_LIBS";
 if test $acjf_found = no; then
   AC_MSG_ERROR([cannot find SystemC library, bailing out])
 fi
