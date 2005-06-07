@@ -17,9 +17,7 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-dnl ACJF_ARG_DEBUG(<default yes|no>,
-dnl		   <CFLAG option added if yes>,
-dnl		   <CFLAG option added if no>)
+dnl ACJF_SYSTEMC check for systemc library
 AC_DEFUN([ACJF_SYSTEMC],
 [dnl
 AC_LANG_PUSH([C++])
@@ -35,9 +33,9 @@ AC_ARG_WITH(systemc-lib,
   [WITH_SYSTEMC_LIB="$withval"])
 
 if test x"$WITH_SYSTEMC_INCLUDE" != "x"; then
-  WITH_SYSTEMC_BASE=`echo $WITH_SYSTEMC_INCLUDE | sed -e 's@^\(.*\)[/\\]include[/\\].*$@\1@'`
+  WITH_SYSTEMC_BASE=`echo $WITH_SYSTEMC_INCLUDE | sed -e 's@^\(.*\)[[/\\]]include[[/\\]].*[$]@\1@'`
 elif test x"$WITH_SYSTEMC_LIB" != "x"; then
-  WITH_SYSTEMC_BASE=`echo $WITH_SYSTEMC_LIB | sed -e 's@^\(.*\)[/\\]lib[/\\].*$@\1@'`
+  WITH_SYSTEMC_BASE=`echo $WITH_SYSTEMC_LIB | sed -e 's@^\(.*\)[[/\\]]lib[[/\\]].*[$]@\1@'`
 fi
 
 acjf_list=""

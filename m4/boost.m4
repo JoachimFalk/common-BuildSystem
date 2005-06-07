@@ -35,9 +35,9 @@ AC_ARG_WITH(boost-lib,
   [WITH_BOOST_LIB="$withval"])
 
 if test x"$WITH_BOOST_INCLUDE" != "x"; then
-  WITH_BOOST_BASE=`echo $WITH_BOOST_INCLUDE | sed -e 's@^\(.*\)[/\\]include[/\\].*$@\1@'`
+  WITH_BOOST_BASE=`echo $WITH_BOOST_INCLUDE | sed -e 's@^\(.*\)[[/\\]]include[[/\\]].*[$]@\1@'`]
 elif test x"$WITH_BOOST_LIB" != "x"; then
-  WITH_BOOST_BASE=`echo $WITH_BOOST_LIB | sed -e 's@^\(.*\)[/\\]lib[/\\].*$@\1@'`
+  WITH_BOOST_BASE=`echo $WITH_BOOST_LIB | sed -e 's@^\(.*\)[[/\\]]lib[[/\\]].*[$]@\1@'`]
 fi
   
 acjf_list=""
