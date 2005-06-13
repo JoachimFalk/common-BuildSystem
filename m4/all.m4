@@ -72,6 +72,47 @@ fi
 AC_SUBST(ACJF_M4_CANON_DN([$1])_INCLUDE)
 ])
 
+dnl ACJF_CHECK_LIBONLY(
+dnl   <name of lib check>,
+dnl   <actual include directives>,
+dnl   <code in main routine for link check>,
+dnl   <lib name>,
+dnl   <lib search list>,
+dnl   <code if found>,
+dnl   <code if not found>)
+AC_DEFUN([ACJF_CHECK_LIBONLY],
+[dnl
+ACJF_M4_CANON_DN([$1])_LDFLAGS=""
+dnl acjf_CPPFLAGS="$CPPFLAGS";
+acjf_LDFLAGS="$LDFLAGS"; acjf_LIBS="$LIBS"; acjf_found=no;
+for acjf_ldflags in $5; do
+  dnl CPPFLAGS="$SYSTEMC_INCLUDE $acjf_CPPFLAGS"
+  LDFLAGS="-L$acjf_ldflags $acjf_LDFLAGS";
+  LIBS="-l$4 $acjf_LIBS";
+  AC_MSG_CHECKING([for $1 library in $acjf_ldflags])
+  AC_TRY_LINK(
+    [$2],
+    [$3],
+    [AC_MSG_RESULT([yes])]
+     ACJF_M4_CANON_DN([$1])[_LDFLAGS="-L$acjf_ldflags"
+     acjf_found=yes
+     break],
+    [AC_MSG_RESULT([no])])
+done
+dnl CPPFLAGS="$acjf_CPPFLAGS"; 
+LDFLAGS="$acjf_LDFLAGS"; LIBS="$acjf_LIBS";
+if test $acjf_found = no; then
+  m4_if([$7], [],
+   [AC_MSG_ERROR([cannot find $1 headers, bailing out])],
+   [$7])
+else
+  m4_if([$6], [],
+   [true],
+   [$6])
+fi
+AC_SUBST(ACJF_M4_CANON_DN([$1])_LDFLAGS)
+])
+
 dnl ACJF_ARG_DEBUG(<default yes|no>,
 dnl		   <CFLAG option added if yes>,
 dnl		   <CFLAG option added if no>)
