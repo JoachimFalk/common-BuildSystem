@@ -50,7 +50,7 @@ fi
 if test x"$BOOST_BASE" != x; then
   acjf_list="$acjf_list $BOOST_BASE/include";
 fi
-acjf_list="`pwd` $acjf_list"
+acjf_list="$acjf_list `pwd`"
 
 ACJF_CHECK_HEADER(
   [boost],
