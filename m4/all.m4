@@ -103,7 +103,7 @@ dnl CPPFLAGS="$acjf_CPPFLAGS";
 LDFLAGS="$acjf_LDFLAGS"; LIBS="$acjf_LIBS";
 if test $acjf_found = no; then
   m4_if([$7], [],
-   [AC_MSG_ERROR([cannot find $1 headers, bailing out])],
+   [AC_MSG_ERROR([cannot find $1 library, bailing out])],
    [$7])
 else
   m4_if([$6], [],
