@@ -46,28 +46,41 @@ dnl   <code if not found>)
 AC_DEFUN([ACJF_CHECK_HEADER],
 [dnl
 ACJF_M4_CANON_DN([$1])_INCLUDE=""
-acjf_CPPFLAGS="$CPPFLAGS"; acjf_found=no
-for acjf_include in $4; do
-  CPPFLAGS="-I$acjf_include $acjf_CPPFLAGS"
-  AC_MSG_CHECKING([for $1 headers in $acjf_include])
-  AC_TRY_COMPILE(
-    [$2],
-    [$3],
-    [AC_MSG_RESULT([yes])]
-     ACJF_M4_CANON_DN([$1])[_INCLUDE="-I$acjf_include"
-     acjf_found=yes
-     break],
-    [AC_MSG_RESULT([no])])
-done
-CPPFLAGS="$acjf_CPPFLAGS"
-if test $acjf_found = no; then
-  m4_if([$6], [],
-   [AC_MSG_ERROR([cannot find $1 headers, bailing out])],
-   [$6])
-else
+AC_MSG_CHECKING([for $1 headers])
+AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$1])_INCPATH,
+ [acjf_CPPFLAGS="$CPPFLAGS";
+  acjf_STDINC="standard include search path"
+  for acjf_include in $4 "$acjf_STDINC"; do
+    if test x"$acjf_include" != x"$acjf_STDINC"; then
+      CPPFLAGS="-I$acjf_include $acjf_CPPFLAGS"
+    else
+      CPPFLAGS="$acjf_CPPFLAGS"
+    fi
+    dnl AC_MSG_CHECKING([for $1 headers in $acjf_include])
+    AC_TRY_COMPILE(
+      [$2],
+      [$3],
+      [dnl AC_MSG_RESULT([yes])
+       acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH="$acjf_include";
+       break],
+      [dnl AC_MSG_RESULT([no])
+       acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH="x"])
+  done
+  CPPFLAGS="$acjf_CPPFLAGS";
+])
+if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH]" != x"x"; then
+  AC_MSG_RESULT([$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH])
+  if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH]" != x"$acjf_STDINC"; then
+    ACJF_M4_CANON_DN([$1])_INCLUDE="[-I$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH]"
+  fi
   m4_if([$5], [],
    [true],
    [$5])
+else
+  m4_if([$6], [],
+   [AC_MSG_ERROR([cannot find $1 library, bailing out])],
+   [AC_MSG_RESULT([no])
+    $6])
 fi
 AC_SUBST(ACJF_M4_CANON_DN([$1])_INCLUDE)
 ])
@@ -84,33 +97,46 @@ AC_DEFUN([ACJF_CHECK_LIBONLY],
 [dnl
 ACJF_M4_CANON_DN([$1])_LDFLAGS=""
 dnl acjf_CPPFLAGS="$CPPFLAGS";
-acjf_LDFLAGS="$LDFLAGS"; acjf_LIBS="$LIBS"; acjf_found=no;
-for acjf_ldflags in $5; do
-  dnl CPPFLAGS="$SYSTEMC_INCLUDE $acjf_CPPFLAGS"
-  LDFLAGS="-L$acjf_ldflags $acjf_LDFLAGS";
-  LIBS="-l$4 $acjf_LIBS";
-  AC_MSG_CHECKING([for $1 library in $acjf_ldflags])
-  AC_TRY_LINK(
-    [$2],
-    [$3],
-    [AC_MSG_RESULT([yes])]
-     ACJF_M4_CANON_DN([$1])[_LDFLAGS="-L$acjf_ldflags"
-     acjf_found=yes
-     break],
-    [AC_MSG_RESULT([no])])
-done
-dnl CPPFLAGS="$acjf_CPPFLAGS"; 
-LDFLAGS="$acjf_LDFLAGS"; LIBS="$acjf_LIBS";
-if test $acjf_found = no; then
-  m4_if([$7], [],
-   [AC_MSG_ERROR([cannot find $1 library, bailing out])],
-   [$7])
-else
+AC_MSG_CHECKING([for $1 library])
+AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$1])_LIBPATH, 
+ [acjf_LDFLAGS="$LDFLAGS"; acjf_LIBS="$LIBS";
+  acjf_STDLIB="standard library search path"
+  for acjf_ldflags in $5 "$acjf_STDLIB"; do
+    dnl CPPFLAGS="$SYSTEMC_INCLUDE $acjf_CPPFLAGS"
+    if test x"$acjf_ldflags" != x"$acjf_STDLIB"; then
+      LDFLAGS="-L$acjf_ldflags $acjf_LDFLAGS";
+    else
+      LDFLAGS="$acjf_LDFLAGS";
+    fi
+    LIBS="-l$4 $acjf_LIBS";
+    dnl AC_MSG_CHECKING([for $1 library in $acjf_ldflags])
+    AC_TRY_LINK(
+      [$2],
+      [$3],
+      [dnl AC_MSG_RESULT([yes])
+       acjf_cv_]ACJF_M4_CANON_DN([$1])[_LIBPATH="$acjf_ldflags";
+       break],
+      [dnl AC_MSG_RESULT([no])
+       acjf_cv_]ACJF_M4_CANON_DN([$1])[_LIBPATH="x"])
+  done
+  dnl CPPFLAGS="$acjf_CPPFLAGS"; 
+  LDFLAGS="$acjf_LDFLAGS"; LIBS="$acjf_LIBS";
+])
+if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$1])[_LIBPATH]" != x"x"; then
+  AC_MSG_RESULT([$acjf_cv_]ACJF_M4_CANON_DN([$1])[_LIBPATH])
+  if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$1])[_LIBPATH]" != x"$acjf_STDLIB"; then
+    ACJF_M4_CANON_DN([$1])_LDFLAGS="[-L$acjf_cv_]ACJF_M4_CANON_DN([$1])[_LIBPATH]"
+  fi
   m4_if([$6], [],
    [true],
    [$6])
+else
+  m4_if([$7], [],
+   [AC_MSG_ERROR([cannot find $1 library, bailing out])],
+   [AC_MSG_RESULT([no])
+    $7])
 fi
-AC_SUBST(ACJF_M4_CANON_DN([$1])_LDFLAGS)
+AC_SUBST(ACJF_M4_CANON_DN([$1])[_LDFLAGS])
 ])
 
 dnl ACJF_ARG_DEBUG(<default yes|no>,
