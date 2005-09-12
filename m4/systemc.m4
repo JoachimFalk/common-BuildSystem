@@ -17,8 +17,12 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
+dnl ACJF_SYSTEMC check for systemc library (obsolete)
+AU_DEFUN([ACJF_SYSTEMC], [ACJF_CHECK_LIB_SYSTEMC],
+  [ACJF_SYSTEMC is considered obsolete use ACJF_CHECK_LIB_SYSTEMC instead.])
+
 dnl ACJF_SYSTEMC check for systemc library
-AC_DEFUN([ACJF_SYSTEMC],
+AC_DEFUN([ACJF_CHECK_LIB_SYSTEMC],
 [dnl
 AC_LANG_PUSH([C++])
 WITH_SYSTEMC_INCLUDE=
@@ -48,7 +52,6 @@ fi
 if test x"$SYSTEMC_BASE" != x; then
   acjf_list="$acjf_list $SYSTEMC_BASE/include";
 fi
-acjf_list="$acjf_list `pwd`"
 
 ACJF_CHECK_HEADER(
   [SystemC], [
@@ -69,7 +72,6 @@ fi
 if test x"$SYSTEMC_BASE" != x; then
   acjf_list="$acjf_list `echo $SYSTEMC_BASE/lib*`";
 fi
-acjf_list="$acjf_list `pwd`"
 
 acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $SYSTEMC_INCLUDE";
 ACJF_CHECK_LIBONLY(
