@@ -47,7 +47,6 @@ fi
 if test x"$XERCES_BASE" != x; then
   acjf_list="$acjf_list $XERCES_BASE/include";
 fi
-acjf_list="$acjf_list `pwd`"
 
 ACJF_CHECK_HEADER(
   [xerces],
@@ -55,7 +54,7 @@ ACJF_CHECK_HEADER(
   [xercesc::XMLPlatformUtils::Initialize();],
   [$acjf_list])
 
-acjf_LDFLAGS="$LDFLAGS"; acjf_CPPFLAGS="$CPPFLAGS"; acjf_found=no
+acjf_LDFLAGS="$LDFLAGS"; acjf_CPPFLAGS="$CPPFLAGS";
 acjf_list=""
 if test x"$WITH_XERCES_LIB" != x; then
   acjf_list="$acjf_list $WITH_XERCES_LIB";
@@ -66,7 +65,7 @@ fi
 if test x"$XERCES_BASE" != x; then
   acjf_list="$acjf_list $XERCES_BASE/lib";
 fi
-acjf_list="$acjf_list `pwd`"
+
 ACJF_CHECK_LIBONLY(
   [xerces],
   [#include <xercesc/util/PlatformUtils.hpp>],
