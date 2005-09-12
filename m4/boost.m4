@@ -50,7 +50,6 @@ fi
 if test x"$BOOST_BASE" != x; then
   acjf_list="$acjf_list $BOOST_BASE/include";
 fi
-acjf_list="$acjf_list `pwd`"
 
 ACJF_CHECK_HEADER(
   [boost],
@@ -71,31 +70,25 @@ fi
 if test x"$BOOST_BASE" != x; then
   acjf_list="$acjf_list $BOOST_BASE/lib";
 fi
-acjf_list="$acjf_list `pwd`"
-for acjf_ldflags in $acjf_list; do
-  for acjf_postfix in "" "-gcc"; do
-    CPPFLAGS="$acjf_CPPFLAGS $BOOST_INCLUDE"
-    LDFLAGS="$acjf_LDFLAGS -L$acjf_ldflags -lboost_regex$acjf_postfix"
-    AC_MSG_CHECKING([for -lboost_regex$acjf_postfix in $acjf_ldflags])
-    AC_TRY_LINK(
-      [#include <boost/regex.hpp>],
-      [boost::regex_constants::match_flag_type x;],
-      [AC_MSG_RESULT([yes])
-       BOOST_LDFLAGS="-L$acjf_ldflags"
-       BOOST_LIBPOSTFIX="$acjf_postfix"
-       acjf_found=yes
-       break],
-      [AC_MSG_RESULT([no])])
-  done
-  if test x"$acjf_found" = x"yes"; then
-    break
-  fi
+
+acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $BOOST_INCLUDE";
+acjf_found=no
+for acjf_postfix in "" "-gcc"; do
+  ACJF_CHECK_LIBONLY(
+    [boost],
+    [#include <boost/regex.hpp>],
+    [boost::regex_constants::match_flag_type x;],
+    [boost_regex$acjf_postfix],
+    [$acjf_list],
+    [acjf_found=yes; break],
+    [false])
 done
-LDFLAGS="$acjf_LDFLAGS"; CPPFLAGS="$acjf_CPPFLAGS"
+CPPFLAGS="$acjf_CPPFLAGS"
+
 if test $acjf_found = no; then
   AC_MSG_ERROR([cannot find Boost library, bailing out])
 fi
-AC_SUBST([BOOST_LDFLAGS])
+
 AC_SUBST([BOOST_LIBPOSTFIX])
 
 AC_LANG_POP
