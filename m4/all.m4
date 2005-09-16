@@ -46,10 +46,10 @@ dnl   <code if not found>)
 AC_DEFUN([ACJF_CHECK_HEADER],
 [dnl
 ACJF_M4_CANON_DN([$1])_INCLUDE=""
+acjf_STDINC="standard include search path"
 AC_MSG_CHECKING([for $1 headers])
 AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$1])_INCPATH,
  [acjf_CPPFLAGS="$CPPFLAGS";
-  acjf_STDINC="standard include search path"
   for acjf_include in $4 "$acjf_STDINC"; do
     if test x"$acjf_include" != x"$acjf_STDINC"; then
       CPPFLAGS="-I$acjf_include $acjf_CPPFLAGS"
@@ -97,10 +97,10 @@ AC_DEFUN([ACJF_CHECK_LIBONLY],
 [dnl
 ACJF_M4_CANON_DN([$1])_LDFLAGS=""
 dnl acjf_CPPFLAGS="$CPPFLAGS";
+acjf_STDLIB="standard library search path"
 AC_MSG_CHECKING([for $1 library])
 AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$1])_LIBPATH, 
  [acjf_LDFLAGS="$LDFLAGS"; acjf_LIBS="$LIBS";
-  acjf_STDLIB="standard library search path"
   for acjf_ldflags in $5 "$acjf_STDLIB"; do
     dnl CPPFLAGS="$SYSTEMC_INCLUDE $acjf_CPPFLAGS"
     if test x"$acjf_ldflags" != x"$acjf_STDLIB"; then
