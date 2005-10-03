@@ -32,9 +32,9 @@ AC_ARG_WITH(xerces-lib,
   [WITH_XERCES_LIB="$withval"])
 
 if test x"$WITH_XERCES_INCLUDE" != "x"; then
-  WITH_XERCES_BASE=`echo $WITH_XERCES_INCLUDE | sed -e 's@^\(.*\)[[/\\]]include[[/\\]].*[$]@\1@'`
+  WITH_XERCES_BASE=`echo $WITH_XERCES_INCLUDE | sed -e 's@^\(.*\)[[/\\]]include\([[/\\]].*\|\)[$]@\1@'`
 elif test x"$WITH_XERCES_LIB" != "x"; then
-  WITH_XERCES_BASE=`echo $WITH_XERCES_LIB | sed -e 's@^\(.*\)[[/\\]]lib[[/\\]].*[$]@\1@'`
+  WITH_XERCES_BASE=`echo $WITH_XERCES_LIB | sed -e 's@^\(.*\)[[/\\]]lib\([[/\\]].*\|\)[$]@\1@'`
 fi
   
 acjf_list=""
@@ -54,7 +54,6 @@ ACJF_CHECK_HEADER(
   [xercesc::XMLPlatformUtils::Initialize();],
   [$acjf_list])
 
-acjf_LDFLAGS="$LDFLAGS"; acjf_CPPFLAGS="$CPPFLAGS";
 acjf_list=""
 if test x"$WITH_XERCES_LIB" != x; then
   acjf_list="$acjf_list $WITH_XERCES_LIB";
@@ -66,6 +65,7 @@ if test x"$XERCES_BASE" != x; then
   acjf_list="$acjf_list $XERCES_BASE/lib";
 fi
 
+acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $XERCES_INCLUDE";
 ACJF_CHECK_LIBONLY(
   [xerces],
   [#include <xercesc/util/PlatformUtils.hpp>],
