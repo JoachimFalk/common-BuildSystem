@@ -36,5 +36,17 @@ m4_define([yes],         [[unquoted_yes]])dnl
 m4_define([unquoted_yes],[[ununquoted_yes]])dnl
 m4_define([no],          [[unquoted_no]])dnl
 m4_define([unquoted_no], [[ununquoted_no]])dnl
+m4_define([foo],         [[unquoted_foo]])dnl
+m4_define([unquoted_foo],[[ununquoted_foo]])dnl
+m4_define([bar],         [[unquoted_bar]])dnl
+m4_define([unquoted_bar],[[ununquoted_bar]])dnl
+m4_define([FOO],         [[unquoted_FOO]])dnl
+m4_define([unquoted_FOO],[[ununquoted_FOO]])dnl
+m4_define([BAR],         [[unquoted_BAR]])dnl
+m4_define([unquoted_BAR],[[ununquoted_BAR]])dnl
+m4_define([Foo],         [[unquoted_Foo]])dnl
+m4_define([unquoted_Foo],[[ununquoted_Foo]])dnl
+m4_define([Bar],         [[unquoted_Bar]])dnl
+m4_define([unquoted_Bar],[[ununquoted_Bar]])dnl
 dnl
 m4_include([jfsugar.m4])dnl

@@ -48,8 +48,14 @@ dnl   ACJF_M4_CODECALL( [a,b,c], [[$1] && [$2] || [$3]])
 dnl Result:
 dnl   a && b || c
 AC_DEFUN([ACJF_M4_CODECALL],
-[m4_define([_ACJF_M4_CODECALL_DEF],ACJF_M4_QUOTEDARGS([$2]))dnl
-_ACJF_M4_CODECALL_DEF(ACJF_M4_LISTTOARGS([$1]))])dnl
+[m4_pushdef([_ACJF_M4_CODECALL_DEF],ACJF_M4_QUOTEDARGS([$2]))dnl
+_ACJF_M4_CODECALL_DEF(ACJF_M4_LISTTOARGS([$1]))[]dnl
+m4_popdef([_ACJF_M4_CODECALL_DEF])])dnl
+dnl ACJF_M4_ONCECODE( <protection m4_define>, <code> )
+AC_DEFUN([ACJF_M4_ONCECODE],
+[m4_ifdef([__oncecode__$1],
+  [],
+  [m4_define([__oncecode__$1], [Yes])$2])])dnl
 dnl
 dnl Macros for operations on args
 dnl
@@ -61,14 +67,47 @@ AC_DEFUN([ACJF_M4_ARG_REVERSE],
 dnl
 dnl Macros for operations on lists
 dnl
+dnl Helper function for ACJF_M4_LISTTOARGS don't call directly
+AC_DEFUN([_ACJF_M4_LISTTOARGS],
+[m4_if($#, 0, [],
+  [m4_bpatsubst(
+    [[$1]],
+    \_ACJF_M4_CLOSESQUAREBRACKET[,]\_ACJF_M4_OPENSQUAREBRACKET,
+    [,])m4_if($#, 1, [], [,_ACJF_M4_LISTTOARGS(m4_shift($@))])])dnl
+])dnl
+dnl ACJF_M4_LISTTOARGS([<item1>,<item2>,...])
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_LISTTOARGS([a,b,c]))
+dnl Result:
+dnl   [a],[b],[c]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_LISTTOARGS([a,[b,[c,d]],[e],[f],g,h]))
+dnl Result:
+dnl   [a],[[b,[c,d]]],[[e]],[[f]],[g],[h]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_LISTTOARGS([a,[b,[c,d]]]))
+dnl Result:
+dnl   [a],[[b,[c,d]]]
 AC_DEFUN([ACJF_M4_LISTTOARGS],
-[m4_bpatsubst([$1],[\(\[.*\]\|[^,]*\)],[[\1]])])dnl
+[_ACJF_M4_LISTTOARGS(
+  m4_bpatsubst(
+    [[$1]],
+    [,],
+    _ACJF_M4_CLOSESQUAREBRACKET[,]_ACJF_M4_OPENSQUAREBRACKET))])dnl
 AC_DEFUN([ACJF_M4_ARGSTOLIST], [[$*]])dnl
 dnl ACJF_M4_LIST_SIZE([<item1>,<item2>,...])
 dnl Example:
 dnl   ACJF_M4_LIST_SIZE([a,b,c,d,ef,g,h])
 dnl Result:
 dnl   7
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_SIZE([a,[b,[c,d]],[e],[f],g,h])
+dnl Result:
+dnl   6
 AC_DEFUN([ACJF_M4_LIST_SIZE],
 [ACJF_M4_ARG_SIZE(ACJF_M4_LISTTOARGS([$1]))])dnl
 dnl ACJF_M4_LIST_HEAD([<item1>,<item2>,...])
@@ -76,6 +115,16 @@ dnl Example:
 dnl   ACJF_M4_LIST_HEAD([a,b,c,d,ef,g,h])
 dnl Result:
 dnl   a
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_HEAD([a,[b,[c,d]],[e],[f],g,h])
+dnl Result:
+dnl   a
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_HEAD([[b,[c,d]],a])
+dnl Result:
+dnl   [b,[c,d]]
 AC_DEFUN([ACJF_M4_LIST_HEAD],
 [ACJF_M4_ARG_HEAD(ACJF_M4_LISTTOARGS([$1]))])dnl
 dnl ACJF_M4_LIST_TAIL([<item1>,<item2>,...])
@@ -83,6 +132,11 @@ dnl Example:
 dnl   ACJF_M4_LIST_TAIL([a,b,c,d,ef,g,h])
 dnl Result:
 dnl   b,c,d,ef,g,h
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_TAIL([a,[b,[c,d]],[e],[f],g,h])
+dnl Result:
+dnl   [b,[c,d]],[e],[f],g,h
 AC_DEFUN([ACJF_M4_LIST_TAIL],
 [ACJF_M4_ARGSTOLIST(m4_shift(ACJF_M4_LISTTOARGS([$1])))])dnl
 dnl ACJF_M4_LIST_REVERSE([<item1>,<item2>,...])
@@ -90,6 +144,11 @@ dnl Example:
 dnl   ACJF_M4_LIST_REVERSE([a,b,c,d,ef,g,h])
 dnl Result:
 dnl   h,g,ef,d,c,b,a
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_REVERSE([a,[b,[c,d]],[e],[f],g,h])
+dnl Result:
+dnl   h,g,[f],[e],[b,[c,d]],a
 AC_DEFUN([ACJF_M4_LIST_REVERSE],
 [ACJF_M4_ARGSTOLIST(ACJF_M4_ARG_REVERSE(ACJF_M4_LISTTOARGS([$1])))])dnl
 dnl ACJF_M4_LIST_FRONT([<item1>,<item2>,...])
@@ -97,28 +156,68 @@ dnl Example:
 dnl   ACJF_M4_LIST_FRONT([a,b,c,d,ef,g,h])
 dnl Result:
 dnl   a
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_FRONT([a,[b,[c,d]],[e],[f],g,h])
+dnl Result:
+dnl   a
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_FRONT([[b,[c,d]],a])
+dnl Result:
+dnl   [b,[c,d]]
 AC_DEFUN([ACJF_M4_LIST_FRONT], m4_defn([ACJF_M4_LIST_HEAD]))dnl
 dnl ACJF_M4_LIST_POP_FRONT([<item1>,<item2>,...])
 dnl Example:
 dnl   ACJF_M4_LIST_POP_FRONT([a,b,c,d,ef,g,h])
 dnl Result:
 dnl   b,c,d,ef,g,h
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_POP_FRONT([a,[b,[c,d]],[e],[f],g,h])
+dnl Result:
+dnl   [b,[c,d]],[e],[f],g,h
 AC_DEFUN([ACJF_M4_LIST_POP_FRONT], m4_defn([ACJF_M4_LIST_TAIL]))dnl
 dnl ACJF_M4_LIST_PUSH_FRONT( [<new_item>], [<item1>,<item2>,...] )
 dnl Example:
 dnl   ACJF_M4_LIST_PUSH_FRONT([a],[b,c,d,e,f])
 dnl Result:
-dnl   [a,b,c,d,e,f]
+dnl   a,b,c,d,e,f
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_FRONT([],[]))
+dnl Result:
+dnl   []
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_FRONT([a],[]))
+dnl Result:
+dnl   [a]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_FRONT([],[a]))
+dnl Result:
+dnl   [a]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_FRONT([x,[y,z]], [a,[b,[c,d]],[e],[f],g,h]))
+dnl Result:
+dnl   [x,[y,z],a,[b,[c,d]],[e],[f],g,h]
 AC_DEFUN([ACJF_M4_LIST_PUSH_FRONT],
 [ACJF_M4_ARGSTOLIST([$1]m4_if([$2], [],
   [],
-  [,ACJF_M4_LISTTOARGS([$2])]))dnl
+  [m4_if([$1], [], [], [,])ACJF_M4_LISTTOARGS([$2])]))dnl
 ])dnl
 dnl ACJF_M4_LIST_BACK([<item1>,<item2>,...])
 dnl Example:
 dnl   ACJF_M4_LIST_BACK([a,b,c,d,ef,g,h])
 dnl Result:
 dnl   h
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_BACK([a,[b,[c,d]]])
+dnl Result:
+dnl   [b,[c,d]]
 AC_DEFUN([ACJF_M4_LIST_BACK],
 [ACJF_M4_LIST_FRONT(ACJF_M4_LIST_REVERSE([$1]))])dnl
 dnl ACJF_M4_LIST_POP_BACK([<item1>,<item2>,...])
@@ -126,6 +225,11 @@ dnl Example:
 dnl   ACJF_M4_LIST_POP_BACK([a,b,c,d,ef,g,h])
 dnl Result:
 dnl   a,b,c,d,ef,g
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_POP_BACK([a,[b,[c,d]],[e],[f],g,h])
+dnl Result:
+dnl   a,[b,[c,d]],[e],[f],g
 AC_DEFUN([ACJF_M4_LIST_POP_BACK],
 [ACJF_M4_LIST_REVERSE(ACJF_M4_LIST_POP_FRONT(ACJF_M4_LIST_REVERSE([$1])))])dnl
 dnl ACJF_M4_LIST_PUSH_BACK( [<new_item>], [<item1>,<item2>,...] )
@@ -133,16 +237,41 @@ dnl Example:
 dnl   ACJF_M4_LIST_PUSH_BACK([a],[b,c,d,e,f])
 dnl Result:
 dnl   [b,c,d,e,f,a]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_BACK([],[]))
+dnl Result:
+dnl   []
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_BACK([a],[]))
+dnl Result:
+dnl   [a]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_BACK([],[a]))
+dnl Result:
+dnl   [a]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_BACK([x,[y,z]], [a,[b,[c,d]],[e],[f],g,h]))
+dnl Result:
+dnl   [a,[b,[c,d]],[e],[f],g,h,x,[y,z]]
 AC_DEFUN([ACJF_M4_LIST_PUSH_BACK],
 [ACJF_M4_ARGSTOLIST(m4_if([$2], [],
   [],
-  [ACJF_M4_LISTTOARGS([$2]),])[$1])dnl
+  [ACJF_M4_LISTTOARGS([$2])m4_if([$1], [], [], [,])])[$1])dnl
 ])dnl
 dnl ACJF_M4_LIST_TOP( [<item1>,<item2>,...], <how many>)
 dnl Example:
 dnl   ACJF_M4_LIST_TOP([a,b,c,d,ef,g,h],3)
 dnl Result:
 dnl   [a,b,c]
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_TOP([a,[b,[c,d]],[e],[f],g,h], 2)
+dnl Result:
+dnl   a,[b,[c,d]]
 AC_DEFUN([ACJF_M4_LIST_TOP],
 [m4_if([$2], 0,
   [[]],
@@ -155,12 +284,17 @@ dnl Example:
 dnl   ACJF_M4_LIST_ELEM( [a,b,c,d,ef,g,h], 2)
 dnl Result:
 dnl   c
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_ELEM([a,[b,[c,d]],[e],[f],g,h], 1)
+dnl Result:
+dnl   [b,[c,d]]
 AC_DEFUN([ACJF_M4_LIST_ELEM],
 [m4_if([$2], 0,
   [ACJF_M4_LIST_HEAD([$1])],
   [ACJF_M4_LIST_ELEM(ACJF_M4_LIST_TAIL([$1]),m4_decr([$2]))]dnl
 )])dnl
-dnl ACJF_M4_LIST_HASELEM( [list], [element], [code if yes], [code if no] )
+dnl ACJF_M4_LIST_HASELEM( [list], [element], <code if yes>, <code if no> )
 dnl
 dnl Example:
 dnl   ACJF_M4_LIST_HASELEM([a,b,a,c], [a], [yes], [no])
@@ -171,6 +305,16 @@ dnl Example:
 dnl   ACJF_M4_LIST_HASELEM([a,b,a,c], [x], [yes], [no])
 dnl Result:
 dnl   unquoted_no
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_HASELEM([a, b,a,c], [b], [yes], [no])
+dnl Result:
+dnl   unquoted_no
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_HASELEM([a,[b,[c,d]],[e],[f],g,h], [[b,[c,d]]], [yes], [no])
+dnl Result:
+dnl   unquoted_yes
 AC_DEFUN([ACJF_M4_LIST_HASELEM],
 [m4_if([$1], [],
   [$4],
@@ -189,6 +333,18 @@ dnl   Loop is now "b".
 dnl   Loop is now "c".
 dnl   Loop is now "d".
 dnl   Loop is now "ef".
+dnl   Loop is now "g".
+dnl   Loop is now "h".
+dnl
+dnl Example:
+dnl   ACJF_M4_FOREACH([a,[b,[c,d]],[e],[f],g,h],
+dnl     [Loop is now "[$1]".
+dnl   ])
+dnl Result:
+dnl   Loop is now "a".
+dnl   Loop is now "[b,[c,d]]".
+dnl   Loop is now "[e]".
+dnl   Loop is now "[f]".
 dnl   Loop is now "g".
 dnl   Loop is now "h".
 AC_DEFUN([ACJF_M4_FOREACH],
@@ -215,45 +371,108 @@ dnl Example:
 dnl   ACJF_M4_MAP( [a,b,c], [yes [$1]])
 dnl Result:
 dnl   unquoted_yes a,unquoted_yes b,unquoted_yes c
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_MAP( [a,b,c], [yes [$1]]))
+dnl Result:
+dnl   [unquoted_yes a,unquoted_yes b,unquoted_yes c]
 AC_DEFUN([ACJF_M4_MAP],
-[ACJF_M4_JOIN([$1],[$2], [,])])dnl
+[ACJF_M4_JOIN([$1],[$2],[,])])dnl
 dnl
 dnl String manipulation Macros
 dnl
-dnl Upcase its args
+dnl ACJF_M4_ADDPOSTFIX([list], [postfix])
+dnl   Add postfix to all the elements in the list
+dnl Example:
+dnl   ACJF_M4_ADDPOSTFIX([a,b,c],[foo])
+dnl Result:
+dnl   afoo,bfoo,cfoo
+AC_DEFUN([ACJF_M4_ADDPOSTFIX], [ACJF_M4_MAP([$1],
+  [[§1$2]])])dnl
+dnl ACJF_M4_UNDERLINECONCAT(<arg1>,<arg2>,...)
+dnl   concat all args to a single long line with __ seperating the former args
+dnl Example:
+dnl   ACJF_M4_UNDERLINECONCAT([a  ,  b],[c])
+dnl Result:
+dnl   a  ,  b__c
+AC_DEFUN([ACJF_M4_UNDERLINECONCAT],
+  [ACJF_M4_JOIN([$@], [§1], [__])])dnl
+dnl ACJF_M4_UPCASE(<arg1>,<arg2>,<arg3>,...) Upcase its args
+dnl 
+dnl Example:
+dnl   ACJF_M4_UPCASE([foo],[bar])
+dnl Result:
+dnl   FOO,BAR
+dnl 
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_UPCASE([foo],[bar]))
+dnl Result:
+dnl   [FOO],[BAR]
 AC_DEFUN([ACJF_M4_UPCASE], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
   [m4_translit([[§1]], [a-z], [A-Z])]))])dnl
-dnl Downcase its args
+dnl ACJF_M4_DOWNCASE(<arg1>,<arg2>,<arg3>,...) Downcase its args
+dnl
+dnl Example:
+dnl   ACJF_M4_DOWNCASE([FOO],[BAR])
+dnl Result:
+dnl   foo,bar
+dnl 
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_DOWNCASE([FOO],[BAR]))
+dnl Result:
+dnl   [foo],[bar]
 AC_DEFUN([ACJF_M4_DOWNCASE], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
   [m4_translit([[§1]], [A-Z], [a-z])]))])dnl
 dnl Helper function for ACJF_M4_CAPITALIZE don't call directly
-AC_DEFUN([ACJF_M4_CAPITALIZE1], [m4_bregexp([$1], [^\(\w\)\(\w*\)], [ACJF_M4_UPCASE([\1])[]ACJF_M4_DOWNCASE([\2])])])dnl
-dnl Capitalize its args
+AC_DEFUN([_ACJF_M4_CAPITALIZE],
+  [m4_bregexp([$1], [^\(\w\)\(\w*\)], [ACJF_M4_UPCASE([\1])[]ACJF_M4_DOWNCASE([\2])])])dnl
+dnl ACJF_M4_CAPITALIZE(<arg1>,<arg2>,<arg3>,...) Capitalize its args
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_CAPITALIZE([foo],[bar]))
+dnl Result:
+dnl   [Foo],[Bar]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_CAPITALIZE([foo,bar]))
+dnl Result:
+dnl   [Foo,Bar]
 AC_DEFUN([ACJF_M4_CAPITALIZE], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
-  [m4_bpatsubst([§1], [\w+], [ACJF_M4_CAPITALIZE1([\&])])]))])dnl
-dnl erase leading and trailing spaces from args
+  [m4_bpatsubst([[§1]], [\w+], _ACJF_M4_CLOSESQUAREBRACKET[_ACJF_M4_CAPITALIZE([\&])]_ACJF_M4_OPENSQUAREBRACKET)]))])dnl
+dnl ACJF_M4_STRIPSPACE(<arg1>,<arg2>,...) Erase leading and trailing spaces from args
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_STRIPSPACE([    foo    ],[  bar   ]))
+dnl Result:
+dnl   [foo],[bar]
 AC_DEFUN([ACJF_M4_STRIPSPACE], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
-  [m4_bpatsubst([§1],[^[ 	]*\(.*[^ 	]\)[ 	]*$],[[\1]])]))])dnl
-dnl replace spaces between the words with a single '_'
+  [m4_bpatsubst(§1,[^[ 	]*\(.*[^ 	]\)[ 	]*$],[[[\1]]])]))])dnl
+dnl ACJF_M4_CANON(<arg1>,<arg2>,...)
+dnl   replace non alnum chars with '_'
+dnl   replace spaces between the words with a single '_'.
+dnl Example:
+dnl   ACJF_M4_CANON([   foo  ,  bar   ], [a])
+dnl Result:
+dnl   _foo___bar_,a
 AC_DEFUN([ACJF_M4_CANON], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
   [m4_bpatsubst([[§1]],[\([^][a-zA-Z0-9]\|[ 	]+\)],[_])]))])dnl
-dnl concat all args to a single long line with __ seperating the former args
-AC_DEFUN([ACJF_M4_UNDERLINECONCAT], [ACJF_M4_FOREACH([$@],
-  [[§1]m4_if( §#, 1, [], [__])])])dnl
-dnl Add postfix $2 to all the elements in the list in $1
-AC_DEFUN([ACJF_M4_ADDPOSTFIX], [ACJF_M4_MAP([$1],
-  [[§1$2]])])dnl
-dnl erase leading and trailing spaces from args
-dnl replace spaces between the words with a single '_'
+dnl ACJF_M4_CANON_CV(<arg1>,<arg2>,...)
+dnl   erase leading and trailing spaces from args.
+dnl   replace non alnum chars with '_'.
+dnl   replace spaces between the words with a single '_'.
+dnl Example:
+dnl   ACJF_M4_CANON_CV([   foo  ,  bar   ], [a])
+dnl Result:
+dnl   foo___bar,a
 AC_DEFUN([ACJF_M4_CANON_CV],
-  [ACJF_M4_CANON(ACJF_M4_STRIPSPACE([$*]))])dnl
-dnl erase leading and trailing spaces from args
-dnl replace spaces between the words with a single '_'
-dnl than upcase the stuff
+  [ACJF_M4_CANON(ACJF_M4_STRIPSPACE($@))])dnl
+dnl ACJF_M4_CANON_DN(<arg1>,<arg2>,...)
+dnl   erase leading and trailing spaces from args,
+dnl   replace non alnum chars with '_',
+dnl   replace spaces between the words with a single '_'
+dnl   than upcase the stuff
+dnl Example:
+dnl   ACJF_M4_CANON_DN([   foo  ,  bar   ], [a])
+dnl Result:
+dnl   FOO___BAR,A
 AC_DEFUN([ACJF_M4_CANON_DN],
-  [m4_translit(ACJF_M4_CANON_CV([$*]),[a-z],[A-Z])])dnl
-dnl ACJF_M4_ONCECODE( <protection m4_define>, <code> )
-AC_DEFUN([ACJF_M4_ONCECODE],
-[m4_ifdef([__oncecode__$1],
-  [],
-  [m4_define([__oncecode__$1], [Yes])$2])])dnl
+  [ACJF_M4_CANON_CV(ACJF_M4_UPCASE($@))])dnl
