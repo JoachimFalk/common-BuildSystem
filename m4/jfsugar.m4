@@ -476,3 +476,79 @@ dnl Result:
 dnl   FOO___BAR,A
 AC_DEFUN([ACJF_M4_CANON_DN],
   [ACJF_M4_CANON_CV(ACJF_M4_UPCASE($@))])dnl
+dnl
+dnl Path manipulation Macros
+dnl
+dnl ACJF_M4_PATH_STRIP_TRAILING_SLASHE(<path>)
+dnl   strip trailing '/' '\' from path
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_PATH_STRIP_TRAILING_SLASHES([\x\\]))
+dnl Result:
+dnl   [\x]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_PATH_STRIP_TRAILING_SLASHES([\\\]))
+dnl Result:
+dnl   [\]
+AC_DEFUN([ACJF_M4_PATH_STRIP_TRAILING_SLASHES],
+  [m4_bpatsubst(
+    [[$1]],
+    [\(..\)[/\\]*]_ACJF_M4_CLOSESQUAREBRACKET[$],
+    [\1]_ACJF_M4_CLOSESQUAREBRACKET)[]dnl
+])dnl
+dnl Helper function for ACJF_M4_PATH_BASENAME don't call directly
+AC_DEFUN([_ACJF_M4_PATH_BASENAME],
+  [m4_bpatsubst(
+    [[$1]],
+    [^\[.*[/\\]\([^/\\]+\)\]$],
+    [[\1]])[]dnl
+])dnl
+dnl ACJF_M4_PATH_BASENAME(<path>) 
+dnl   get basename of path
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_PATH_BASENAME([\x\\]))
+dnl Result:
+dnl   [x]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_PATH_BASENAME([\\\]))
+dnl Result:
+dnl   [\]
+AC_DEFUN([ACJF_M4_PATH_BASENAME],
+[_ACJF_M4_PATH_BASENAME(
+  ACJF_M4_PATH_STRIP_TRAILING_SLASHES([$1]))[]dnl
+])dnl
+dnl Helper function for ACJF_M4_PATH_DIRNAME don't call directly
+AC_DEFUN([_ACJF_M4_PATH_DIRNAME],
+  [m4_if(m4_bregexp([$1], [[/\\]]), [-1],
+    [[.]],
+    [m4_bpatsubst(
+      [[$1]],
+      [^\[\(.*[/\\]+\)[^/\\]+\]$],
+      [ACJF_M4_PATH_STRIP_TRAILING_SLASHES([\1])])])[]dnl
+])dnl
+dnl ACJF_M4_PATH_DIRNAME(<path>) 
+dnl   get dirname of path
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_PATH_DIRNAME([\\foo\\bar\\\]))
+dnl Result:
+dnl   [\\foo]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_PATH_DIRNAME([\x\\]))
+dnl Result:
+dnl   [\]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_PATH_DIRNAME([\\\]))
+dnl Result:
+dnl   [\]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_PATH_DIRNAME([foo]))
+dnl Result:
+dnl   [.]
+AC_DEFUN([ACJF_M4_PATH_DIRNAME],
+[_ACJF_M4_PATH_DIRNAME(
+  ACJF_M4_PATH_STRIP_TRAILING_SLASHES([$1]))[]dnl
+])dnl
