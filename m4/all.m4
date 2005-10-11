@@ -147,9 +147,7 @@ AC_DEFUN([ACJF_ARG_DEBUG],
 AC_MSG_CHECKING([whether to build with debug])
 AC_ARG_ENABLE(
   debug,
-  changequote(<<, >>)dnl
-  <<--enable-debug          enable debuging [default=>>$1],
-  changequote([, ])dnl
+  [[  --enable-debug          enable debuging [default=$1]]],
   [case "$enableval" in
      yes) enable_debug=yes ;;
      no)  enable_debug=no  ;;
