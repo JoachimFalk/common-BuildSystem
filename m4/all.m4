@@ -78,7 +78,7 @@ if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH]" != x"x"; then
    [$5])
 else
   m4_if([$6], [],
-   [AC_MSG_ERROR([cannot find $1 library, bailing out])],
+   [AC_MSG_ERROR([cannot find $1 headers, bailing out])],
    [AC_MSG_RESULT([no])
     $6])
 fi
@@ -99,7 +99,7 @@ ACJF_M4_CANON_DN([$1])_LDFLAGS=""
 dnl acjf_CPPFLAGS="$CPPFLAGS";
 acjf_STDLIB="standard library search path"
 AC_MSG_CHECKING([for $1 library])
-AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$1])_LIBPATH, 
+AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$4])_LIBPATH, 
  [acjf_LDFLAGS="$LDFLAGS"; acjf_LIBS="$LIBS";
   for acjf_ldflags in $5 "$acjf_STDLIB"; do
     dnl CPPFLAGS="$SYSTEMC_INCLUDE $acjf_CPPFLAGS"

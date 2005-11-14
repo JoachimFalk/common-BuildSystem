@@ -73,16 +73,18 @@ fi
 
 acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $BOOST_INCLUDE";
 acjf_found=no
-for acjf_postfix in "" "-gcc"; do
-  ACJF_CHECK_LIBONLY(
-    [boost],
-    [#include <boost/regex.hpp>],
-    [boost::regex_constants::match_flag_type x;],
-    [boost_regex$acjf_postfix],
-    [$acjf_list],
-    [acjf_found=yes; break],
-    [false])
-done
+ACJF_M4_FOREACH( [[-gcc],[]], [dnl
+  if test $acjf_found = no; then
+    ACJF_CHECK_LIBONLY(
+      [boost],
+      [#include <boost/regex.hpp>],
+      [boost::regex_constants::match_flag_type x;],
+      [boost_regex]§1,
+      [$acjf_list],
+      [acjf_found=yes;],
+      [false;])
+  fi
+])
 CPPFLAGS="$acjf_CPPFLAGS"
 
 if test $acjf_found = no; then
