@@ -142,8 +142,10 @@ AC_SUBST(ACJF_M4_CANON_DN([$1])[_LDFLAGS])
 dnl ACJF_ARG_DEBUG(<default yes|no>,
 dnl		   <CFLAG option added if yes>,
 dnl		   <CFLAG option added if no>)
-AC_DEFUN([ACJF_ARG_DEBUG],
-[AC_BEFORE([$0],  [ACJF_APPEND_CFLAGS])AC_BEFORE([$0], [ACJF_APPEND_CXXFLAGS])dnl
+AC_DEFUN([ACJF_ARG_DEBUG], 
+[dnl
+AC_BEFORE([$0],  [ACJF_APPEND_CFLAGS])dnl
+AC_BEFORE([$0], [ACJF_APPEND_CXXFLAGS])dnl
 AC_MSG_CHECKING([whether to build with debug])
 AC_ARG_ENABLE(
   debug,
@@ -161,31 +163,23 @@ if test "x$enable_debug" = "xyes"; then
     CFLAGS="$CFLAGS $2"
   elif test $ac_cv_prog_cc_g = yes; then
     if test "$GCC" = yes; then
-      CFLAGS="-Wall -g $2"
+      CFLAGS="-Wall -ggdb $2"
     else
       CFLAGS="-g $2"
     fi
   else
-    if test "$GCC" = yes; then
-      CFLAGS="-Wall $2"
-    else
-      CFLAGS="$2"
-    fi
+    CFLAGS="$2"
   fi
   if test "$ac_test_CXXFLAGS" = set; then
     CXXFLAGS="$CXXFLAGS $2"
   elif test $ac_cv_prog_cxx_g = yes; then
     if test "$GCC" = yes; then
-      CXXFLAGS="-Wall -g $2"
+      CXXFLAGS="-Wall -ggdb $2"
     else
       CXXFLAGS="-g $2"
     fi
   else
-    if test "$GCC" = yes; then
-      CXXFLAGS="-Wall $2"
-    else
-      CXXFLAGS="$2"
-    fi
+    CXXFLAGS="$2"
   fi
 else
   if test "$ac_test_CFLAGS" = set; then
@@ -198,12 +192,12 @@ else
     fi
   fi
   if test "$ac_test_CXXFLAGS" = set; then
-    CFLAGS="$CXXFLAGS $3"
+    CXXFLAGS="$CXXFLAGS $3"
   else
     if test "$GCC" = yes; then
-      CFLAGS="-O2 $3"
+      CXXFLAGS="-O2 $3"
     else
-      CFLAGS="-O $3"
+      CXXFLAGS="-O $3"
     fi
   fi
 fi
@@ -400,6 +394,8 @@ dnl ACJF_CHECK_CROSSTOOL( <toolname>,
 dnl			  <default name> )
 AC_DEFUN([ACJF_CHECK_CROSSTOOL],
 [m4_pattern_allow([$1_FOR_BUILD])
+acjf_test_CFLAGS=${CFLAGS+set}; acjf_save_CFLAGS="$CFLAGS";
+acjf_test_CXXFLAGS=${CXXFLAGS+set}; acjf_save_CXXFLAGS="$CXXFLAGS";
 if test "x$host" != "x$build"; then
   dnl Supporting Canadian Cross in Configure Scripts
   if test "x$$1" = "x"; then
@@ -413,6 +409,16 @@ ifdef([AC_PROG_$1],
 if test "x$host" = "x$build"; then
   [$1_FOR_BUILD]="$$1"
   AC_SUBST([$1_FOR_BUILD])
+fi
+if test x$acjf_test_CFLAGS = xset; then
+  CFLAGS="$acjf_save_CFLAGS";
+else
+  unset CFLAGS
+fi
+if test x$acjf_test_CXXFLAGS = xset; then
+  CFLAGS="$acjf_save_CXXFLAGS";
+else
+  unset CXXFLAGS
 fi
 ])
 
