@@ -435,10 +435,11 @@ dnl
 dnl Add packages to the include and lib pathes
 dnl
 AC_DEFUN([ACJF_NEED_PKG],
-[for dir in $1; do
-  if test -d ../$dir; then
-    INCLUDES="$INCLUDES -I../$dir/include";
-    AM_LDFLAGS="$AM_LDFLAGS -L../$dir -L../$dir/.libs";
+[for acjf_dir in $1; do
+  if test -d ../$acjf_dir; then
+    acjf_dir_abs=`cd ../$acjf_dir; pwd`
+    INCLUDES="$INCLUDES -I$acjf_dir_abs -I$acjf_dir_abs/include";
+    AM_LDFLAGS="$AM_LDFLAGS -L$acjf_dir_abs/ -L$acjf_dir_abs/.libs";
   fi
 done
 AC_SUBST(INCLUDES)
