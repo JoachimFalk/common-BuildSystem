@@ -440,7 +440,7 @@ AC_DEFUN([ACJF_NEED_PKG],
     acjf_dir_abs=`cd ../$acjf_dir; pwd`
     INCLUDES="$INCLUDES -I$acjf_dir_abs -I$acjf_dir_abs/include";
     AM_LDFLAGS="$AM_LDFLAGS -L$acjf_dir_abs/ -L$acjf_dir_abs/.libs";
-    acjf_dir_abs=`cd $ac_srcdir; cd ../$acjf_dir; pwd`
+    acjf_dir_abs=`cd $srcdir; cd ../$acjf_dir; pwd`
     INCLUDES="$INCLUDES -I$acjf_dir_abs -I$acjf_dir_abs/include";
     AM_LDFLAGS="$AM_LDFLAGS -L$acjf_dir_abs/ -L$acjf_dir_abs/.libs";
   fi
