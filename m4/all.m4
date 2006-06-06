@@ -28,7 +28,15 @@ AH_TOP(
 
 dnl ACJF_DONE
 AC_DEFUN([ACJF_DONE],[
-AC_SUBST([ac_aux_dir])
+case $ac_aux_dir in
+  $srcdir/*)
+    auxdir='$(top_srcdir)/'`echo $ac_aux_dir | sed -e "s|^$srcdir/||"`
+    ;;
+  *)
+    auxdir='$(top_builddir)/'"$ac_aux_dir";
+    ;;
+esac
+AC_SUBST([auxdir])
 AH_BOTTOM(
 [#endif /* _INCLUDED_CONFIG_H */
 ])])
