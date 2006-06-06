@@ -11,7 +11,7 @@ include: $(pkginclude_HEADERS)
 
 compileheader.mk: $(HEADERS)
 	@if test -n "$?"; then					\
-		$(ac_abs_aux_dir)/mkcompileheaderobj.sh $?;	\
+		$(auxdir)/mkcompileheaderobj.sh $?;		\
 	fi
 
 clean-am: clean-pkginclude  clean-re2c
