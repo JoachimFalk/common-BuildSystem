@@ -1,13 +1,13 @@
 dnl vim: set sw=2 ts=8 syn=config:
 dnl
-dnl Copyright (C) Joachim Falk <joachim.falk@gmx.de> $Date: 2003/01/24 13:23:54 $
+dnl Copyright (C) 2001 - 2006 Joachim Falk <joachim.falk@gmx.de>
 dnl
-dnl all.m4 is part of the SysteMoC distribution of Joachim Falk;
+dnl This file is part of the BuildSystem distribution of Joachim Falk;
 dnl you can redistribute it and/or modify it under the terms of the
 dnl GNU General Public License as published by the Free Software Foundation;
 dnl either version 2 of the License, or (at your option) any later version.
 dnl
-dnl The jflibs distributio is distributed in the hope that it will be useful,
+dnl The BuildSystem is distributed in the hope that it will be useful,
 dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
 dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 dnl General Public License for more details.
@@ -19,6 +19,7 @@ dnl Boston, MA 02111-1307, USA.
 
 dnl ACJF_INIT
 AC_DEFUN([ACJF_INIT],[
+m4_define([ACJF_VAR_SUBPROJECT_DIR], [])dnl
 AH_TOP(
 [/* vim: set sw=2 ts=8 syn=c: */
 
@@ -342,61 +343,6 @@ if test "x$acjflib_miss_ssize_t" != "x"; then
     [define this to your ssize_t type if you dont have one predefined])
 fi])
 
-dnl check for va_copy __va_copy or role your own
-AC_DEFUN([ACJF_CHECK_VA_COPY],
-[AC_CACHE_CHECK(
- [for va_copy],
- [ac_cv_func_va_copy],
- [AC_TRY_LINK(
-   [#include <stdarg.h>],
-   [va_list ap1, ap2;
-    va_copy( ap1, ap2 );],
-   [ac_cv_func_va_copy="yes"],
-   [ac_cv_func_va_copy="no"]
-  )]
-)
-if test "x$ac_cv_func_va_copy" = "xyes"; then
-  AC_DEFINE(HAVE_VA_COPY,1,[Do we have va_copy in stdarg.h than define this])
-else
-  AC_CACHE_CHECK(
-   [for __va_copy],
-   [ac_cv_func___va_copy],
-   [AC_TRY_LINK(
-     [#include <stdarg.h>],
-     [va_list ap1, ap2;
-      __va_copy( ap1, ap2 );],
-     [ac_cv_func___va_copy="yes"],
-     [ac_cv_func___va_copy="no"]
-    )]
-  )
-  if test "x$ac_cv_func___va_copy" = "xyes"; then
-    AC_DEFINE(HAVE___VA_COPY,1,[Do we have __va_copy in stdarg.h than define this])
-  else
-    AC_DEFINE(DO_VA_PTR_COPY,1,[have neither va_copy nor __va_copy than define this and pray])
-  fi
-fi
-AH_BOTTOM([/*
- * NOTE: Some routine need va_copy() from stdarg.h, as
- * specified by C9X, to be able to traverse the same list of arguments twice.
- * I don't know of any other standard and portable way of achieving the same.
- * With some versions of gcc you may use __va_copy(). You might even get away
- * with "ap2 = ap", in this case it may not be safe to call va_end(ap2) !
- */
-#ifdef HAVE_VA_COPY
- /* dito have it */
-#else
-# if HAVE___VA_COPY
-#   define va_copy( dest, src ) __va_copy( dest, src )
-# else
-#   if DO_VA_PTR_COPY
-#     define va_copy( dest, src ) do { dest = src; } while ( 0 )
-#   else
-      /* fuck what now ? */
-#   endif
-# endif
-#endif])
-])
-
 dnl check for cross tool
 dnl ACJF_CHECK_CROSSTOOL( <toolname>,
 dnl			  <default name> )
@@ -473,29 +419,6 @@ AC_DEFUN([ACJF_INVESTIGATE_CCBASE],
    if test "x$host_alias" != "x"; then
      acjf_cv_path_ccbase="$acjf_cv_path_ccbase/$host_alias";
    fi])
-])
-
-dnl
-dnl Add packages to the include and lib pathes
-dnl
-AC_DEFUN([ACJF_NEED_LIBIBERTY],
-[AC_CHECK_LIB(iberty, libiberty_concat_ptr,
-  [],
-  [AC_MSG_ERROR([cannot find -liberty, bailing out])])
-ACJF_INVESTIGATE_CCBASE
-AC_CACHE_CHECK([for libiberty headers],
-  [acjf_cv_includepath_libiberty],
-  [if test -d "$includedir/libiberty"; then
-    acjf_cv_includepath_libiberty="$(includedir)/libiberty";
-  elif test -d "$acjf_cv_path_ccbase/include/libiberty"; then
-    acjf_cv_includepath_libiberty="$acjf_cv_path_ccbase/include/libiberty";
-  fi])
-  if test x"$acjf_cv_includepath_libiberty" != x; then
-    INCLUDES="$INCLUDES -I $acjf_cv_includepath_libiberty";
-    AC_SUBST(INCLUDES)
-  else
-    AC_MSG_ERROR([cannot find libiberty headers, bailing out])
-  fi
 ])
 
 # ACJF_CHECK_VAR(VARIABLE, [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
@@ -577,3 +500,14 @@ AC_DEFUN([ACJF_PROG_CXX_ACCEPTS_OPT],
     fi])[]dnl
   ; echo "CXXFLAGS: $CXXFLAGS"[]dnl
 ])# ACJF_PROG_CXX_ACCEPTS_OPT
+
+# ACJF_SUBPROJECT([subproject subdir])#, [ACTION-IF-FOUND], [ACTION-IF-MISSING])
+##  ACTION-IF-FOUND:   default do nothing
+##  ACTION-IF-MISSING: default do nothing
+# -------------
+# Integrate subproject must contain a configure.in.frag file
+AC_DEFUN([ACJF_SUBPROJECT],[dnl
+m4_pushdef([ACJF_VAR_SUBPROJECT_DIR], ACJF_VAR_SUBPROJECT_DIR[$1/])dnl
+m4_sinclude([$1][/configure.in.frag])dnl
+m4_popdef([ACJF_VAR_SUBPROJECT_DIR])dnl
+])
