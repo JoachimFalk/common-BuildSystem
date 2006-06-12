@@ -123,18 +123,18 @@ AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$4])_LIBPATH,
       [$2],
       [$3],
       [dnl AC_MSG_RESULT([yes])
-       acjf_cv_]ACJF_M4_CANON_DN([$1])[_LIBPATH="$acjf_ldflags";
+       acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH="$acjf_ldflags";
        break],
       [dnl AC_MSG_RESULT([no])
-       acjf_cv_]ACJF_M4_CANON_DN([$1])[_LIBPATH="x"])
+       acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH="x"])
   done
   dnl CPPFLAGS="$acjf_CPPFLAGS"; 
   LDFLAGS="$acjf_LDFLAGS"; LIBS="$acjf_LIBS";
 ])
-if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$1])[_LIBPATH]" != x"x"; then
-  AC_MSG_RESULT([$acjf_cv_]ACJF_M4_CANON_DN([$1])[_LIBPATH])
-  if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$1])[_LIBPATH]" != x"$acjf_STDLIB"; then
-    ACJF_M4_CANON_DN([$1])_LDFLAGS="[-L$acjf_cv_]ACJF_M4_CANON_DN([$1])[_LIBPATH]"
+if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH]" != x"x"; then
+  AC_MSG_RESULT([$acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH])
+  if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH]" != x"$acjf_STDLIB"; then
+    ACJF_M4_CANON_DN([$1])_LDFLAGS="[-L$acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH]"
   fi
   m4_if([$6], [],
    [true],
