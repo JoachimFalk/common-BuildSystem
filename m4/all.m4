@@ -501,13 +501,9 @@ AC_DEFUN([ACJF_PROG_CXX_ACCEPTS_OPT],
   ; echo "CXXFLAGS: $CXXFLAGS"[]dnl
 ])# ACJF_PROG_CXX_ACCEPTS_OPT
 
-# ACJF_SUBPROJECT([subproject subdir])#, [ACTION-IF-FOUND], [ACTION-IF-MISSING])
-##  ACTION-IF-FOUND:   default do nothing
-##  ACTION-IF-MISSING: default do nothing
-# -------------
-# Integrate subproject must contain a configure.in.frag file
-AC_DEFUN([ACJF_SUBPROJECT],[dnl
-m4_pushdef([ACJF_VAR_SUBPROJECT_DIR], ACJF_VAR_SUBPROJECT_DIR[$1/])dnl
-m4_sinclude([$1][/configure.in.frag])dnl
+dnl m4_sinclude([subproject subdir/configure.in.frag])
+m4_define([m4_sinclude],[dnl
+m4_pushdef([ACJF_VAR_SUBPROJECT_DIR], ACJF_VAR_SUBPROJECT_DIR[]ACJF_M4_PATH_DIRNAME([$1])[/])dnl
+m4_builtin([sinclude], [$1])dnl
 m4_popdef([ACJF_VAR_SUBPROJECT_DIR])dnl
 ])
