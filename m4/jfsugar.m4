@@ -551,3 +551,5 @@ AC_DEFUN([ACJF_M4_PATH_DIRNAME],
 [_ACJF_M4_PATH_DIRNAME(
   ACJF_M4_PATH_STRIP_TRAILING_SLASHES([$1]))[]dnl
 ])dnl
+dnl
+m4_pattern_forbid([^ACJF_])
