@@ -3,9 +3,10 @@
 pkgincludebacktrack=$(shell echo "$(pkgincludeprefix)" | sed -e 's@[^/][^/]*\(/\|$$\)@../@g')
 pkgincludedir=$(includedir)/$(pkgincludeprefix)
 
-include: $(pkginclude_HEADERS)
-	@set -e; mkdir -p include/$(pkgincludeprefix); \
-	for i in $^; do \
+include: Makefile $(pkginclude_HEADERS) 
+	@set -e; rm -rf include/$(pkgincludeprefix); mkdir -p include/$(pkgincludeprefix); \
+	set $^; shift; \
+	for i in $${1+"$$@"}; do \
 	  ln -sf `case $$i in /*) echo $$i; ;; *) echo '../$(pkgincludebacktrack)/'"$$i"; ;; esac` include/$(pkgincludeprefix); \
 	done
 
