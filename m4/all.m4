@@ -389,26 +389,22 @@ dnl
 dnl Add packages to the include and lib pathes
 dnl
 AC_DEFUN([ACJF_NEED_PKG],
-[for acjf_dir in $1; do
-  if test -d $acjf_dir; then
-    acjf_dir_abs=`cd $acjf_dir; pwd`
-    INCLUDES="$INCLUDES -I$acjf_dir_abs -I$acjf_dir_abs/include";
-    AM_LDFLAGS="$AM_LDFLAGS -L$acjf_dir_abs/ -L$acjf_dir_abs/.libs";
-    acjf_dir_abs=`cd $srcdir; cd ../$acjf_dir; pwd`
-    INCLUDES="$INCLUDES -I$acjf_dir_abs -I$acjf_dir_abs/include";
-    AM_LDFLAGS="$AM_LDFLAGS -L$acjf_dir_abs/ -L$acjf_dir_abs/.libs";
-  fi
-  if test -d ../$acjf_dir; then
-    acjf_dir_abs=`cd ../$acjf_dir; pwd`
-    INCLUDES="$INCLUDES -I$acjf_dir_abs -I$acjf_dir_abs/include";
-    AM_LDFLAGS="$AM_LDFLAGS -L$acjf_dir_abs/ -L$acjf_dir_abs/.libs";
-    acjf_dir_abs=`cd $srcdir; cd ../$acjf_dir; pwd`
-    INCLUDES="$INCLUDES -I$acjf_dir_abs -I$acjf_dir_abs/include";
-    AM_LDFLAGS="$AM_LDFLAGS -L$acjf_dir_abs/ -L$acjf_dir_abs/.libs";
-  fi
-done
-AC_SUBST(INCLUDES)
-AC_SUBST(AM_LDFLAGS)
+ [ACJF_M4_FOREACH([$1],
+   [m4_pushdef([_ACJF_VAR_DIR],ACJF_VAR_SUBPROJECT_DIR[dummy])dnl
+    # Searching §1 subproject
+    _acjf_found=no
+    ACJF_M4_WHILE([m4_if(_ACJF_VAR_DIR, [.], [0], [1])],
+     [m4_define([_ACJF_VAR_DIR], ACJF_M4_PATH_DIRNAME(_ACJF_VAR_DIR))dnl
+      if test x"$_acjf_found" = x"no" -a -d $srcdir/_ACJF_VAR_DIR/§1; then
+        INCLUDES="$INCLUDES -I\$(top_srcdir)/_ACJF_VAR_DIR/§1 -I\$(top_builddir)/_ACJF_VAR_DIR/§1/include";
+        AM_LDFLAGS="$AM_LDFLAGS -L\$(top_builddir)/_ACJF_VAR_DIR/§1 -L\$(top_builddir)/_ACJF_VAR_DIR/§1/.libs";
+        _acjf_found=yes;
+      fi
+    ])dnl
+    m4_popdef([_ACJF_VAR_DIR])dnl
+  ])dnl
+  AC_SUBST(INCLUDES)
+  AC_SUBST(AM_LDFLAGS)
 ])
 
 AC_DEFUN([ACJF_INVESTIGATE_CCBASE],
