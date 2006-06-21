@@ -321,6 +321,30 @@ AC_DEFUN([ACJF_M4_LIST_HASELEM],
     [$3],
     [ACJF_M4_LIST_HASELEM(ACJF_M4_LIST_TAIL([$1]), [$2], [$3], [$4])])])[]dnl
 ])dnl
+dnl ACJF_M4_WHILE(<test code>, <code while body>)
+dnl Example:
+dnl   m4_pushdef([i],10)dnl
+dnl   ACJF_M4_WHILE([m4_eval(i >= 1)],
+dnl     [Loop is now "i".
+dnl      m4_define([i],m4_eval(i - 1))[]dnl
+dnl   ])dnl
+dnl   m4_popdef([i])dnl
+dnl Result:
+dnl   Loop is now "10".
+dnl   Loop is now "9".
+dnl   Loop is now "8".
+dnl   Loop is now "7".
+dnl   Loop is now "6".
+dnl   Loop is now "5".
+dnl   Loop is now "4".
+dnl   Loop is now "3".
+dnl   Loop is now "2".
+dnl   Loop is now "1".
+AC_DEFUN([ACJF_M4_WHILE],
+[m4_if($1, [1],
+  [$2[]ACJF_M4_WHILE([$1],[$2])],
+  [])[]dnl
+])dnl
 dnl ACJF_M4_FOREACH( [<item1>,<item2>,...], <code to iterate>)
 dnl Example:
 dnl   ACJF_M4_FOREACH( [a,b,c,d,ef,g,h],
