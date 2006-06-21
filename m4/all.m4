@@ -402,6 +402,12 @@ AC_DEFUN([ACJF_NEED_PKG],
       fi
     ])dnl
     m4_popdef([_ACJF_VAR_DIR])dnl
+    # Last ditch effort try one uplevel directory
+    if test x"$_acjf_found" = x"no" -a -d $srcdir/../§1; then
+      INCLUDES="$INCLUDES -I\$(top_srcdir)/../§1 -I\$(top_builddir)/../§1/include";
+      AM_LDFLAGS="$AM_LDFLAGS -L\$(top_builddir)/../§1 -L\$(top_builddir)/../§1/.libs";
+      _acjf_found=yes;
+    fi
   ])dnl
   AC_SUBST(INCLUDES)
   AC_SUBST(AM_LDFLAGS)
