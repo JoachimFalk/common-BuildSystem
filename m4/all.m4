@@ -501,7 +501,7 @@ AC_DEFUN([ACJF_PROG_CXX_ACCEPTS_OPT],
 ## do not remove space between m4_si and nclude because
 ## the concatenated name is automagically hardcoded in aclocal
 m4_define([m4_sinclude],[dnl
-m4_pushdef([ACJF_VAR_SUBPROJECT_DIR], ACJF_VAR_SUBPROJECT_DIR[]ACJF_M4_PATH_DIRNAME([$1])[/])dnl
+m4_pushdef([ACJF_VAR_SUBPROJECT_DIR], ACJF_M4_PATH_DIRNAME([$1])[/])dnl
 m4_builtin([sinclude], [$1])dnl
 m4_popdef([ACJF_VAR_SUBPROJECT_DIR])dnl
 ])
