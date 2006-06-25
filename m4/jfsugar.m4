@@ -499,6 +499,17 @@ dnl Result:
 dnl   FOO___BAR,A
 AC_DEFUN([ACJF_M4_CANON_DN],
   [ACJF_M4_CANON_CV(ACJF_M4_UPCASE($@))])dnl
+dnl ACJF_M4_CANON_DC(<arg1>,<arg2>,...)
+dnl   erase leading and trailing spaces from args,
+dnl   replace non alnum chars with '_',
+dnl   replace spaces between the words with a single '_'
+dnl   than downcase the stuff
+dnl Example:
+dnl   ACJF_M4_CANON_DC([   FOO  ,  BAR   ], [a])
+dnl Result:
+dnl   foo___bar,a
+AC_DEFUN([ACJF_M4_CANON_DC],
+  [ACJF_M4_CANON_CV(ACJF_M4_DOWNCASE($@))])dnl
 dnl
 dnl Path manipulation Macros
 dnl
