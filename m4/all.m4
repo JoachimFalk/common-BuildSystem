@@ -385,32 +385,41 @@ AC_DEFUN([ACJF_CHECK_LIBS],
   AC_CHECK_LIB([$acjf_lib],[main])
 done])
 
-dnl
 dnl Add packages to the include and lib pathes
-dnl
+dnl ACJF_NEED_PKG(<packet>,
+dnl		  [<action if yes>],
+dnl		  [<action if no> ])
 AC_DEFUN([ACJF_NEED_PKG],
- [ACJF_M4_FOREACH([$1],
-   [m4_pushdef([_ACJF_VAR_DIR],ACJF_VAR_SUBPROJECT_DIR[dummy])dnl
-    # Searching §1 subproject
-    _acjf_found=no
-    ACJF_M4_WHILE([m4_if(_ACJF_VAR_DIR, [.], [0], [1])],
-     [m4_define([_ACJF_VAR_DIR], ACJF_M4_PATH_DIRNAME(_ACJF_VAR_DIR))dnl
-      if test x"$_acjf_found" = x"no" -a -d $srcdir/_ACJF_VAR_DIR/§1; then
-        INCLUDES="$INCLUDES -I\$(top_srcdir)/_ACJF_VAR_DIR/§1 -I\$(top_builddir)/_ACJF_VAR_DIR/§1/include";
-        AM_LDFLAGS="$AM_LDFLAGS -L\$(top_builddir)/_ACJF_VAR_DIR/§1 -L\$(top_builddir)/_ACJF_VAR_DIR/§1/.libs";
-        _acjf_found=yes;
-      fi
-    ])dnl
-    m4_popdef([_ACJF_VAR_DIR])dnl
-    # Last ditch effort try one uplevel directory
-    if test x"$_acjf_found" = x"no" -a -d $srcdir/../§1; then
-      INCLUDES="$INCLUDES -I\$(top_srcdir)/../§1 -I\$(top_builddir)/../§1/include";
-      AM_LDFLAGS="$AM_LDFLAGS -L\$(top_builddir)/../§1 -L\$(top_builddir)/../§1/.libs";
+ [m4_pushdef([_ACJF_VAR_DIR],ACJF_VAR_SUBPROJECT_DIR[dummy])dnl
+  # Searching $1 subproject
+  _acjf_found=no
+  ACJF_M4_WHILE([m4_if(_ACJF_VAR_DIR, [.], [0], [1])],
+   [m4_define([_ACJF_VAR_DIR], ACJF_M4_PATH_DIRNAME(_ACJF_VAR_DIR))dnl
+    if test x"$_acjf_found" = x"no" -a -d $srcdir/_ACJF_VAR_DIR/$1; then
+      acjf_pkgdir="_ACJF_VAR_DIR/$1";
       _acjf_found=yes;
     fi
   ])dnl
-  AC_SUBST(INCLUDES)
-  AC_SUBST(AM_LDFLAGS)
+  m4_popdef([_ACJF_VAR_DIR])dnl
+  # Last ditch effort try one uplevel directory
+  if test x"$_acjf_found" = x"no" -a -d $srcdir/../$1; then
+    acjf_pkgdir="../$1";
+    _acjf_found=yes;
+  fi
+  if test x"$_acjf_found" = x"yes"; then
+    m4_if([$2], [], [dnl
+      [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]="\$(top_srcdir)/$acjf_pkgdir"
+      [pkg_]ACJF_M4_CANON_DC([$1])[_builddir]="\$(top_builddir)/$acjf_pkgdir"
+      [INCLUDES]="$INCLUDES -I\$(top_srcdir)/$acjf_pkgdir -I\$(top_builddir)/$acjf_pkgdir/include";
+      [AM_LDFLAGS]="$AM_LDFLAGS -L\$(top_builddir)/$acjf_pkgdir -L\$(top_builddir)/$acjf_pkgdir/.libs";
+      AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_srcdir])
+      AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_builddir])
+      AC_SUBST([INCLUDES])
+      AC_SUBST([AM_LDFLAGS])], [$2])
+  else
+    m4_if([$3], [], [false], [$3])
+  fi
+  unset _acjf_found
 ])
 
 AC_DEFUN([ACJF_INVESTIGATE_CCBASE],
