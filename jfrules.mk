@@ -11,19 +11,20 @@ include: Makefile $(pkginclude_HEADERS)
 	done
 
 compileheader.mk: $(HEADERS)
-	@if test -n "$?"; then					\
-		$(auxdir)/mkcompileheaderobj.sh $?;		\
+	@if test -n "$?"; then						\
+		$(auxdir)/mkcompileheaderobj.sh $?;			\
 	fi
 
-clean-am: clean-pkginclude  clean-re2c
+clean-am: clean-pkginclude  clean-re2c-scripts
 
-clean-re2c:
-	@find $(srcdir) -maxdepth 1 -name "*.re2c*" |		\
-	  while read file; do					\
-	    case $$file in					\
-	      *.re2c)   rm -f $${file%%.re2c}.c ;;		\
-	      *.re2cpp) rm -f $${file%%.re2cpp}.cpp ;;		\
-	    esac;						\
+clean-re2c-scripts:
+	@find $(srcdir) -maxdepth 1 -name "*.re2c*" -o -name "*-sh" |	\
+	  while read file; do						\
+	    case $$file in						\
+	      *.re2c)   rm -f `basename $${file%%.re2c}.c` ;;		\
+	      *.re2cpp) rm -f `basename $${file%%.re2cpp}.cpp` ;;	\
+	      *-sh)     rm -f `basename $${file%%-sh}.sh` ;;		\
+	    esac;							\
 	  done
 
 clean-pkginclude:
