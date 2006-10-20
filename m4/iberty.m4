@@ -33,8 +33,8 @@ AC_CACHE_CHECK([for libiberty headers],
     acjf_cv_includepath_libiberty="$acjf_cv_path_ccbase/include/libiberty";
   fi])
   if test x"$acjf_cv_includepath_libiberty" != x; then
-    INCLUDES="$INCLUDES -I $acjf_cv_includepath_libiberty";
-    AC_SUBST(INCLUDES)
+    AM_CPPFLAGS="$AM_CPPFLAGS -I $acjf_cv_includepath_libiberty";
+    AC_SUBST([AM_CPPFLAGS])dnl
   else
     AC_MSG_ERROR([cannot find libiberty headers, bailing out])
   fi

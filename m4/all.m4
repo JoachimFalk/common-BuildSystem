@@ -25,7 +25,10 @@ AH_TOP(
 
 #ifndef _INCLUDED_CONFIG_H
 #define _INCLUDED_CONFIG_H
-])])
+])dnl
+AC_SUBST([AM_LDFLAGS], [])dnl
+AC_SUBST([AM_CPPFLAGS], [])dnl
+])
 
 dnl ACJF_DONE
 AC_DEFUN([ACJF_DONE],[
@@ -153,8 +156,8 @@ dnl		   <CFLAG option added if yes>,
 dnl		   <CFLAG option added if no>)
 AC_DEFUN([ACJF_ARG_DEBUG], 
 [dnl
-AC_BEFORE([$0],  [ACJF_APPEND_CFLAGS])dnl
-AC_BEFORE([$0], [ACJF_APPEND_CXXFLAGS])dnl
+dnl AC_BEFORE([$0],  [ACJF_APPEND_CFLAGS])dnl
+dnl AC_BEFORE([$0], [ACJF_APPEND_CXXFLAGS])dnl
 AC_MSG_CHECKING([whether to build with debug])
 AC_ARG_ENABLE(
   debug,
@@ -210,7 +213,9 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(DEBUG, test x$enable_debug = xyes)
+AC_SUBST([CFLAGS])dnl
+AC_SUBST([CXXFLAGS])dnl
+AM_CONDITIONAL([DEBUG], test x$enable_debug = xyes)dnl
 ])
 
 dnl check for type
@@ -408,13 +413,13 @@ AC_DEFUN([ACJF_NEED_PKG],
   fi
   if test x"$_acjf_found" = x"yes"; then
     m4_if([$2], [], [dnl
-      [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]="\$(top_srcdir)/$acjf_pkgdir"
-      [pkg_]ACJF_M4_CANON_DC([$1])[_builddir]="\$(top_builddir)/$acjf_pkgdir"
-      [INCLUDES]="$INCLUDES -I\$(top_srcdir)/$acjf_pkgdir -I\$(top_builddir)/$acjf_pkgdir/include";
-      [AM_LDFLAGS]="$AM_LDFLAGS -L\$(top_builddir)/$acjf_pkgdir -L\$(top_builddir)/$acjf_pkgdir/.libs";
-      AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_srcdir])
-      AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_builddir])
-      AC_SUBST([INCLUDES])
+      [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]="\$(top_srcdir)/$acjf_pkgdir";
+      [pkg_]ACJF_M4_CANON_DC([$1])[_builddir]="\$(top_builddir)/$acjf_pkgdir";
+      AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/$acjf_pkgdir -I\$(top_builddir)/$acjf_pkgdir/include";
+      AM_LDFLAGS="$AM_LDFLAGS -L\$(top_builddir)/$acjf_pkgdir -L\$(top_builddir)/$acjf_pkgdir/.libs";
+      AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_srcdir])dnl
+      AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_builddir])dnl
+      AC_SUBST([AM_CPPFLAGS])dnl
       AC_SUBST([AM_LDFLAGS])], [$2])
   else
     m4_if([$3], [], [false], [$3])
