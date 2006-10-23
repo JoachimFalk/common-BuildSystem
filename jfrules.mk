@@ -32,13 +32,20 @@ clean-pkginclude:
 
 -include compileheader.mk
 
-%.sh:%-sh
-	cp -f $< $@; chmod 0755 $@
+%.sh: %-sh
+	{ [ -d $(dir $@) ] || mkdir -p $(dir $@); } && \
+	  cp -f $< $@ && chmod 0755 $@
+
+%: %.m4
+	{ [ -d $(dir $@) ] || mkdir -p $(dir $@); } && \
+	  m4 --fatal-warnings -P -I $(dir $<) -I $(auxdir)/m4 $(auxdir)/autoconf-env.m4 $< > $@
 
 %.c: %.re2c
-	re2c -b -o $@ $<
+	{ [ -d $(dir $@) ] || mkdir -p $(dir $@); } && \
+	  re2c -b -o $@ $<
 
 %.cpp: %.re2cpp
-	re2c -b -o $@ $<
+	{ [ -d $(dir $@) ] || mkdir -p $(dir $@); } && \
+	  re2c -b -o $@ $<
 
 .PHONY:  clean-pkginclude  clean-re2c
