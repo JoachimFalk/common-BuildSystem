@@ -416,7 +416,7 @@ AC_DEFUN([ACJF_NEED_PKG],
       [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]="\$(top_srcdir)/$acjf_pkgdir";
       [pkg_]ACJF_M4_CANON_DC([$1])[_builddir]="\$(top_builddir)/$acjf_pkgdir";
       AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/$acjf_pkgdir -I\$(top_builddir)/$acjf_pkgdir/include";
-      AM_LDFLAGS="$AM_LDFLAGS -L\$(top_builddir)/$acjf_pkgdir -L\$(top_builddir)/$acjf_pkgdir/.libs";
+      AM_LDFLAGS="$AM_LDFLAGS -L\$(top_builddir)/$acjf_pkgdir";
       AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_srcdir])dnl
       AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_builddir])dnl
       AC_SUBST([AM_CPPFLAGS])dnl
