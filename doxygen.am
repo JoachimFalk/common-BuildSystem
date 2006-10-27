@@ -1,4 +1,5 @@
 # Copyright (C) 2004 Oren Ben-Kiki
+# Copyright (C) 2006 Joachim Falk
 # This file is distributed under the same terms as the Automake macro files.
 
 # Generate automatic documentation using Doxygen. Goals and variables values
