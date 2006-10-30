@@ -17,6 +17,16 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
+AC_DEFUN([ACJF_INVESTIGATE_CCBASE],
+[AC_CACHE_CHECK([for the $CC compiler base],
+  [acjf_cv_path_ccbase],
+  [acjf_cv_path_ccbase=`which $CC`;
+   acjf_cv_path_ccbase="`dirname $acjf_cv_path_ccbase`/..";
+   if test "x$host_alias" != "x"; then
+     acjf_cv_path_ccbase="$acjf_cv_path_ccbase/$host_alias";
+   fi])
+])
+
 dnl
 dnl Add packages to the include and lib pathes
 dnl
