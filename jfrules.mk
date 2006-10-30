@@ -75,6 +75,6 @@ doxygen-doc-recursive:
 	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
 	fi; test -z "$$fail"
 
-doxygen-doc-am:
+doxygen-doc-am: $(DX_RUN_GOAL) $(DX_PS_GOAL) $(DX_PDF_GOAL)
 
 .PHONY:  clean-pkginclude  clean-re2c doxygen-doc-am

@@ -33,11 +33,13 @@
 ## Format-independent Doxygen rules. ##
 ## --------------------------------- ##
 
-.PHONY: doxygen-run-am $(DX_PS_GOAL) $(DX_PDF_GOAL)
+.PHONY: $(DX_RUN_GOAL) $(DX_PS_GOAL) $(DX_PDF_GOAL)
 
-.INTERMEDIATE: doxygen-run-am $(DX_PS_GOAL) $(DX_PDF_GOAL)
+.INTERMEDIATE: $(DX_RUN_GOAL) $(DX_PS_GOAL) $(DX_PDF_GOAL)
 
 if DX_COND_doc
+
+DX_RUN_GOAL = doxygen-run-am 
 
 ## ------------------------------- ##
 ## Rules specific for HTML output. ##
@@ -164,8 +166,6 @@ DX_CLEAN_LATEX = @DX_DOCDIR@/latex
 endif DX_COND_latex
 
 doxygen-run-am: @DX_DOCDIR@/@PACKAGE@.tag
-
-doxygen-doc-am: doxygen-run-am $(DX_PS_GOAL) $(DX_PDF_GOAL)
 
 @DX_DOCDIR@/@PACKAGE@.tag: $(DX_CONFIG) $(pkginclude_HEADERS)
 	rm -rf @DX_DOCDIR@
