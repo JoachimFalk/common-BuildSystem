@@ -16,4 +16,4 @@
 # the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-exec m4 -P -I m4 test-jfsugar.m4 -
+exec m4 -P --define "dnl=m4_dnl" -I m4 test-jfsugar.m4 -

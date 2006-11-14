@@ -15,7 +15,11 @@ dnl You should have received a copy of the GNU General Public
 dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
-
+m4_dnl
+dnl
+dnl Miscellaneous helper macros
+dnl
+m4_define([_ACJF_M4_OPENSQUAREBRACKET],
   m4_changequote(<,>)<m4_changequote(<,>)<[>m4_changequote([,])>m4_changequote([,]))dnl
 m4_define([_ACJF_M4_CLOSESQUAREBRACKET],
   m4_changequote(<,>)<m4_changequote(<,>)<]>m4_changequote([,])>m4_changequote([,]))dnl

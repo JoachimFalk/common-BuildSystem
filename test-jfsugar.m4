@@ -14,9 +14,8 @@ dnl You should have received a copy of the GNU General Public
 dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
-
+m4_dnl
 m4_changequote([,])m4_dnl
-m4_define([dnl],m4_defn([m4_dnl]))dnl
 m4_define([m4_if],m4_defn([m4_ifelse]))dnl
 m4_define([m4_bregexp],m4_defn([m4_regexp]))dnl
 m4_define([m4_bpatsubst],m4_defn([m4_patsubst]))dnl
