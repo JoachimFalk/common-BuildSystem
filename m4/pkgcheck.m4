@@ -141,13 +141,15 @@ AC_DEFUN([ACJF_NEED_PKG],
     _acjf_found=yes;
   fi
   if test x"$_acjf_found" = x"yes"; then
+    acjf_pkg_srcdir="\$(top_srcdir)/$acjf_pkgdir";
+    acjf_pkg_builddir="\$(top_builddir)/$acjf_pkgdir";
+    [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]="$acjf_pkg_srcdir";
+    [pkg_]ACJF_M4_CANON_DC([$1])[_builddir]="$acjf_pkg_builddir";
+    AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_srcdir])dnl
+    AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_builddir])dnl
     m4_if([$2], [], [dnl
-      [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]="\$(top_srcdir)/$acjf_pkgdir";
-      [pkg_]ACJF_M4_CANON_DC([$1])[_builddir]="\$(top_builddir)/$acjf_pkgdir";
       AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/$acjf_pkgdir -I\$(top_builddir)/$acjf_pkgdir/include";
       AM_LDFLAGS="$AM_LDFLAGS -L\$(top_builddir)/$acjf_pkgdir";
-      AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_srcdir])dnl
-      AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_builddir])dnl
       AC_SUBST([AM_CPPFLAGS])dnl
       AC_SUBST([AM_LDFLAGS])], [$2])
   else
