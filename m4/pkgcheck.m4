@@ -126,21 +126,21 @@ dnl		  [<action if no> ])
 AC_DEFUN([ACJF_NEED_PKG],
  [m4_pushdef([_ACJF_VAR_DIR],ACJF_VAR_SUBPROJECT_DIR[dummy])dnl
   # Searching $1 subproject
-  _acjf_found=no
+  acjf_pkgfound=no
   ACJF_M4_WHILE([m4_if(_ACJF_VAR_DIR, [.], [0], [1])],
    [m4_define([_ACJF_VAR_DIR], ACJF_M4_PATH_DIRNAME(_ACJF_VAR_DIR))dnl
-    if test x"$_acjf_found" = x"no" -a -d $srcdir/_ACJF_VAR_DIR/$1; then
+    if test x"$acjf_pkgfound" = x"no" -a -d $srcdir/_ACJF_VAR_DIR/$1; then
       acjf_pkgdir="_ACJF_VAR_DIR/$1";
-      _acjf_found=yes;
+      acjf_pkgfound=yes;
     fi
   ])dnl
   m4_popdef([_ACJF_VAR_DIR])dnl
   # Last ditch effort try one uplevel directory
-  if test x"$_acjf_found" = x"no" -a -d $srcdir/../$1; then
+  if test x"$acjf_pkgfound" = x"no" -a -d $srcdir/../$1; then
     acjf_pkgdir="../$1";
-    _acjf_found=yes;
+    acjf_pkgfound=yes;
   fi
-  if test x"$_acjf_found" = x"yes"; then
+  if test x"$acjf_pkgfound" = x"yes"; then
     acjf_pkg_srcdir="\$(top_srcdir)/$acjf_pkgdir";
     acjf_pkg_builddir="\$(top_builddir)/$acjf_pkgdir";
     [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]="$acjf_pkg_srcdir";
@@ -157,7 +157,11 @@ AC_DEFUN([ACJF_NEED_PKG],
       AC_SUBST([AM_CPPFLAGS])dnl
       AC_SUBST([AM_LDFLAGS])], [$2])
   else
+    unset acjf_pkgdir;
+    unset acjf_pkg_srcdir;
+    unset acjf_pkg_builddir;
+    unset [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir];
+    unset [pkg_]ACJF_M4_CANON_DC([$1])[_builddir];
     m4_if([$3], [], [false], [$3])
   fi
-  unset _acjf_found
 ])
