@@ -148,7 +148,11 @@ AC_DEFUN([ACJF_NEED_PKG],
     AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_srcdir])dnl
     AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_builddir])dnl
     m4_if([$2], [], [dnl
-      AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/$acjf_pkgdir -I\$(top_builddir)/$acjf_pkgdir/include";
+      if test -d "$srcdir/$acjf_pkgdir/pkginclude"; then
+        AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/$acjf_pkgdir/pkginclude";
+      else
+        AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/$acjf_pkgdir -I\$(top_builddir)/$acjf_pkgdir/include";
+      fi
       AM_LDFLAGS="$AM_LDFLAGS -L\$(top_builddir)/$acjf_pkgdir";
       AC_SUBST([AM_CPPFLAGS])dnl
       AC_SUBST([AM_LDFLAGS])], [$2])
