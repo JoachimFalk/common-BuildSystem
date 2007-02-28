@@ -175,7 +175,6 @@ AC_DEFUN([ACJF_CHECK_PKG],
      [AC_MSG_RESULT([no])
       $3])
   fi
-  echo FOO
   m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_INCLUDE])dnl
   m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_LDFLAGS])dnl
   m4_define([ACJF_VAR_SUBSTVARFIXUP], ACJF_M4_QUOTE(
@@ -185,7 +184,6 @@ AC_DEFUN([ACJF_CHECK_PKG],
       [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir],
       [pkg_]ACJF_M4_CANON_DC([$1])[_builddir]),
     ACJF_VAR_SUBSTVARFIXUP)))dnl
-  echo BAR
 ])
 
 dnl Add packages to the include and lib pathes
