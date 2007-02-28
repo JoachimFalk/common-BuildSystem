@@ -31,16 +31,16 @@ AC_DEFUN([ACJF_M4_FLATEN],
     [[$1]],
     [ACJF_M4_FLATEN($1)])m4_if($#, 1, [],
     [,ACJF_M4_FLATEN(m4_shift($@))])])])dnl
-dnl ACJF_M4_QUOTEDARGS([code with ง instead of $])
+dnl ACJF_M4_QUOTEDARGS([code with ยง instead of $])
 dnl Example:
-dnl   ACJF_M4_QUOTEDARGS([ง1 == "bar"])
+dnl   ACJF_M4_QUOTEDARGS([ยง1 == "bar"])
 dnl Result:
 dnl   $1 == "bar"
 AC_DEFUN([ACJF_M4_QUOTEDARGS],
 [m4_bpatsubst(
     m4_bpatsubst( [[[$1]]],
-      [\([^ง]\)ง\([0123456789#@*]\)], [\1$\2]),
-  [ง\(งง*\)], [\1])])dnl
+      [\([^ยง]\)ยง\([0123456789#@*]\)], [\1$\2]),
+  [ยง\(ยงยง*\)], [\1])])dnl
 dnl ACJF_M4_CODECALL( [<arg1>,<arg2>,...], <code to call>)
 dnl Example:
 dnl   ACJF_M4_CODECALL( [a,b,c], [[$1] && [$2] || [$3]])
@@ -411,7 +411,7 @@ dnl   ACJF_M4_ADDPOSTFIX([a,b,c],[foo])
 dnl Result:
 dnl   afoo,bfoo,cfoo
 AC_DEFUN([ACJF_M4_ADDPOSTFIX], [ACJF_M4_MAP([$1],
-  [[ง1$2]])])dnl
+  [[ยง1$2]])])dnl
 dnl ACJF_M4_UNDERLINECONCAT(<arg1>,<arg2>,...)
 dnl   concat all args to a single long line with __ seperating the former args
 dnl Example:
@@ -419,7 +419,7 @@ dnl   ACJF_M4_UNDERLINECONCAT([a  ,  b],[c])
 dnl Result:
 dnl   a  ,  b__c
 AC_DEFUN([ACJF_M4_UNDERLINECONCAT],
-  [ACJF_M4_JOIN([$@], [ง1], [__])])dnl
+  [ACJF_M4_JOIN([$@], [ยง1], [__])])dnl
 dnl ACJF_M4_UPCASE(<arg1>,<arg2>,<arg3>,...) Upcase its args
 dnl 
 dnl Example:
@@ -432,7 +432,7 @@ dnl   ACJF_M4_QUOTE(ACJF_M4_UPCASE([foo],[bar]))
 dnl Result:
 dnl   [FOO],[BAR]
 AC_DEFUN([ACJF_M4_UPCASE], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
-  [m4_translit([[ง1]], [a-z], [A-Z])]))])dnl
+  [m4_translit([[ยง1]], [a-z], [A-Z])]))])dnl
 dnl ACJF_M4_DOWNCASE(<arg1>,<arg2>,<arg3>,...) Downcase its args
 dnl
 dnl Example:
@@ -445,7 +445,7 @@ dnl   ACJF_M4_QUOTE(ACJF_M4_DOWNCASE([FOO],[BAR]))
 dnl Result:
 dnl   [foo],[bar]
 AC_DEFUN([ACJF_M4_DOWNCASE], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
-  [m4_translit([[ง1]], [A-Z], [a-z])]))])dnl
+  [m4_translit([[ยง1]], [A-Z], [a-z])]))])dnl
 dnl Helper function for ACJF_M4_CAPITALIZE don't call directly
 AC_DEFUN([_ACJF_M4_CAPITALIZE],
   [m4_bregexp([$1], [^\(\w\)\(\w*\)], [ACJF_M4_UPCASE([\1])[]ACJF_M4_DOWNCASE([\2])])])dnl
@@ -461,14 +461,14 @@ dnl   ACJF_M4_QUOTE(ACJF_M4_CAPITALIZE([foo,bar]))
 dnl Result:
 dnl   [Foo,Bar]
 AC_DEFUN([ACJF_M4_CAPITALIZE], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
-  [m4_bpatsubst([[ง1]], [\w+], _ACJF_M4_CLOSESQUAREBRACKET[_ACJF_M4_CAPITALIZE([\&])]_ACJF_M4_OPENSQUAREBRACKET)]))])dnl
+  [m4_bpatsubst([[ยง1]], [\w+], _ACJF_M4_CLOSESQUAREBRACKET[_ACJF_M4_CAPITALIZE([\&])]_ACJF_M4_OPENSQUAREBRACKET)]))])dnl
 dnl ACJF_M4_STRIPSPACE(<arg1>,<arg2>,...) Erase leading and trailing spaces from args
 dnl Example:
 dnl   ACJF_M4_QUOTE(ACJF_M4_STRIPSPACE([    foo    ],[  bar   ]))
 dnl Result:
 dnl   [foo],[bar]
 AC_DEFUN([ACJF_M4_STRIPSPACE], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
-  [m4_bpatsubst(ง1,[^[ 	]*\(.*[^ 	]\)[ 	]*$],[[[\1]]])]))])dnl
+  [m4_bpatsubst(ยง1,[^[ 	]*\(.*[^ 	]\)[ 	]*$],[[[\1]]])]))])dnl
 dnl ACJF_M4_CANON(<arg1>,<arg2>,...)
 dnl   replace non alnum chars with '_'
 dnl   replace spaces between the words with a single '_'.
@@ -477,7 +477,7 @@ dnl   ACJF_M4_CANON([   foo  ,  bar   ], [a])
 dnl Result:
 dnl   _foo___bar_,a
 AC_DEFUN([ACJF_M4_CANON], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
-  [m4_bpatsubst([[ง1]],[\([^][a-zA-Z0-9]\|[ 	]+\)],[_])]))])dnl
+  [m4_bpatsubst([[ยง1]],[\([^][a-zA-Z0-9]\|[ 	]+\)],[_])]))])dnl
 dnl ACJF_M4_CANON_CV(<arg1>,<arg2>,...)
 dnl   erase leading and trailing spaces from args.
 dnl   replace non alnum chars with '_'.

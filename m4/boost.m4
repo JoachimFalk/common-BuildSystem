@@ -78,10 +78,10 @@ ACJF_M4_FOREACH( [[-gcc],[]], [dnl
       [boost],
       [#include <boost/regex.hpp>],
       [boost::regex_constants::match_flag_type x;],
-      [boost_regex]ง1,
+      [boost_regex]ยง1,
       [$acjf_list],
       [acjf_found=yes;
-       BOOST_LIBPOSTFIX="ง1";],
+       BOOST_LIBPOSTFIX="ยง1";],
       [false;])
   fi
 ])

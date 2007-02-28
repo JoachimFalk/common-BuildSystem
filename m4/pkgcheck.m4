@@ -17,15 +17,16 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 dnl ACJF_CHECK_HEADER(
-dnl   <name of header check>,
+dnl   <name of header check (pkgname)>,
 dnl   <actual include directives>,
 dnl   <code in main routine for compilation check>,
 dnl   <header search list>,
-dnl   <code if found>,
-dnl   <code if not found>)
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+dnl IF header found defines: PKGNAME_INCLUDE
 AC_DEFUN([ACJF_CHECK_HEADER],
 [dnl
-ACJF_M4_CANON_DN([$1])_INCLUDE=""
+ACJF_M4_CANON_DN([$1])[_INCLUDE]=""
 acjf_STDINC="standard include search path"
 AC_MSG_CHECKING([for $1 headers])
 AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$1])_INCPATH,
@@ -40,42 +41,44 @@ AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$1])_INCPATH,
     AC_TRY_COMPILE(
       [$2],
       [$3],
-      [dnl AC_MSG_RESULT([yes])
-       acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH="$acjf_include";
-       break],
-      [dnl AC_MSG_RESULT([no])
-       acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH="x"])
+      [acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH="$acjf_include"; break],
+      [acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH="x"])
   done
   CPPFLAGS="$acjf_CPPFLAGS";
+  unset acjf_CPPFLAGS
 ])
 if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH]" != x"x"; then
   AC_MSG_RESULT([$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH])
   if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH]" != x"$acjf_STDINC"; then
-    ACJF_M4_CANON_DN([$1])_INCLUDE="[-I$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH]"
+    ACJF_M4_CANON_DN([$1])[_INCLUDE]="[-I$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH]"
   fi
+  unset acjf_STDINC
   m4_if([$5], [],
    [true],
    [$5])
 else
+  unset acjf_STDINC
   m4_if([$6], [],
    [AC_MSG_ERROR([cannot find $1 headers, bailing out])],
    [AC_MSG_RESULT([no])
     $6])
 fi
-AC_SUBST(ACJF_M4_CANON_DN([$1])_INCLUDE)
+m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_INCLUDE])dnl
+AC_SUBST(ACJF_M4_CANON_DN([$1])[_INCLUDE])dnl
 ])
 
 dnl ACJF_CHECK_LIBONLY(
-dnl   <name of lib check>,
+dnl   <name of lib check (pkgname)>,
 dnl   <actual include directives>,
 dnl   <code in main routine for link check>,
 dnl   <lib name>,
 dnl   <lib search list>,
-dnl   <code if found>,
-dnl   <code if not found>)
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+dnl IF lib found defines: PKGNAME_LDFLAGS
 AC_DEFUN([ACJF_CHECK_LIBONLY],
 [dnl
-ACJF_M4_CANON_DN([$1])_LDFLAGS=""
+ACJF_M4_CANON_DN([$1])[_LDFLAGS]=""
 dnl acjf_CPPFLAGS="$CPPFLAGS";
 acjf_STDLIB="standard library search path"
 AC_MSG_CHECKING([for $1 library])
@@ -93,75 +96,111 @@ AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$4])_LIBPATH,
     AC_TRY_LINK(
       [$2],
       [$3],
-      [dnl AC_MSG_RESULT([yes])
-       acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH="$acjf_ldflags";
-       break],
-      [dnl AC_MSG_RESULT([no])
-       acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH="x"])
+      [acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH="$acjf_ldflags"; break],
+      [acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH="x"])
   done
   dnl CPPFLAGS="$acjf_CPPFLAGS"; 
   LDFLAGS="$acjf_LDFLAGS"; LIBS="$acjf_LIBS";
+  unset acjf_LDFLAGS
+  unset acjf_LIBS
 ])
 if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH]" != x"x"; then
   AC_MSG_RESULT([$acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH])
   if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH]" != x"$acjf_STDLIB"; then
-    ACJF_M4_CANON_DN([$1])_LDFLAGS="[-L$acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH]"
+    ACJF_M4_CANON_DN([$1])[_LDFLAGS]="[-L$acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH]"
   fi
+  unset acjf_STDLIB
   m4_if([$6], [],
    [true],
    [$6])
 else
+  unset acjf_STDLIB
   m4_if([$7], [],
    [AC_MSG_ERROR([cannot find $1 library, bailing out])],
    [AC_MSG_RESULT([no])
     $7])
 fi
-AC_SUBST(ACJF_M4_CANON_DN([$1])[_LDFLAGS])
+m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_LDFLAGS])dnl
+AC_SUBST(ACJF_M4_CANON_DN([$1])[_LDFLAGS])dnl
 ])
 
 dnl Add packages to the include and lib pathes
-dnl ACJF_NEED_PKG(<packet>,
-dnl		  [<action if yes>],
-dnl		  [<action if no> ])
-AC_DEFUN([ACJF_NEED_PKG],
- [m4_pushdef([_ACJF_VAR_DIR],ACJF_VAR_SUBPROJECT_DIR[dummy])dnl
-  # Searching $1 subproject
-  acjf_pkgfound=no
-  ACJF_M4_WHILE([m4_if(_ACJF_VAR_DIR, [.], [0], [1])],
-   [m4_define([_ACJF_VAR_DIR], ACJF_M4_PATH_DIRNAME(_ACJF_VAR_DIR))dnl
-    if test x"$acjf_pkgfound" = x"no" -a -d $srcdir/_ACJF_VAR_DIR/$1; then
-      acjf_pkgdir="_ACJF_VAR_DIR/$1";
-      acjf_pkgfound=yes;
-    fi
-  ])dnl
-  m4_popdef([_ACJF_VAR_DIR])dnl
-  # Last ditch effort try one uplevel directory
-  if test x"$acjf_pkgfound" = x"no" -a -d $srcdir/../$1; then
-    acjf_pkgdir="../$1";
-    acjf_pkgfound=yes;
-  fi
-  if test x"$acjf_pkgfound" = x"yes"; then
-    acjf_pkg_srcdir="\$(top_srcdir)/$acjf_pkgdir";
-    acjf_pkg_builddir="\$(top_builddir)/$acjf_pkgdir";
-    [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]="$acjf_pkg_srcdir";
-    [pkg_]ACJF_M4_CANON_DC([$1])[_builddir]="$acjf_pkg_builddir";
-    AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_srcdir])dnl
-    AC_SUBST([pkg_]ACJF_M4_CANON_DC([$1])[_builddir])dnl
-    m4_if([$2], [], [dnl
-      if test -d "$srcdir/$acjf_pkgdir/pkginclude"; then
-        AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/$acjf_pkgdir/pkginclude";
-      else
-        AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/$acjf_pkgdir -I\$(top_builddir)/$acjf_pkgdir/include";
+dnl ACJF_CHECK_PKG(
+dnl   <packet>,
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+dnl IF pkg found define:
+dnl   PKGNAME_INCLUDE
+dnl   PKGNAME_LDFLAGS
+dnl   pkg_pkgname_srcdir
+dnl   pkg_pkgname_builddir
+AC_DEFUN([ACJF_CHECK_PKG],
+ [AC_REQUIRE([ACJF_INIT])dnl
+  AC_MSG_CHECKING([for $1 package in source tree])
+  AC_CACHE_VAL([acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1]),
+   [# Searching $1 subproject
+    m4_pushdef([_ACJF_VAR_DIR],ACJF_VAR_SUBPROJECT_DIR[dummy])dnl
+    ACJF_M4_WHILE([m4_if(_ACJF_VAR_DIR, [.], [0], [1])],
+     [m4_define([_ACJF_VAR_DIR], ACJF_M4_PATH_DIRNAME(_ACJF_VAR_DIR))dnl
+      if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" = x"" -a -d $srcdir/_ACJF_VAR_DIR/$1; then
+        [acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])="_ACJF_VAR_DIR/$1";
       fi
-      AM_LDFLAGS="$AM_LDFLAGS -L\$(top_builddir)/$acjf_pkgdir";
-      AC_SUBST([AM_CPPFLAGS])dnl
-      AC_SUBST([AM_LDFLAGS])], [$2])
+    ])dnl
+    m4_popdef([_ACJF_VAR_DIR])dnl
+    # Last ditch effort try one uplevel directory
+    if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" = x"" -a -d $srcdir/../$1; then
+      [acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])="../$1";
+    fi
+  ])
+  if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" != x""; then
+    AC_MSG_RESULT([[$acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])])
+    [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]="$acjf_top_srcdir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])";
+    [pkg_]ACJF_M4_CANON_DC([$1])[_builddir]="$acjf_top_builddir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])";
+    if test -d "$srcdir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])/pkginclude"; then
+      ACJF_M4_CANON_DN([$1])[_INCLUDE]="-I$[pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]/pkginclude"
+    else
+      ACJF_M4_CANON_DN([$1])[_INCLUDE]="-I$[pkg_]ACJF_M4_CANON_DC([$1])[_builddir]/include -I$[pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]"
+    fi
+    ACJF_M4_CANON_DN([$1])[_LDFLAGS]="-L$[pkg_]ACJF_M4_CANON_DC([$1])[_builddir]"
+    m4_if([$2], [], 
+     [true;],
+     [$2])
   else
-    unset acjf_pkgdir;
-    unset acjf_pkg_srcdir;
-    unset acjf_pkg_builddir;
     unset [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir];
     unset [pkg_]ACJF_M4_CANON_DC([$1])[_builddir];
-    m4_if([$3], [], [false], [$3])
+    unset ACJF_M4_CANON_DN([$1])[_INCLUDE];
+    unset ACJF_M4_CANON_DN([$1])[_LDFLAGS];
+    m4_if([$3], [],
+     [AC_MSG_ERROR([cannot find $1 package in source tree, bailing out])],
+     [AC_MSG_RESULT([no])
+      $3])
   fi
+  echo FOO
+  m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_INCLUDE])dnl
+  m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_LDFLAGS])dnl
+  m4_define([ACJF_VAR_SUBSTVARFIXUP], ACJF_M4_QUOTE(
+    ACJF_M4_LIST_PUSH_BACK(ACJF_M4_ARGSTOLIST(
+      ACJF_M4_CANON_DN([$1])[_INCLUDE],
+      ACJF_M4_CANON_DN([$1])[_LDFLAGS],
+      [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir],
+      [pkg_]ACJF_M4_CANON_DC([$1])[_builddir]),
+    ACJF_VAR_SUBSTVARFIXUP)))dnl
+  echo BAR
+])
+
+dnl Add packages to the include and lib pathes
+dnl ACJF_NEED_PKG(<packet>)
+dnl Take the same actions as ACJF_CHECK_PKG but also adds
+dnl PKGNAME_INCLUDE to AM_CPPFLAGS and
+dnl PGKNAME_LDFLAGS to AM_LDFLAGS
+AC_DEFUN([ACJF_NEED_PKG],
+ [m4_if([$2$3], [], [], [m4_errprint(
+[Action if yes and action if no arguments for ACJF_NEED_PKG are obsolete,
+please use ACJF_CHECK_PKG!
+])m4_exit([-1])])dnl
+  ACJF_CHECK_PKG([$1],
+  [AM_CPPFLAGS="$AM_CPPFLAGS $[]ACJF_M4_CANON_DN([$1])[_INCLUDE]"
+   AM_LDFLAGS="$AM_LDFLAGS $[]ACJF_M4_CANON_DN([$1])[_LDFLAGS]"
+   AC_SUBST([AM_CPPFLAGS])
+   AC_SUBST([AM_LDFLAGS])])dnl
 ])

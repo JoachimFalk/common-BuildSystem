@@ -19,18 +19,24 @@ dnl Boston, MA 02111-1307, USA.
 dnl ACJF_INIT
 AC_DEFUN([ACJF_INIT],[
 m4_define([ACJF_VAR_SUBPROJECT_DIR], [])dnl
+m4_define([ACJF_VAR_SUBSTVARFIXUP], [[AM_LDFLAGS,AM_CPPFLAGS]])dnl
+acjf_top_builddir=`pwd`
+acjf_top_srcdir=`cd "$srcdir" && pwd`
 AH_TOP(
 [/* vim: set sw=2 ts=8 syn=c: */
 
 #ifndef _INCLUDED_CONFIG_H
 #define _INCLUDED_CONFIG_H
 ])dnl
-AC_SUBST([AM_LDFLAGS], [])dnl
-AC_SUBST([AM_CPPFLAGS], [])dnl
 ])
 
 dnl ACJF_DONE
-AC_DEFUN([ACJF_DONE],[
+AC_DEFUN([ACJF_DONE],[AC_REQUIRE([ACJF_INIT])dnl
+ACJF_M4_FOREACH(ACJF_VAR_SUBSTVARFIXUP,
+ [[§1]=`echo "$[§1]" | sed dnl
+    -e "s@\(-I\|-L\|\<\)$acjf_top_srcdir\(/\|\>\)@\1\\$(top_srcdir)\2@g" dnl
+    -e "s@\(-I\|-L\|\<\)$acjf_top_builddir\(/\|\>\)@\1\\$(top_builddir)\2@g"`
+  AC_SUBST([§1])])dnl
 case $ac_aux_dir in
   $srcdir/*)
     auxdir='$(top_srcdir)/'`echo $ac_aux_dir | sed -e "s|^$srcdir/||"`
@@ -39,7 +45,7 @@ case $ac_aux_dir in
     auxdir='$(top_builddir)/'"$ac_aux_dir";
     ;;
 esac
-AC_SUBST([auxdir])
+AC_SUBST([auxdir])dnl
 AH_BOTTOM(
 [#endif /* _INCLUDED_CONFIG_H */
 ])])
