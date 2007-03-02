@@ -44,7 +44,7 @@ for header_file in "$@"; do
       cat <<EOF > ${header_prefix}$line.$SRCEXT
 #define _COMPILEHEADER_
 #define _COMPILEHEADER_$line
-#include "$header"
+#include "$header_file"
 EOF
       SRCS="$SRCS ${header_prefix}$line.$SRCEXT"
       OBJS="$OBJS ${header_prefix}$line.o"
