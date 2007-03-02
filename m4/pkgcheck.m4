@@ -157,7 +157,7 @@ AC_DEFUN([ACJF_CHECK_PKG],
     [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]="$acjf_top_srcdir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])";
     [pkg_]ACJF_M4_CANON_DC([$1])[_builddir]="$acjf_top_builddir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])";
     if test -d "$srcdir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])/pkginclude"; then
-      ACJF_M4_CANON_DN([$1])[_INCLUDE]="-I$[pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]/pkginclude"
+      ACJF_M4_CANON_DN([$1])[_INCLUDE]="-I$[pkg_]ACJF_M4_CANON_DC([$1])[_builddir]/pkginclude -I$[pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]/pkginclude"
     else
       ACJF_M4_CANON_DN([$1])[_INCLUDE]="-I$[pkg_]ACJF_M4_CANON_DC([$1])[_builddir]/include -I$[pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]"
     fi
