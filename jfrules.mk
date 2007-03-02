@@ -16,6 +16,7 @@
 # the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+ifdef pkgincludeprefix
 pkgincludebacktrack=$(shell echo "$(pkgincludeprefix)" | sed -e 's@[^/][^/]*\(/\|$$\)@../@g')
 pkgincludedir=$(includedir)/$(pkgincludeprefix)
 
@@ -26,12 +27,13 @@ include: Makefile $(pkginclude_HEADERS)
 	  ln -sf `case $$i in /*) echo $$i; ;; *) echo '../$(pkgincludebacktrack)/'"$$i"; ;; esac` include/$(pkgincludeprefix); \
 	done
 
-compileheader.mk: $(HEADERS)
-	@if test -n "$?"; then						\
-		$(auxdir)/mkcompileheaderobj.sh $?;			\
-	fi
+clean-am: clean-pkginclude
 
-clean-am: clean-pkginclude  clean-re2c-scripts
+clean-pkginclude:
+	rm -rf include
+endif
+
+clean-am: clean-re2c-scripts
 
 clean-re2c-scripts:
 	@find $(srcdir) -maxdepth 1 -name "*.re2c*" -o -name "*-sh" |	\
@@ -43,10 +45,12 @@ clean-re2c-scripts:
 	    esac;							\
 	  done
 
-clean-pkginclude:
-	rm -rf include
-
 -include compileheader.mk
+
+compileheader.mk: $(HEADERS)
+	@if test -n "$?"; then						\
+		$(auxdir)/mkcompileheaderobj.sh $?;			\
+	fi
 
 %.sh: %-sh
 	{ [ -d $(dir $@) ] || mkdir -p $(dir $@); } && \
