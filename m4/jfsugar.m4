@@ -233,7 +233,7 @@ AC_DEFUN([ACJF_M4_LIST_POP_BACK],
 [ACJF_M4_LIST_REVERSE(ACJF_M4_LIST_POP_FRONT(ACJF_M4_LIST_REVERSE([$1])))])dnl
 dnl ACJF_M4_LIST_PUSH_BACK( [<new_item>], [<item1>,<item2>,...] )
 dnl Example:
-dnl   ACJF_M4_LIST_PUSH_BACK([a],[b,c,d,e,f])
+dnl   ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_BACK([a],[b,c,d,e,f]))
 dnl Result:
 dnl   [b,c,d,e,f,a]
 dnl
@@ -263,7 +263,7 @@ AC_DEFUN([ACJF_M4_LIST_PUSH_BACK],
 ])dnl
 dnl ACJF_M4_LIST_TOP( [<item1>,<item2>,...], <how many>)
 dnl Example:
-dnl   ACJF_M4_LIST_TOP([a,b,c,d,ef,g,h],3)
+dnl   ACJF_M4_QUOTE(ACJF_M4_LIST_TOP([a,b,c,d,ef,g,h],3))
 dnl Result:
 dnl   [a,b,c]
 dnl
@@ -349,7 +349,7 @@ dnl ACJF_M4_FOREACH( [<item1>,<item2>,...], <code to iterate>)
 dnl Example:
 dnl   ACJF_M4_FOREACH( [a,b,c,d,ef,g,h],
 dnl     [Loop is now "[$1]".
-dnl   ])
+dnl   ])dnl
 dnl Result:
 dnl   Loop is now "a".
 dnl   Loop is now "b".
@@ -362,7 +362,7 @@ dnl
 dnl Example:
 dnl   ACJF_M4_FOREACH([a,[b,[c,d]],[e],[f],g,h],
 dnl     [Loop is now "[$1]".
-dnl   ])
+dnl   ])dnl
 dnl Result:
 dnl   Loop is now "a".
 dnl   Loop is now "[b,[c,d]]".
@@ -380,7 +380,7 @@ dnl ACJF_M4_JOIN( [<item1>,<item2>,...], <code to iterate>, <join with> )
 dnl Example:
 dnl   ACJF_M4_JOIN( [a,b,c], [yes [$1] ], [ z ])
 dnl Result:
-dnl   unquoted_yes a  z unquoted_yes b  z unquoted_yes c
+dnl   unquoted_yes a  z unquoted_yes b  z unquoted_yes c 
 AC_DEFUN([ACJF_M4_JOIN],
 [m4_if([$1], [],
   [],
