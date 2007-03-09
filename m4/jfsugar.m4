@@ -545,6 +545,11 @@ dnl Result:
 dnl   [x]
 dnl
 dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_PATH_BASENAME([\x\.\]))
+dnl Result:
+dnl   [.]
+dnl
+dnl Example:
 dnl   ACJF_M4_QUOTE(ACJF_M4_PATH_BASENAME([\\\]))
 dnl Result:
 dnl   [\]
