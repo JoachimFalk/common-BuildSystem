@@ -345,6 +345,8 @@ AC_DEFUN([ACJF_M4_WHILE],
   [$2[]ACJF_M4_WHILE([$1],[$2])],
   [])[]dnl
 ])dnl
+dnl OBSOLETE FOREACH USAGE: 
+dnl
 dnl ACJF_M4_FOREACH( [<item1>,<item2>,...], <code to iterate>)
 dnl Example:
 dnl   ACJF_M4_FOREACH( [a,b,c,d,ef,g,h],
@@ -370,11 +372,41 @@ dnl   Loop is now "[e]".
 dnl   Loop is now "[f]".
 dnl   Loop is now "g".
 dnl   Loop is now "h".
-AC_DEFUN([ACJF_M4_FOREACH],
+dnl
+dnl NEW FOREACH USAGE: 
+dnl
+dnl ACJF_M4_FOREACH( [var], [<item1>,<item2>,...], <code to iterate>)
+dnl Example:
+dnl   ACJF_M4_FOREACH([ii], [a,b,c],
+dnl    [ACJF_M4_FOREACH([jj], [d,e,f],
+dnl      [Loop is now "ii:jj".]
+dnl     )])dnl
+dnl Result:
+dnl   Loop is now "a:d".
+dnl   Loop is now "a:e".
+dnl   Loop is now "a:f".
+dnl   Loop is now "b:d".
+dnl   Loop is now "b:e".
+dnl   Loop is now "b:f".
+dnl   Loop is now "c:d".
+dnl   Loop is now "c:e".
+dnl   Loop is now "c:f".
+AC_DEFUN([_ACJF_M4_FOREACH_OBSOLETE],
 [m4_if([$1], [],
   [],
   [ACJF_M4_CODECALL(ACJF_M4_LIST_HEAD([$1]), [$2])[]dnl
-ACJF_M4_FOREACH(ACJF_M4_LIST_TAIL([$1]), [$2])])[]dnl
+_ACJF_M4_FOREACH_OBSOLETE(ACJF_M4_LIST_TAIL([$1]), [$2])])[]dnl
+])dnl
+AC_DEFUN([_ACJF_M4_FOREACH_HELPER],
+[m4_if([$2], [],
+  [],
+  [m4_define([$1], ACJF_M4_QUOTE(ACJF_M4_LIST_HEAD([$2])))[]$3[]dnl
+_ACJF_M4_FOREACH_HELPER([$1], ACJF_M4_LIST_TAIL([$2]), [$3])])[]dnl
+])dnl
+AC_DEFUN([ACJF_M4_FOREACH],
+[m4_if([$#], [2],
+ [_ACJF_M4_FOREACH_OBSOLETE([$1], [$2])],
+ [m4_pushdef([$1])_ACJF_M4_FOREACH_HELPER([$1], [$2], [$3])m4_popdef([$1])])dnl
 ])dnl
 dnl ACJF_M4_JOIN( [<item1>,<item2>,...], <code to iterate>, <join with> )
 dnl Example:

@@ -72,16 +72,16 @@ fi
 
 acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $BOOST_INCLUDE";
 acjf_found=no
-ACJF_M4_FOREACH( [[-gcc],[]], [dnl
+ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [-gcc,], [dnl
   if test $acjf_found = no; then
     ACJF_CHECK_LIBONLY(
       [boost],
       [#include <boost/regex.hpp>],
       [boost::regex_constants::match_flag_type x;],
-      [boost_regex]§1,
+      [boost_regex]ACJF_VAR_BOOSTPOSTFIX,
       [$acjf_list],
       [acjf_found=yes;
-       BOOST_LIBPOSTFIX="§1";],
+       BOOST_LIBPOSTFIX="ACJF_VAR_BOOSTPOSTFIX";],
       [false;])
   fi
 ])
