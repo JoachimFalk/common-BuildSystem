@@ -137,8 +137,9 @@ dnl   pkg_pkgname_builddir
 AC_DEFUN([ACJF_CHECK_PKG],
  [AC_REQUIRE([ACJF_INIT])dnl
   AC_MSG_CHECKING([for $1 package in source tree])
-  AC_CACHE_VAL([acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1]),
-   [# Searching $1 subproject
+  [acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])="";
+dnl AC_CACHE_VAL([acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1]),
+dnl [# Searching $1 subproject
     m4_pushdef([_ACJF_VAR_DIR],ACJF_VAR_SUBPROJECT_DIR[dummy])dnl
     ACJF_M4_WHILE([m4_if(_ACJF_VAR_DIR, [.], [0], [1])],
      [m4_define([_ACJF_VAR_DIR], ACJF_M4_PATH_DIRNAME(_ACJF_VAR_DIR))dnl
@@ -151,7 +152,7 @@ AC_DEFUN([ACJF_CHECK_PKG],
     if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" = x"" -a -d $srcdir/../$1; then
       [acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])="../$1";
     fi
-  ])
+dnl  ])
   if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" != x""; then
     AC_MSG_RESULT([[$acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])])
     [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]="$acjf_top_srcdir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])";
