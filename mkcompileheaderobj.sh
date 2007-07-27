@@ -30,7 +30,7 @@ for header_file in "$@"; do
     *.h)
       SRCEXT="c"
       ;;
-    *.hpp)
+    *.hh|*.hpp|*.hxx|*.tcc|*.tcpp|*.tcxx)
       SRCEXT="cpp"
       ;;
     *)
