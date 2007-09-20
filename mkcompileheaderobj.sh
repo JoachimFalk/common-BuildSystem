@@ -24,7 +24,7 @@ fi
 
 for header_file in "$@"; do
   header=`basename $header_file`
-  header_prefix=`echo "${header}_CH_" | tr '.' '_'`
+  header_prefix=`echo "${header}_CH" | tr '.' '_'`
   rm -f ${header_prefix}*
   case $header in
     *.h)
@@ -41,21 +41,21 @@ for header_file in "$@"; do
   sed -e "s/^ *#.*  *_COMPILEHEADER_\(.\+\)$/\1/;t;d" $header_file | {\
     SRCS=""; OBJS=""; LTOBJS=""; DEPS=""
     while read line; do
-      cat <<EOF > ${header_prefix}$line.$SRCEXT
+      cat <<EOF > ${header_prefix}_${line}.${SRCEXT}
 #define _COMPILEHEADER_
 #define _COMPILEHEADER_$line
 #include "$header_file"
 EOF
-      SRCS="$SRCS ${header_prefix}$line.$SRCEXT"
-      OBJS="$OBJS ${header_prefix}$line.o"
-      LTOBJS="$LTOBJS ${header_prefix}$line.lo"
-      DEPS="$DEPS .deps/${header_prefix}$line.P"
+      SRCS="$SRCS ${header_prefix}_${line}.${SRCEXT}"
+      OBJS="$OBJS ${header_prefix}_${line}.o"
+      LTOBJS="$LTOBJS ${header_prefix}_${line}.lo"
+      DEPS="$DEPS .deps/${header_prefix}_${line}.Plo"
     done
     if [ "x$DEPS" != "x" ]; then
       cat <<EOF > ${header_prefix}.mk
-${header_prefix}SRCS=$SRCS
-${header_prefix}OBJS=$OBJS
-${header_prefix}LTOBJS=$LTOBJS
+${header_prefix}_SRCS=$SRCS
+${header_prefix}_OBJS=$OBJS
+${header_prefix}_LTOBJS=$LTOBJS
 
 -include $DEPS
 EOF
@@ -68,20 +68,29 @@ done
 .PHONY: clean-compileheader
 
 clean-am: clean-compileheader
+EOF
+  SRCS=""; OBJS=""; LTOBJS=""; MKFRAGS=""
+  for header_file in "$@"; do
+    header=`basename $header_file`
+    header_prefix=`echo "${header}_CH" | tr '.' '_'`
+    if test -f "${header_prefix}.mk"; then
+      cat <<EOF
+include ${header_prefix}.mk
+EOF
+      SRCS="$SRCS \$(${header_prefix}_SRCS)"
+      OBJS="$OBJS \$(${header_prefix}_OBJS)"
+      LTOBJS="$LTOBJS \$(${header_prefix}_LTOBJS)"
+      MKFRAGS="$MKFRAGS ${header_prefix}.mk"
+    fi
+  done
+cat <<EOF
+CH_SRCS=$SRCS
+CH_OBJS=$OBJS
+CH_LTOBJS=$LTOBJS
+CH_MKFRAGS=$MKFRAGS
 
 clean-compileheader:
 	@\$(RM) compileheader.mk compileheader*.stamp
-
+	@\$(RM) \$(CH_SRCS) \$(CH_OBJS) \$(CH_LTOBJS) \$(CH_MKFRAGS)
 EOF
-  for i in *_CH_.mk; do
-    if [ -f $i ]; then
-      cat <<EOF
-include $i
-clean-compileheader: clean-compileheader-${i%%.mk}
-clean-compileheader-${i%%.mk}:
-	@\$(RM) $i \$(${i%%.mk}OBJS) \$(${i%%.mk}LTOBJS) \$(${i%%.mk}SRCS)
-
-EOF
-    fi
-  done
 } > compileheader.mk
