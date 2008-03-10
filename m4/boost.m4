@@ -71,8 +71,9 @@ if test x"$BOOST_BASE" != x; then
 fi
 
 acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $BOOST_INCLUDE";
+
 acjf_found=no
-ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [[-gcc],[]], [dnl
+ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [[-gcc41],[-gcc],[]], [dnl
   if test $acjf_found = no; then
     ACJF_CHECK_LIBONLY(
       [boost],
@@ -85,13 +86,35 @@ ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [[-gcc],[]], [dnl
       [false;])
   fi
 ])
-CPPFLAGS="$acjf_CPPFLAGS"
-
 if test $acjf_found = no; then
   AC_MSG_ERROR([cannot find Boost library, bailing out])
 fi
 
+acjf_found=no
+ACJF_M4_FOREACH([ACJF_VAR_BOOSTMTPOSTFIX], [[$BOOST_LIBPOSTFIX],[-gcc41-mt],[-gcc-mt],[-mt]], [dnl
+  if test $acjf_found = no; then
+    ACJF_CHECK_LIBONLY(
+      [boost multithreaded version],
+      [#include <boost/thread.hpp>
+
+       void dummy() { return; }],
+      [boost::thread th(dummy);
+       th.join();],
+      [boost_thread]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX),
+      [$acjf_list],
+      [acjf_found=yes;
+       BOOST_LIBMTPOSTFIX="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX)";],
+      [false;])
+  fi
+])
+if test $acjf_found = no; then
+  AC_MSG_ERROR([cannot find multithreaded version of Boost library, bailing out])
+fi
+
+CPPFLAGS="$acjf_CPPFLAGS"
+
 AC_SUBST([BOOST_LIBPOSTFIX])
+AC_SUBST([BOOST_LIBMTPOSTFIX])
 
 AC_LANG_POP
 ])
