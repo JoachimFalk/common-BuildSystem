@@ -124,7 +124,6 @@ m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_LDFLAGS])dnl
 AC_SUBST(ACJF_M4_CANON_DN([$1])[_LDFLAGS])dnl
 ])
 
-dnl Add packages to the include and lib pathes
 dnl ACJF_CHECK_PKG(
 dnl   <packet>,
 dnl  [<code if found, default does nothing>,
@@ -187,7 +186,6 @@ dnl  ])
     ACJF_VAR_SUBSTVARFIXUP)))dnl
 ])
 
-dnl Add packages to the include and lib pathes
 dnl ACJF_NEED_PKG(<packet>)
 dnl Take the same actions as ACJF_CHECK_PKG but also adds
 dnl PKGNAME_INCLUDE to AM_CPPFLAGS and
