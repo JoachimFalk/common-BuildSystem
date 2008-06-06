@@ -127,7 +127,7 @@ AC_SUBST(ACJF_M4_CANON_DN([$1])[_LDFLAGS])dnl
 dnl ACJF_CHECK_PKG(
 dnl   <packet>,
 dnl  [<code if found, default does nothing>,
-dnl  [<code if not found, default is bailout>]])
+dnl  [<code if not found, default is bailout>])
 dnl IF pkg found define:
 dnl   PKGNAME_INCLUDE
 dnl   PKGNAME_LDFLAGS
@@ -152,6 +152,8 @@ dnl [# Searching $1 subproject
       [acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])="../$1";
     fi
 dnl  ])
+  AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN([$1])[_IN_SRCDIR],
+    test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" != x"")
   if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" != x""; then
     AC_MSG_RESULT([[$acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])])
     [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]="$acjf_top_srcdir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])";
@@ -200,4 +202,108 @@ please use ACJF_CHECK_PKG!
    AM_LDFLAGS="$AM_LDFLAGS $[]ACJF_M4_CANON_DN([$1])[_LDFLAGS]"
    AC_SUBST([AM_CPPFLAGS])
    AC_SUBST([AM_LDFLAGS])])dnl
+])
+
+dnl ACJF_CHECK_LIB(
+dnl   <name of lib check (pkgname)>,
+dnl   <possible location in source tree>,
+dnl   <actual include directives>,
+dnl   <code in main routine for link check>,
+dnl   <lib name>,
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+dnl IF lib found defines: PKGNAME_INCLUDE, PKGNAME_LDFLAGS
+AC_DEFUN([ACJF_CHECK_LIB],
+[dnl
+[WITH_]ACJF_M4_CANON_DN([$1])[_INCLUDE]=""
+[WITH_]ACJF_M4_CANON_DN([$1])[_LIB]=""
+[WITH_]ACJF_M4_CANON_DN([$1])[_BASE]=""
+
+AC_ARG_WITH(ACJF_M4_DOWNCASE([$1]),
+  [  --with-]ACJF_M4_DOWNCASE([$1])[         Installation directory of $1],
+  [WITH_]ACJF_M4_CANON_DN([$1])[_BASE="$withval"])
+
+AC_ARG_WITH(ACJF_M4_DOWNCASE([$1])[-include],
+  [  --with-]ACJF_M4_DOWNCASE([$1])[-include Path to $1 include directory],
+  [WITH_]ACJF_M4_CANON_DN([$1])[_INCLUDE="$withval"])
+
+AC_ARG_WITH(ACJF_M4_DOWNCASE([$1])[-lib],
+  [  --with-]ACJF_M4_DOWNCASE([$1])[-lib     Path to $1 lib directory],
+  [WITH_]ACJF_M4_CANON_DN([$1])[_LIB="$withval"])
+
+if test x"$[WITH_]ACJF_M4_CANON_DN([$1])[_BASE]" = "x"; then
+  if echo "$[WITH_]ACJF_M4_CANON_DN([$1])[_INCLUDE]" | grep "[[/\\]]include[[/\\]]*$" 1>/dev/null; then
+    [WITH_]ACJF_M4_CANON_DN([$1])[_BASE]=`dirname "$[WITH_]ACJF_M4_CANON_DN([$1])[_INCLUDE]"`;
+    unset [WITH_]ACJF_M4_CANON_DN([$1])[_INCLUDE]
+  elif echo "$[WITH_]ACJF_M4_CANON_DN([$1])[_LIB]" | grep "[[/\\]]lib[[/\\]]*$" 1>/dev/null; then
+    [WITH_]ACJF_M4_CANON_DN([$1])[_BASE]=`dirname "$[WITH_]ACJF_M4_CANON_DN([$1])[_LIB]"`;
+    unset [WITH_]ACJF_M4_CANON_DN([$1])[_LIB]
+  fi
+fi
+
+m4_if([$2], [], [], [acjf_use_intern=""])
+acjf_list_includedir=""
+acjf_list_libdir=""
+if test x"[$]ACJF_M4_CANON_DN([$1])[_BASE]" != x; then
+  m4_if([$2], [], [], [dnl
+  if test x"[$]ACJF_M4_CANON_DN([$1])[_BASE]" != x"intern"; then
+    acjf_use_intern="no";])
+    acjf_list_includedir="[$]ACJF_M4_CANON_DN([$1])[_BASE]/include $acjf_list_includedir";
+    acjf_list_libdir="[$]ACJF_M4_CANON_DN([$1])[_BASE]/lib $acjf_list_libdir";
+  m4_if([$2], [], [], [dnl
+  else
+    acjf_use_intern="yes";
+  fi])
+fi
+if test x"$[WITH_]ACJF_M4_CANON_DN([$1])[_BASE]" != x; then
+  m4_if([$2], [], [], [dnl
+  if test x"$[WITH_]ACJF_M4_CANON_DN([$1])[_BASE]" != x"intern"; then
+    acjf_use_intern="no";])
+    acjf_list_includedir="$[WITH_]ACJF_M4_CANON_DN([$1])[_BASE]/include $acjf_list_includedir";
+    acjf_list_libdir="$[WITH_]ACJF_M4_CANON_DN([$1])[_BASE]/lib $acjf_list_libdir";
+  m4_if([$2], [], [], [dnl
+  else
+    acjf_use_intern="yes";
+  fi])
+fi
+if test x"$[WITH_]ACJF_M4_CANON_DN([$1])[_INCLUDE]" != x; then
+  m4_if([$2], [], [], [acjf_use_intern="no"])
+  acjf_list_includedir="$[WITH_]ACJF_M4_CANON_DN([$1])[_INCLUDE] $acjf_list_includedir";
+fi
+if test x"$[WITH_]ACJF_M4_CANON_DN([$1])[_LIB]" != x; then
+  m4_if([$2], [], [], [acjf_use_intern="no"])
+  acjf_list_libdir="$[WITH_]ACJF_M4_CANON_DN([$1])[_LIB] $acjf_list_libdir";
+fi
+
+acjf_found_pkg=""
+m4_if([$2], [], [], [dnl
+if test x"$acjf_use_intern" != x"no"; then
+  ACJF_CHECK_PKG([$1],
+    [acjf_found_pkg="yes"],
+    [acjf_found_pkg=""])
+else
+  AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN([$1])[_IN_SRCDIR], false)
+fi
+if test x"$acjf_use_intern" != x"yes" -a x"$acjf_found_pkg" != x"yes"; then
+])
+  ACJF_CHECK_HEADER([$1], [$3], [$4], [$acjf_list_includedir],
+    [acjf_found_pkg=""],
+    [acjf_found_pkg="no"])
+  if test x"$acjf_found_pkg" != x"no"; then
+    acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $COSUPPORT_INCLUDE";
+    ACJF_CHECK_LIBONLY([$1], [$3], [$4], [$5], [$acjf_list_libdir],
+      [acjf_found_pkg="yes"],
+      [acjf_found_pkg="no"])
+    CPPFLAGS="$acjf_CPPFLAGS"
+  fi
+m4_if([$2], [], [], [fi])
+if test x"$acjf_found_pkg" = x"yes"; then
+  m4_if([$6], [], 
+   [true;],
+   [$6])
+else
+  m4_if([$7], [],
+   [AC_MSG_ERROR([Cannot find $1 package, bailing out!])],
+   [$7])
+fi
 ])
