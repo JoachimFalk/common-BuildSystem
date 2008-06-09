@@ -124,8 +124,26 @@ m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_LDFLAGS])dnl
 AC_SUBST(ACJF_M4_CANON_DN([$1])[_LDFLAGS])dnl
 ])
 
+dnl OBSOLETE ACJF_CHECK_PKG USAGE: 
+dnl
 dnl ACJF_CHECK_PKG(
-dnl   <packet>,
+dnl   <pkgname>,
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>])
+dnl
+dnl <srcdir subdirectory name> will be set to <pkgname>
+dnl
+dnl IF pkg found define:
+dnl   PKGNAME_INCLUDE
+dnl   PKGNAME_LDFLAGS
+dnl   pkg_pkgname_srcdir
+dnl   pkg_pkgname_builddir
+dnl
+dnl NEW ACJF_CHECK_PKG USAGE: 
+dnl
+dnl ACJF_CHECK_PKG(
+dnl   <pkgname>,
+dnl   <srcdir subdirectory name>
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>])
 dnl IF pkg found define:
@@ -135,7 +153,22 @@ dnl   pkg_pkgname_srcdir
 dnl   pkg_pkgname_builddir
 AC_DEFUN([ACJF_CHECK_PKG],
  [AC_REQUIRE([ACJF_INIT])dnl
-  AC_MSG_CHECKING([for $1 package in source tree])
+  m4_if(
+    m4_if(m4_eval([$#<=1]), [1],
+      [[old]],
+      [m4_if(m4_bregexp([$2], [[=;]\|^$]), [-1], [[new]], [[old]])]),
+    [old],
+    [# OBSOLETE USAGE
+     m4_pushdef([ACJF_VAR_PKGNAME], [$1])
+     m4_pushdef([ACJF_VAR_SUBDIR], [$1])
+     m4_pushdef([ACJF_VAR_CODE_IF_TRUE], [$2])
+     m4_pushdef([ACJF_VAR_CODE_IF_FALSE], [$3])],
+    [# NEW USAGE
+     m4_pushdef([ACJF_VAR_PKGNAME], [$1])
+     m4_pushdef([ACJF_VAR_SUBDIR], [$2])
+     m4_pushdef([ACJF_VAR_CODE_IF_TRUE], [$3])
+     m4_pushdef([ACJF_VAR_CODE_IF_FALSE], [$4])])
+  AC_MSG_CHECKING([for ACJF_VAR_PKGNAME package in subdir ACJF_VAR_SUBDIR of source tree])
   if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" = x""; then
     [acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])="/invalid";
 dnl AC_CACHE_VAL([acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1]),
@@ -143,49 +176,55 @@ dnl [# Searching $1 subproject
     m4_pushdef([_ACJF_VAR_DIR],ACJF_VAR_SUBPROJECT_DIR[dummy])dnl
     ACJF_M4_WHILE([m4_if(_ACJF_VAR_DIR, [.], [0], [1])],
      [m4_define([_ACJF_VAR_DIR], ACJF_M4_PATH_DIRNAME(_ACJF_VAR_DIR))dnl
-      if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" = x"/invalid" -a -d $srcdir/_ACJF_VAR_DIR/$1; then
-        [acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])="_ACJF_VAR_DIR/$1";
+      if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" = x"/invalid" -a \
+              -d "$srcdir/_ACJF_VAR_DIR/ACJF_VAR_SUBDIR"; then
+        [acjf_cv_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)="_ACJF_VAR_DIR/ACJF_VAR_SUBDIR";
       fi
     ])dnl
     m4_popdef([_ACJF_VAR_DIR])dnl
     # Last ditch effort try one uplevel directory
-    if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" = x"/invalid" -a -d $srcdir/../$1; then
-      [acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])="../$1";
+    if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" = x"/invalid" -a \
+            -d "$srcdir/../ACJF_VAR_SUBDIR"; then
+      [acjf_cv_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)="../ACJF_VAR_SUBDIR";
     fi
 dnl  ])
   fi
-  if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" != x"/invalid"; then
-    AC_MSG_RESULT([[$acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])])
-    [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]="$acjf_top_srcdir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])";
-    [pkg_]ACJF_M4_CANON_DC([$1])[_builddir]="$acjf_top_builddir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])";
-    if test -d "$srcdir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])/pkginclude"; then
-      ACJF_M4_CANON_DN([$1])[_INCLUDE]="-I$[pkg_]ACJF_M4_CANON_DC([$1])[_builddir]/pkginclude -I$[pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]/pkginclude"
+  if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" != x"/invalid"; then
+    AC_MSG_RESULT([[$acjf_cv_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)])
+    [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]="$acjf_top_srcdir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)";
+    [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]="$acjf_top_builddir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)";
+    if test -d "$srcdir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)/pkginclude"; then
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE]="-I$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]/pkginclude -I$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]/pkginclude"
     else
-      ACJF_M4_CANON_DN([$1])[_INCLUDE]="-I$[pkg_]ACJF_M4_CANON_DC([$1])[_builddir]/include -I$[pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]"
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE]="-I$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]/include -I$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]"
     fi
-    ACJF_M4_CANON_DN([$1])[_LDFLAGS]="-L$[pkg_]ACJF_M4_CANON_DC([$1])[_builddir]"
-    m4_if([$2], [], 
+    ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS]="-L$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]"
+    m4_if([ACJF_VAR_CODE_IF_TRUE], [], 
      [true;],
-     [$2])
+     ACJF_VAR_CODE_IF_TRUE)
   else
-    unset [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir];
-    unset [pkg_]ACJF_M4_CANON_DC([$1])[_builddir];
-    unset ACJF_M4_CANON_DN([$1])[_INCLUDE];
-    unset ACJF_M4_CANON_DN([$1])[_LDFLAGS];
-    m4_if([$3], [],
-     [AC_MSG_ERROR([cannot find $1 package in source tree, bailing out])],
+    unset [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir];
+    unset [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir];
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE];
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS];
+    m4_if([ACJF_VAR_CODE_IF_FALSE], [],
+     [AC_MSG_ERROR([cannot find ACJF_VAR_PKGNAME package in subdir ACJF_VAR_SUBDIR of source tree, bailing out])],
      [AC_MSG_RESULT([no])
-      $3])
+      ACJF_VAR_CODE_IF_FALSE])
   fi
-  m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_INCLUDE])dnl
-  m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_LDFLAGS])dnl
+  m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE])dnl
+  m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS])dnl
   m4_define([ACJF_VAR_SUBSTVARFIXUP], ACJF_M4_QUOTE(
     ACJF_M4_LIST_PUSH_BACK(ACJF_M4_ARGSTOLIST(
-      ACJF_M4_CANON_DN([$1])[_INCLUDE],
-      ACJF_M4_CANON_DN([$1])[_LDFLAGS],
-      [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir],
-      [pkg_]ACJF_M4_CANON_DC([$1])[_builddir]),
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE],
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS],
+      [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir],
+      [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]),
     ACJF_VAR_SUBSTVARFIXUP)))dnl
+  m4_popdef([ACJF_VAR_PKGNAME])
+  m4_popdef([ACJF_VAR_SUBDIR])
+  m4_popdef([ACJF_VAR_CODE_IF_TRUE])
+  m4_popdef([ACJF_VAR_CODE_IF_FALSE])
 ])
 
 dnl ACJF_NEED_PKG(<packet>)
