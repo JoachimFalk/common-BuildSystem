@@ -23,14 +23,58 @@ dnl  [<code if not found, default is bailout>])
 AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC],
 [dnl
 AC_LANG_PUSH([C++])
-ACJF_CHECK_LIB(
-  [SysteMoC],
-  [SysteMoC],
-  [#include <systemoc/smoc_config.h>
-  ],
-  [int x;],
-  [systemoc],
-  [$1], [$2])
+acjf_found_systemoc=""
+if test x"$acjf_found_systemoc" != x"no"; then
+  ACJF_CHECK_LIB_BOOST(
+   [acjf_got_boost="yes";],
+   [acjf_got_boost="no";])
+  if test x"$acjf_got_boost" = x"no"; then
+    m4_if([$2], [], [AC_MSG_ERROR([Cannot find boost library required by SysteMoC, bailing out!])], [])
+    acjf_found_systemoc="no"
+  fi
+fi
+if test x"$acjf_found_systemoc" != x"no"; then
+  ACJF_CHECK_LIB_SYSTEMC(
+   [acjf_got_systemc="yes";],
+   [acjf_got_systemc="no";])
+  if test x"$acjf_got_systemc " = x"no"; then
+    m4_if([$2], [], [AC_MSG_ERROR([Cannot find SystemC library required by SysteMoC, bailing out!])], [])
+    acjf_found_systemoc="no"
+  fi
+fi
+if test x"$acjf_found_systemoc" != x"no"; then
+  ACJF_CHECK_LIB_COSUPPORT(
+   [acjf_got_cosupport="yes";],
+   [acjf_got_cosupport="no";])
+  if test x"$acjf_got_cosupport" = x"no"; then
+    m4_if([$2], [], [AC_MSG_ERROR([Cannot find CoSupport library required by SysteMoC, bailing out!])], [])
+    acjf_found_systemoc="no"
+  fi
+fi
+if test x"$acjf_found_systemoc" != x"no"; then
+  ACJF_CHECK_LIB_SYSTEMC_VPC(
+   [acjf_got_systemcvpc="yes";],
+   [acjf_got_systemcvpc="no";])
+
+  acjf_systemoc_CPPFLAGS="$CPPFLAGS";
+  CPPFLAGS="$CPPFLAGS $BOOST_INCLUDE $COSUPPORT_INCLUDE $SYSTEMC_VPC_INCLUDE"
+  ACJF_CHECK_LIB(
+    [SysteMoC],
+    [SysteMoC],
+    [#include <systemoc/smoc_config.h>
+    ],
+    [int x;],
+    [systemoc],
+    [acjf_found_systemoc="no";]
+    [acjf_found_systemoc="";])
+  CPPFLAGS="$acjf_systemoc_CPPFLAGS"
+  if test x"$acjf_found_systemoc" = x"no"; then
+    m4_if([$2], [], [AC_MSG_ERROR([Cannot find SysteMoC library, bailing out!])], [])
+    acjf_found_systemoc="no"
+  else
+    SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $BOOST_INCLUDE $SYSTEMC_INCLUDE $COSUPPORT_INCLUDE"
+  fi
+fi
 
 if test x"$pkg_systemoc_builddir" != x""; then
   SYSTEMOC_DEPENDENCIES="$pkg_systemoc_builddir/libsystemoc.la"
@@ -39,61 +83,82 @@ else
 fi
 AC_SUBST([SYSTEMOC_DEPENDENCIES])
 
-# Check for WSDF Support in SysteMoC
-AC_MSG_CHECKING([for WSDF support in SysteMoC])
-AC_CACHE_VAL([acjf_cv_systemoc_wsdf_support], 
- [acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$CPPFLAGS $SYSTEMOC_INCLUDE"
-  # Checks for header files.
-  AC_PREPROC_IFELSE(
-   [AC_LANG_PROGRAM(
-    [[
-#include <systemoc/smoc_config.h>
-    ]],
-    [[
-#ifndef SYSTEMOC_ENABLE_WSDF
-# error "No WSDF Support in SysteMoC"
-#endif
-    ]])],
-   [acjf_cv_systemoc_wsdf_support=yes;],
-   [acjf_cv_systemoc_wsdf_support=no;])
-  CPPFLAGS="$acjf_CPPFLAGS"
-  unset acjf_CPPFLAGS])
-if test x"$acjf_cv_systemoc_wsdf_support" = x"yes"; then
-  AC_MSG_RESULT([yes])
-else
-  AC_MSG_RESULT([no])
-fi
+m4_define([ACJF_VAR_SUBSTVARFIXUP], ACJF_M4_QUOTE(
+  ACJF_M4_LIST_PUSH_BACK([SYSTEMOC_DEPENDENCIES], ACJF_VAR_SUBSTVARFIXUP)))dnl
 
-# Check for VPC Support in SysteMoC
-AC_MSG_CHECKING([for VPC support in SysteMoC])
-AC_CACHE_VAL([acjf_cv_systemoc_vpc_support], 
- [acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$CPPFLAGS $SYSTEMOC_INCLUDE"
-  # Checks for header files.
-  AC_PREPROC_IFELSE(
-   [AC_LANG_PROGRAM(
-    [[
+if test x"$acjf_found_systemoc" != x"no"; then
+  # Check for VPC Support in SysteMoC
+  AC_MSG_CHECKING([for VPC support in SysteMoC])
+  AC_CACHE_VAL([acjf_cv_systemoc_vpc_support], 
+   [acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$CPPFLAGS $SYSTEMOC_INCLUDE"
+    # Checks for header files.
+    AC_PREPROC_IFELSE(
+     [AC_LANG_PROGRAM(
+      [[
 #include <systemoc/smoc_config.h>
-    ]],
-    [[
+      ]],
+      [[
 #ifndef SYSTEMOC_ENABLE_VPC
 # error "No VPC Support in SysteMoC"
 #endif
-    ]])],
-   [acjf_cv_systemoc_vpc_support=yes;],
-   [acjf_cv_systemoc_vpc_support=no;])
-  CPPFLAGS="$acjf_CPPFLAGS"
-  unset acjf_CPPFLAGS])
-if test x"$acjf_cv_systemoc_vpc_support" = x"yes"; then
-  AC_MSG_RESULT([yes])
+      ]])],
+     [acjf_cv_systemoc_vpc_support=yes;],
+     [acjf_cv_systemoc_vpc_support=no;])
+    CPPFLAGS="$acjf_CPPFLAGS"
+    unset acjf_CPPFLAGS])
+  if test x"$acjf_cv_systemoc_vpc_support" = x"yes"; then
+    AC_MSG_RESULT([yes])
+  else
+    AC_MSG_RESULT([no])
+  fi
+  AM_CONDITIONAL([SYSTEMOC_ENABLE_VPC], test x"$acjf_cv_systemoc_vpc_support" = x"yes")
+  if test x"$acjf_cv_systemoc_vpc_support" = x"yes" -a \
+          x"$acjf_got_systemcvpc" != x"yes"; then
+    m4_if([$2], [], [AC_MSG_ERROR([Cannot find SystemC-VPC library required by SysteMoC, bailing out!])], [])
+    acjf_found_systemoc="no"
+  else
+    if test x"$acjf_cv_systemoc_vpc_support" != x"no"; then
+      SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $SYSTEMC_VPC_INCLUDE"
+    fi
+    acjf_found_systemoc="yes"
+  fi
+fi
+if test x"$acjf_found_systemoc" != x"no"; then
+  # Check for WSDF Support in SysteMoC
+  AC_MSG_CHECKING([for WSDF support in SysteMoC])
+  AC_CACHE_VAL([acjf_cv_systemoc_wsdf_support], 
+   [acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$CPPFLAGS $SYSTEMOC_INCLUDE"
+    # Checks for header files.
+    AC_PREPROC_IFELSE(
+     [AC_LANG_PROGRAM(
+      [[
+#include <systemoc/smoc_config.h>
+      ]],
+      [[
+#ifndef SYSTEMOC_ENABLE_WSDF
+# error "No WSDF Support in SysteMoC"
+#endif
+      ]])],
+     [acjf_cv_systemoc_wsdf_support=yes;],
+     [acjf_cv_systemoc_wsdf_support=no;])
+    CPPFLAGS="$acjf_CPPFLAGS"
+    unset acjf_CPPFLAGS])
+  if test x"$acjf_cv_systemoc_wsdf_support" = x"yes"; then
+    AC_MSG_RESULT([yes])
+  else
+    AC_MSG_RESULT([no])
+  fi
+  AM_CONDITIONAL([SYSTEMOC_ENABLE_WSDF], test x"$acjf_cv_systemoc_wsdf_support" = x"yes")
+fi
+if test x"$acjf_found_systemoc" = x"yes"; then
+  m4_if([$1], [], [true;], [$1])
 else
-  AC_MSG_RESULT([no])
+  m4_if([$2], [], [true;], [$2])
 fi
-
-ACJF_CHECK_LIB_SYSTEMC_VPC([true], [true])
-
-if test x"$acjf_cv_systemoc_vpc_support" != x"no"; then
-  SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $SYSTEMC_VPC_INCLUDE"
-fi
-
+unset acjf_found_systemoc
+unset acjf_got_systemc
+unset acjf_got_boost
+unset acjf_got_cosupport
+unset acjf_got_systemcvpc
 AC_LANG_POP
 ])
