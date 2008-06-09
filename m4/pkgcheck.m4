@@ -149,7 +149,9 @@ dnl   <lib name>,
 dnl   <lib search list>,
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
-dnl IF lib found defines: PKGNAME_LDFLAGS
+dnl IF lib found defines:
+dnl   PKGNAME_LDFLAGS
+dnl   PKGNAME_LIBPATH
 AC_DEFUN([ACJF_CHECK_LIBONLY],
 [dnl
 ACJF_M4_CANON_DN([$1])[_LDFLAGS]=""
@@ -164,6 +166,7 @@ AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$4])_LIBPATH,
       LDFLAGS="-L$acjf_ldflags $acjf_LDFLAGS";
     else
       LDFLAGS="$acjf_LDFLAGS";
+      acjf_ldflags=""
     fi
     LIBS="-l$4 $acjf_LIBS";
     dnl AC_MSG_CHECKING([for $1 library in $acjf_ldflags])
@@ -350,11 +353,12 @@ if test x"$[acjf_]ACJF_M4_CANON_DC([$1])[_use_srcdir_version]" != x"yes" -a x"$a
     [acjf_found_pkg=""],
     [acjf_found_pkg="no"])
   if test x"$acjf_found_pkg" != x"no"; then
-    acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $COSUPPORT_INCLUDE";
+    acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $ACJF_M4_CANON_DN([$1])_INCLUDE";
     ACJF_CHECK_LIBONLY([$1], [$3], [$4], [$5], [$[acjf_]ACJF_M4_CANON_DC([$1])[_search_libdirs]],
       [acjf_found_pkg="yes"],
       [acjf_found_pkg="no"])
     CPPFLAGS="$acjf_CPPFLAGS"
+    unset acjf_CPPFLAGS
   fi
 m4_if([$2], [], [], [fi])
 if test x"$acjf_found_pkg" = x"yes"; then
@@ -366,4 +370,5 @@ else
    [AC_MSG_ERROR([Cannot find $1 package, bailing out!])],
    [$7])
 fi
+unset acjf_found_pkg
 ])
