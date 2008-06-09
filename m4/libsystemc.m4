@@ -24,65 +24,16 @@ dnl ACJF_SYSTEMC check for systemc library
 AC_DEFUN([ACJF_CHECK_LIB_SYSTEMC],
 [dnl
 AC_LANG_PUSH([C++])
-WITH_SYSTEMC_INCLUDE=
-WITH_SYSTEMC_LIB=
-WITH_SYSTEMC_BASE=
-AC_ARG_WITH(systemc-include,
-  [  --with-systemc-include  Path to SystemC include directory],
-  [WITH_SYSTEMC_INCLUDE="$withval"])
-  
-AC_ARG_WITH(systemc-lib,
-  [  --with-systemc-lib      Path to SystemC lib directory],
-  [WITH_SYSTEMC_LIB="$withval"])
-
-if test x"$WITH_SYSTEMC_INCLUDE" != "x"; then
-  WITH_SYSTEMC_BASE=`echo $WITH_SYSTEMC_INCLUDE | sed -e 's@^\(.*\)[[/\\]]include\([[/\\]].*\|\)[$]@\1@'`
-elif test x"$WITH_SYSTEMC_LIB" != "x"; then
-  WITH_SYSTEMC_BASE=`echo $WITH_SYSTEMC_LIB | sed -e 's@^\(.*\)[[/\\]]lib\([[/\\]].*\|-.*\|\)[$]@\1@'`
-fi
-
-acjf_list=""
-if test x"$WITH_SYSTEMC_INCLUDE" != x; then
-  acjf_list="$acjf_list $WITH_SYSTEMC_INCLUDE";
-fi
-if test x"$WITH_SYSTEMC_BASE" != x; then
-  acjf_list="$acjf_list $WITH_SYSTEMC_BASE/include";
-fi
-if test x"$SYSTEMC_BASE" != x; then
-  acjf_list="$acjf_list $SYSTEMC_BASE/include";
-fi
-
-ACJF_CHECK_HEADER(
-  [SystemC], [
-#include <systemc.h>
-#define  main _main
-
-int sc_main(int argc, char *argv[]) { return 0; }],
-  [SC_MODULE(foo) { SC_CTOR(foo) {} } bar("bar")],
-  [$acjf_list])
-
-acjf_list=""
-if test x"$WITH_SYSTEMC_LIB" != x; then
-  acjf_list="$acjf_list $WITH_SYSTEMC_LIB";
-fi
-if test x"$WITH_SYSTEMC_BASE" != x; then
-  acjf_list="$acjf_list `echo $WITH_SYSTEMC_BASE/lib*`";
-fi
-if test x"$SYSTEMC_BASE" != x; then
-  acjf_list="$acjf_list `echo $SYSTEMC_BASE/lib*`";
-fi
-
-acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $SYSTEMC_INCLUDE";
-ACJF_CHECK_LIBONLY(
-  [SystemC], [
+ACJF_CHECK_LIB(
+  [SystemC],
+  [],
+  [
 #include <systemc.h>
 #define  main _main
 
 int sc_main(int argc, char *argv[]) { return 0; }],
   [SC_MODULE(foo) { SC_CTOR(foo) {} } bar("bar")],
   [systemc],
-  [$acjf_list])
-CPPFLAGS="$acjf_CPPFLAGS"
-
+  [$1], [$2])
 AC_LANG_POP
 ])
