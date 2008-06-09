@@ -38,9 +38,9 @@ AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$1])_INCPATH,
       CPPFLAGS="$acjf_CPPFLAGS"
     fi
     dnl AC_MSG_CHECKING([for $1 headers in $acjf_include])
-    AC_TRY_COMPILE(
-      [$2],
-      [$3],
+    AC_COMPILE_IFELSE(
+      [AC_LANG_PROGRAM([[$2]],
+         [[$3]])],
       [acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH="$acjf_include"; break],
       [acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH="x"])
   done
@@ -93,9 +93,9 @@ AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$4])_LIBPATH,
     fi
     LIBS="-l$4 $acjf_LIBS";
     dnl AC_MSG_CHECKING([for $1 library in $acjf_ldflags])
-    AC_TRY_LINK(
-      [$2],
-      [$3],
+    AC_LINK_IFELSE(
+      [AC_LANG_PROGRAM([[$2]],
+         [[$3]])],
       [acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH="$acjf_ldflags"; break],
       [acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH="x"])
   done

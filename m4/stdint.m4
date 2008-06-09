@@ -32,13 +32,11 @@ AC_FOREACH(acjf_header,[$2],
 
 AC_MSG_CHECKING([for $1])
 AC_CACHE_VAL([ac_cv_type_]ACJF_M4_CANON_CV([$1]),
- [AC_TRY_COMPILE(
-   [$acjf_check_type_headers],
-   [$1 x;],
+ [AC_COMPILE_IFELSE(
+   [AC_LANG_PROGRAM([[$acjf_check_type_headers]],
+     [[$1 x;]])],
    [ac_cv_type_]ACJF_M4_CANON_CV([$1])[="yes";],
-   [ac_cv_type_]ACJF_M4_CANON_CV([$1])[="no";]
-  )]
-)
+   [ac_cv_type_]ACJF_M4_CANON_CV([$1])[="no";])])
 if eval "test \"x\${ac_cv_type_[]ACJF_M4_CANON_CV([$1])}\" = \"xyes\""; then
   AC_MSG_RESULT([yes])
   AC_DEFINE([HAVE_]ACJF_M4_CANON_DN([$1]),1,[define if you have the ']$1[' type])

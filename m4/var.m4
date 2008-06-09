@@ -1,3 +1,4 @@
+dnl vim: set sw=2 ts=8 syn=config:
 dnl Copyright (C) 2001 - 2006 Joachim Falk <joachim.falk@gmx.de>
 dnl 
 dnl This file is part of the BuildSystem distribution of Joachim Falk;
@@ -20,9 +21,12 @@ dnl Boston, MA 02111-1307, USA.
 AC_DEFUN([ACJF_CHECK_VAR],
 [AS_VAR_PUSHDEF([ac_var], [acjf_cv_var_$1])dnl
 AC_CACHE_CHECK([for $1], ac_var,
-[AC_TRY_LINK([int *p;], [extern int $1 []; p = $1;],
-                [AS_VAR_SET(ac_var, yes)],
-                [AS_VAR_SET(ac_var, no)])])
+ [AC_LINK_IFELSE(
+  [AC_LANG_PROGRAM(
+    [[extern int $1;]],
+    [[int *p; p = $1;]])],
+  [AS_VAR_SET(ac_var, yes)],
+  [AS_VAR_SET(ac_var, no)])])
 AS_IF([test AS_VAR_GET(ac_var) = yes], [$2], [$3])dnl
 AS_VAR_POPDEF([ac_var])dnl
 ])# ACJF_CHECK_VAR

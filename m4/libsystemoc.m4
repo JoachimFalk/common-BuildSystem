@@ -42,18 +42,20 @@ AC_SUBST([SYSTEMOC_DEPENDENCIES])
 # Check for WSDF Support in SysteMoC
 AC_MSG_CHECKING([for WSDF support in SysteMoC])
 AC_CACHE_VAL([acjf_cv_systemoc_wsdf_support], 
- [acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$CPPFLAGS $SUPPORT_INCLUDE $SYSTEMOC_INCLUDE"
+ [acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$CPPFLAGS $SYSTEMOC_INCLUDE"
   # Checks for header files.
-  AC_TRY_COMPILE(
-   [#include <systemoc/smoc_config.h>
-   ],
-   [#ifndef SYSTEMOC_ENABLE_WSDF
-    # error "No WSDF Support in SysteMoC"
-    #endif
-   ],
+  AC_PREPROC_IFELSE(
+   [AC_LANG_PROGRAM(
+    [[
+#include <systemoc/smoc_config.h>
+    ]],
+    [[
+#ifndef SYSTEMOC_ENABLE_WSDF
+# error "No WSDF Support in SysteMoC"
+#endif
+    ]])],
    [acjf_cv_systemoc_wsdf_support=yes;],
-   [acjf_cv_systemoc_wsdf_support=no;]
-  )
+   [acjf_cv_systemoc_wsdf_support=no;])
   CPPFLAGS="$acjf_CPPFLAGS"
   unset acjf_CPPFLAGS])
 if test x"$acjf_cv_systemoc_wsdf_support" = x"yes"; then
@@ -65,18 +67,20 @@ fi
 # Check for VPC Support in SysteMoC
 AC_MSG_CHECKING([for VPC support in SysteMoC])
 AC_CACHE_VAL([acjf_cv_systemoc_vpc_support], 
- [acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$CPPFLAGS $SUPPORT_INCLUDE $SYSTEMOC_INCLUDE"
+ [acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$CPPFLAGS $SYSTEMOC_INCLUDE"
   # Checks for header files.
-  AC_TRY_COMPILE(
-   [#include <systemoc/smoc_config.h>
-   ],
-   [#ifndef SYSTEMOC_ENABLE_VPC
-    # error "No VPC Support in SysteMoC"
-    #endif
-   ],
+  AC_PREPROC_IFELSE(
+   [AC_LANG_PROGRAM(
+    [[
+#include <systemoc/smoc_config.h>
+    ]],
+    [[
+#ifndef SYSTEMOC_ENABLE_VPC
+# error "No VPC Support in SysteMoC"
+#endif
+    ]])],
    [acjf_cv_systemoc_vpc_support=yes;],
-   [acjf_cv_systemoc_vpc_support=no;]
-  )
+   [acjf_cv_systemoc_vpc_support=no;])
   CPPFLAGS="$acjf_CPPFLAGS"
   unset acjf_CPPFLAGS])
 if test x"$acjf_cv_systemoc_vpc_support" = x"yes"; then
@@ -85,8 +89,9 @@ else
   AC_MSG_RESULT([no])
 fi
 
+ACJF_CHECK_LIB_SYSTEMC_VPC([true], [true])
+
 if test x"$acjf_cv_systemoc_vpc_support" != x"no"; then
-  ACJF_CHECK_LIB_SYSTEMC_VPC
   SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $SYSTEMC_VPC_INCLUDE"
 fi
 

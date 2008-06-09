@@ -21,28 +21,22 @@ AC_DEFUN([ACJF_CHECK_VA_COPY],
 [AC_CACHE_CHECK(
  [for va_copy],
  [ac_cv_func_va_copy],
- [AC_TRY_LINK(
-   [#include <stdarg.h>],
-   [va_list ap1, ap2;
-    va_copy( ap1, ap2 );],
+ [AC_LINK_IFELSE(
+   [AC_LANG_PROGRAM([[#include <stdarg.h>]],
+     [[va_list ap1, ap2; va_copy(ap1, ap2);]])],
    [ac_cv_func_va_copy="yes"],
-   [ac_cv_func_va_copy="no"]
-  )]
-)
+   [ac_cv_func_va_copy="no"])])
 if test "x$ac_cv_func_va_copy" = "xyes"; then
   AC_DEFINE(HAVE_VA_COPY,1,[Do we have va_copy in stdarg.h than define this])
 else
   AC_CACHE_CHECK(
    [for __va_copy],
    [ac_cv_func___va_copy],
-   [AC_TRY_LINK(
-     [#include <stdarg.h>],
-     [va_list ap1, ap2;
-      __va_copy( ap1, ap2 );],
+   [AC_LINK_IFELSE(
+     [AC_LANG_PROGRAM([[#include <stdarg.h>]],
+       [[va_list ap1, ap2; __va_copy(ap1, ap2);]])],
      [ac_cv_func___va_copy="yes"],
-     [ac_cv_func___va_copy="no"]
-    )]
-  )
+     [ac_cv_func___va_copy="no"])])
   if test "x$ac_cv_func___va_copy" = "xyes"; then
     AC_DEFINE(HAVE___VA_COPY,1,[Do we have __va_copy in stdarg.h than define this])
   else
