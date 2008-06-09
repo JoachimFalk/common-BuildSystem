@@ -136,25 +136,25 @@ dnl   pkg_pkgname_builddir
 AC_DEFUN([ACJF_CHECK_PKG],
  [AC_REQUIRE([ACJF_INIT])dnl
   AC_MSG_CHECKING([for $1 package in source tree])
-  [acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])="";
+  if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" = x""; then
+    [acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])="/invalid";
 dnl AC_CACHE_VAL([acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1]),
 dnl [# Searching $1 subproject
     m4_pushdef([_ACJF_VAR_DIR],ACJF_VAR_SUBPROJECT_DIR[dummy])dnl
     ACJF_M4_WHILE([m4_if(_ACJF_VAR_DIR, [.], [0], [1])],
      [m4_define([_ACJF_VAR_DIR], ACJF_M4_PATH_DIRNAME(_ACJF_VAR_DIR))dnl
-      if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" = x"" -a -d $srcdir/_ACJF_VAR_DIR/$1; then
+      if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" = x"/invalid" -a -d $srcdir/_ACJF_VAR_DIR/$1; then
         [acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])="_ACJF_VAR_DIR/$1";
       fi
     ])dnl
     m4_popdef([_ACJF_VAR_DIR])dnl
     # Last ditch effort try one uplevel directory
-    if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" = x"" -a -d $srcdir/../$1; then
+    if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" = x"/invalid" -a -d $srcdir/../$1; then
       [acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])="../$1";
     fi
 dnl  ])
-  AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN([$1])[_IN_SRCDIR],
-    test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" != x"")
-  if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" != x""; then
+  fi
+  if test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" != x"/invalid"; then
     AC_MSG_RESULT([[$acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])])
     [pkg_]ACJF_M4_CANON_DC([$1])[_srcdir]="$acjf_top_srcdir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])";
     [pkg_]ACJF_M4_CANON_DC([$1])[_builddir]="$acjf_top_builddir/$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])";
@@ -278,12 +278,13 @@ fi
 acjf_found_pkg=""
 m4_if([$2], [], [], [dnl
 if test x"$acjf_use_intern" != x"no"; then
-  ACJF_CHECK_PKG([$1],
+  ACJF_CHECK_PKG([$2],
     [acjf_found_pkg="yes"],
     [acjf_found_pkg=""])
-else
-  AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN([$1])[_IN_SRCDIR], false)
 fi
+m4_pattern_allow([PKG_]ACJF_M4_CANON_DN([$1])[_USE_SRCDIR_VERSION])
+AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN([$1])[_USE_SRCDIR_VERSION],
+  test x"$[acjf_cv_pkgdir_]ACJF_M4_CANON_DC([$1])" != x"/invalid")
 if test x"$acjf_use_intern" != x"yes" -a x"$acjf_found_pkg" != x"yes"; then
 ])
   ACJF_CHECK_HEADER([$1], [$3], [$4], [$acjf_list_includedir],
