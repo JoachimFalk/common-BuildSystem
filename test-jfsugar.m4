@@ -49,10 +49,22 @@ m4_define([x],[[unquoted_x]])dnl
 m4_define([y],[[unquoted_y]])dnl
 m4_define([z],[[unquoted_z]])dnl
 dnl
+m4_define([new],         [[unquoted_new]])dnl
+m4_define([unquoted_new],[[ununquoted_new]])dnl
+m4_define([old],         [[unquoted_old]])dnl
+m4_define([unquoted_old],[[ununquoted_old]])dnl
+m4_define([NEW],         [[unquoted_NEW]])dnl
+m4_define([unquoted_NEW],[[ununquoted_NEW]])dnl
+m4_define([OLD],         [[unquoted_OLD]])dnl
+m4_define([unquoted_OLD],[[ununquoted_OLD]])dnl
 m4_define([yes],         [[unquoted_yes]])dnl
 m4_define([unquoted_yes],[[ununquoted_yes]])dnl
 m4_define([no],          [[unquoted_no]])dnl
 m4_define([unquoted_no], [[ununquoted_no]])dnl
+m4_define([YES],         [[unquoted_YES]])dnl
+m4_define([unquoted_YES],[[ununquoted_YES]])dnl
+m4_define([NO],          [[unquoted_NO]])dnl
+m4_define([unquoted_NO], [[ununquoted_NO]])dnl
 m4_define([foo],         [[unquoted_foo]])dnl
 m4_define([unquoted_foo],[[ununquoted_foo]])dnl
 m4_define([bar],         [[unquoted_bar]])dnl
