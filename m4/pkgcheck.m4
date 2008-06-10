@@ -41,7 +41,7 @@ AC_ARG_WITH(ACJF_M4_DOWNCASE([$1])[-lib],
   [  --with-]ACJF_M4_DOWNCASE([$1])[-lib     Library path for $1],
   [acjf_with_]ACJF_M4_CANON_DC([$1])[_lib="$withval"])
 
-if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" = "x"; then
+if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" = x""; then
   if echo "$[acjf_with_]ACJF_M4_CANON_DC([$1])[_include]" | grep "[[/\\]]include[[/\\]]*$" 1>/dev/null; then
     [acjf_with_]ACJF_M4_CANON_DC([$1])=`dirname "$[acjf_with_]ACJF_M4_CANON_DC([$1])[_include]"`;
     unset [acjf_with_]ACJF_M4_CANON_DC([$1])[_include]
@@ -97,7 +97,9 @@ dnl   <code in main routine for compilation check>,
 dnl   <header search list>,
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
-dnl IF header found defines: PKGNAME_INCLUDE
+dnl IF header found defines:
+dnl   PKGNAME_INCLUDE
+dnl   PKGNAME_INCPATH
 AC_DEFUN([ACJF_CHECK_HEADER],
 [dnl
 ACJF_M4_CANON_DN([$1])[_INCLUDE]=""
@@ -105,26 +107,31 @@ acjf_STDINC="standard include search path"
 AC_MSG_CHECKING([for $1 headers])
 AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$1])_INCPATH,
  [acjf_CPPFLAGS="$CPPFLAGS";
-  for acjf_include in $4 "$acjf_STDINC"; do
-    if test x"$acjf_include" != x"$acjf_STDINC"; then
-      CPPFLAGS="-I$acjf_include $acjf_CPPFLAGS"
+  for acjf_INCPATH in $4 "$acjf_STDINC"; do
+    if test x"$acjf_INCPATH" != x"$acjf_STDINC"; then
+      CPPFLAGS="-I$acjf_INCPATH $acjf_CPPFLAGS"
     else
       CPPFLAGS="$acjf_CPPFLAGS"
     fi
-    dnl AC_MSG_CHECKING([for $1 headers in $acjf_include])
+    dnl AC_MSG_CHECKING([for $1 headers in $acjf_INCPATH])
     AC_COMPILE_IFELSE(
       [AC_LANG_PROGRAM([[$2]],
          [[$3]])],
-      [acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH="$acjf_include"; break],
-      [acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH="x"])
+      [acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH="$acjf_INCPATH"; break],
+      [acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH="/invalid"])
   done
   CPPFLAGS="$acjf_CPPFLAGS";
+  unset acjf_INCPATH
   unset acjf_CPPFLAGS
 ])
-if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH]" != x"x"; then
+if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH]" != x"/invalid"; then
   AC_MSG_RESULT([$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH])
   if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH]" != x"$acjf_STDINC"; then
-    ACJF_M4_CANON_DN([$1])[_INCLUDE]="[-I$acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH]"
+    ACJF_M4_CANON_DN([$1])[_INCLUDE]="-I$[acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH]"
+    ACJF_M4_CANON_DN([$1])[_INCPATH]="$[acjf_cv_]ACJF_M4_CANON_DN([$1])[_INCPATH]"
+  else
+    ACJF_M4_CANON_DN([$1])[_INCLUDE]=""
+    ACJF_M4_CANON_DN([$1])[_INCPATH]=""
   fi
   unset acjf_STDINC
   m4_if([$5], [],
@@ -139,6 +146,8 @@ else
 fi
 m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_INCLUDE])dnl
 AC_SUBST(ACJF_M4_CANON_DN([$1])[_INCLUDE])dnl
+m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_INCPATH])dnl
+AC_SUBST(ACJF_M4_CANON_DN([$1])[_INCPATH])dnl
 ])
 
 dnl ACJF_CHECK_LIBONLY(
@@ -158,33 +167,37 @@ ACJF_M4_CANON_DN([$1])[_LDFLAGS]=""
 dnl acjf_CPPFLAGS="$CPPFLAGS";
 acjf_STDLIB="standard library search path"
 AC_MSG_CHECKING([for $1 library])
-AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$4])_LIBPATH, 
+AC_CACHE_VAL([acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH],
  [acjf_LDFLAGS="$LDFLAGS"; acjf_LIBS="$LIBS";
-  for acjf_ldflags in $5 "$acjf_STDLIB"; do
+  for acjf_LIBPATH in $5 "$acjf_STDLIB"; do
     dnl CPPFLAGS="$SYSTEMC_INCLUDE $acjf_CPPFLAGS"
-    if test x"$acjf_ldflags" != x"$acjf_STDLIB"; then
-      LDFLAGS="-L$acjf_ldflags $acjf_LDFLAGS";
+    if test x"$acjf_LIBPATH" != x"$acjf_STDLIB"; then
+      LDFLAGS="-L$acjf_LIBPATH $acjf_LDFLAGS";
     else
       LDFLAGS="$acjf_LDFLAGS";
-      acjf_ldflags=""
     fi
     LIBS="-l$4 $acjf_LIBS";
-    dnl AC_MSG_CHECKING([for $1 library in $acjf_ldflags])
+    dnl AC_MSG_CHECKING([for $1 library in $acjf_LIBPATH])
     AC_LINK_IFELSE(
       [AC_LANG_PROGRAM([[$2]],
          [[$3]])],
-      [acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH="$acjf_ldflags"; break],
-      [acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH="x"])
+      [acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH="$acjf_LIBPATH"; break],
+      [acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH="/invalid"])
   done
   dnl CPPFLAGS="$acjf_CPPFLAGS"; 
   LDFLAGS="$acjf_LDFLAGS"; LIBS="$acjf_LIBS";
+  unset acjf_LIBPATH
   unset acjf_LDFLAGS
   unset acjf_LIBS
 ])
-if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH]" != x"x"; then
+if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH]" != x"/invalid"; then
   AC_MSG_RESULT([$acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH])
   if test x"[$acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH]" != x"$acjf_STDLIB"; then
-    ACJF_M4_CANON_DN([$1])[_LDFLAGS]="[-L$acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH]"
+    ACJF_M4_CANON_DN([$1])[_LIBPATH]="$[acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH]"
+    ACJF_M4_CANON_DN([$1])[_LDFLAGS]="-L$[acjf_cv_]ACJF_M4_CANON_DN([$4])[_LIBPATH]"
+  else
+    ACJF_M4_CANON_DN([$1])[_LIBPATH]=""
+    ACJF_M4_CANON_DN([$1])[_LDFLAGS]=""
   fi
   unset acjf_STDLIB
   m4_if([$6], [],
@@ -199,6 +212,8 @@ else
 fi
 m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_LDFLAGS])dnl
 AC_SUBST(ACJF_M4_CANON_DN([$1])[_LDFLAGS])dnl
+m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_LIBPATH])dnl
+AC_SUBST(ACJF_M4_CANON_DN([$1])[_LIBPATH])dnl
 ])
 
 dnl OBSOLETE ACJF_CHECK_PKG USAGE: 
