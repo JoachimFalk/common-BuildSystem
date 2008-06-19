@@ -55,9 +55,12 @@ if test x"$acjf_found_systemoc" != x"no"; then
   ACJF_CHECK_LIB_SYSTEMC_VPC(
    [acjf_got_systemcvpc="yes";],
    [acjf_got_systemcvpc="no";])
+  ACJF_CHECK_LIB_WSDF(
+   [acjf_got_libwsdf="yes";],
+   [acjf_got_libwsdf="no";])
 
   acjf_systemoc_CPPFLAGS="$CPPFLAGS";
-  CPPFLAGS="$CPPFLAGS $BOOST_INCLUDE $COSUPPORT_INCLUDE $SYSTEMC_VPC_INCLUDE"
+  CPPFLAGS="$CPPFLAGS $BOOST_INCLUDE $COSUPPORT_INCLUDE $SYSTEMC_VPC_INCLUDE $LIBWSDF_INCLUDE"
   ACJF_CHECK_LIB(
     [SysteMoC],
     [SysteMoC],
@@ -149,6 +152,16 @@ if test x"$acjf_found_systemoc" != x"no"; then
     AC_MSG_RESULT([no])
   fi
   AM_CONDITIONAL([SYSTEMOC_ENABLE_WSDF], test x"$acjf_cv_systemoc_wsdf_support" = x"yes")
+  if test x"$acjf_cv_systemoc_wsdf_support" = x"yes" -a \
+          x"$acjf_got_libwsdf" != x"yes"; then
+    m4_if([$2], [], [AC_MSG_ERROR([Cannot find libWSDF library required by SysteMoC, bailing out!])], [])
+    acjf_found_systemoc="no"
+  else
+    if test x"$acjf_cv_systemoc_wsdf_support" != x"no"; then
+      SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $LIBWSDF_INCLUDE"
+    fi
+    acjf_found_systemoc="yes"
+  fi
 fi
 if test x"$acjf_found_systemoc" = x"yes"; then
   m4_if([$1], [], [true;], [$1])
