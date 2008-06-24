@@ -37,11 +37,11 @@ CPPFLAGS="$acjf_PRE_LIBWSDF_CPPFLAGS"
 LDFLAGS="$acjf_PRE_LIBWSDF_LDFLAGS"
 
 if test x"$pkg_libwsdf_builddir" != x""; then
-  SYSTEMC_VPC_DEPENDENCIES="$pkg_libwsdf_builddir/libwsdf.la"
+  LIBWSDF_DEPENDENCIES="$pkg_libwsdf_builddir/libwsdf.la"
 else
-  SYSTEMC_VPC_DEPENDENCIES=""
+  LIBWSDF_DEPENDENCIES=""
 fi
-AC_SUBST([SYSTEMC_VPC_DEPENDENCIES])
+AC_SUBST([LIBWSDF_DEPENDENCIES])
 
 AC_LANG_POP
 ])
