@@ -292,18 +292,18 @@ dnl  ])
       ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE]="-I$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]/include -I$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]"
     fi
     ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS]="-L$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]"
-    m4_if([ACJF_VAR_CODE_IF_TRUE], [], 
+    m4_if(ACJF_VAR_CODE_IF_TRUE, [], 
      [true;],
      ACJF_VAR_CODE_IF_TRUE)
   else
+    AC_MSG_RESULT([no])
     unset [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir];
     unset [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir];
     unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE];
     unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS];
-    m4_if([ACJF_VAR_CODE_IF_FALSE], [],
-     [AC_MSG_ERROR([cannot find ACJF_VAR_PKGNAME package in subdir ACJF_VAR_SUBDIR of source tree, bailing out])],
-     [AC_MSG_RESULT([no])
-      ACJF_VAR_CODE_IF_FALSE])
+    m4_if(ACJF_VAR_CODE_IF_FALSE, [],
+     [AC_MSG_ERROR([Cannot find ACJF_VAR_PKGNAME package in subdir ACJF_VAR_SUBDIR of source tree, bailing out])],
+     [ACJF_VAR_CODE_IF_FALSE])
   fi
   m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE])dnl
   m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS])dnl
