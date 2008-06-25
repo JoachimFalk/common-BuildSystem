@@ -280,6 +280,11 @@ dnl [# Searching $1 subproject
             -d "$srcdir/../ACJF_VAR_SUBDIR"; then
       [acjf_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)="../ACJF_VAR_SUBDIR";
     fi
+    # Last ditch effort try two uplevel directory
+    if test x"$[acjf_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" = x"/invalid" -a \
+            -d "$srcdir/../../ACJF_VAR_SUBDIR"; then
+      [acjf_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)="../../ACJF_VAR_SUBDIR";
+    fi
 dnl  ])
   fi
   if test x"$[acjf_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" != x"/invalid"; then
