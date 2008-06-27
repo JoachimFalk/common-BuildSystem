@@ -59,6 +59,7 @@ if test x"$acjf_found_libsgx" != x"no"; then
     acjf_found_libsgx="no"
   else
     LIBSGX_INCLUDE="$LIBSGX_INCLUDE $BOOST_INCLUDE $COSUPPORT_INCLUDE"
+    acjf_found_libsgx="yes"
   fi
 fi
 
