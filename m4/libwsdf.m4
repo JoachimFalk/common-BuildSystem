@@ -33,8 +33,9 @@ ACJF_CHECK_LIB(
   [WSDF],
   [$1], [$2])
 
-CPPFLAGS="$acjf_PRE_LIBWSDF_CPPFLAGS"
-LDFLAGS="$acjf_PRE_LIBWSDF_LDFLAGS"
+dnl WTF@Keinert? Where are acjf_PRE_LIBWSDF_CPPFLAGS acjf_PRE_LIBWSDF_LDFLAGS stored before?
+dnl CPPFLAGS="$acjf_PRE_LIBWSDF_CPPFLAGS"
+dnl LDFLAGS="$acjf_PRE_LIBWSDF_LDFLAGS"
 
 if test x"$pkg_libwsdf_builddir" != x""; then
   LIBWSDF_DEPENDENCIES="$pkg_libwsdf_builddir/libwsdf.la"
