@@ -237,7 +237,9 @@ dnl After execution of the macro
 dnl
 dnl IF pkg found define:
 dnl   PKGNAME_INCLUDE
+dnl   PKGNAME_INCPATH
 dnl   PKGNAME_LDFLAGS
+dnl   PKGNAME_LIBPATH
 dnl   pkg_pkgname_srcdir
 dnl   pkg_pkgname_builddir
 AC_DEFUN([ACJF_CHECK_PKG],
@@ -293,10 +295,13 @@ dnl  ])
     [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]="$acjf_top_builddir/$[acjf_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)";
     if test -d "$srcdir/$[acjf_pkgdir_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)/pkginclude"; then
       ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE]="-I$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]/pkginclude -I$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]/pkginclude"
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH]="$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]/pkginclude $[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]/pkginclude"
     else
       ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE]="-I$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]/include -I$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]"
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH]="$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]/include $[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]"
     fi
     ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS]="-L$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]"
+    ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBPATH]="$[pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]"
     m4_if(ACJF_VAR_CODE_IF_TRUE, [], 
      [true;],
      ACJF_VAR_CODE_IF_TRUE)
@@ -305,7 +310,9 @@ dnl  ])
     unset [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir];
     unset [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir];
     unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE];
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH];
     unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS];
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBPATH];
     m4_if(ACJF_VAR_CODE_IF_FALSE, [],
      [AC_MSG_ERROR([Cannot find ACJF_VAR_PKGNAME package in subdir ACJF_VAR_SUBDIR of source tree, bailing out])],
      [ACJF_VAR_CODE_IF_FALSE])
@@ -315,7 +322,9 @@ dnl  ])
   m4_define([ACJF_VAR_SUBSTVARFIXUP], ACJF_M4_QUOTE(
     ACJF_M4_LIST_PUSH_BACK(ACJF_M4_ARGSTOLIST(
       ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE],
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH],
       ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS],
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBPATH],
       [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir],
       [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]),
     ACJF_VAR_SUBSTVARFIXUP)))dnl
