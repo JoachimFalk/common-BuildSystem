@@ -44,16 +44,19 @@ if test x"$acjf_found_libsgx" != x"no"; then
 fi
 if test x"$acjf_found_libsgx" != x"no"; then
   acjf_libsgx_CPPFLAGS="$CPPFLAGS";
-  CPPFLAGS="$CPPFLAGS $BOOST_INCLUDE $COSUPPORT_INCLUDE"
+  acjf_libsgx_LDFLAGS="$LDFLAGS";
+  CPPFLAGS="$CPPFLAGS $COSUPPORT_INCLUDE $XERCES_INCLUDE"
+  LDFLAGS="$LDFLAGS $COSUPPORT_LDFLAGS $XERCES_LDFLAGS"
   ACJF_CHECK_LIB(
     [LibSGX],
     [LibSGX],
-    [#include <sgx.hpp>]
-    [SGX::NetworkGraphAccess ngx("some-file.sgx");],
-    [sgx],
+    [#include <sgx.hpp>],
+    [SystemCoDesigner::SGX::NetworkGraphAccess ngx("some-file.sgx");],
+    [sgx -lcosupport-xerces -lxerces-c -lcosupport-initializer -lcosupport-streams],
     [acjf_found_libsgx="no";]
     [acjf_found_libsgx="";])
   CPPFLAGS="$acjf_libsgx_CPPFLAGS"
+  LDFLAGS="$acjf_libsgx_LDFLAGS"
   if test x"$acjf_found_libsgx" = x"no"; then
     m4_if([$2], [], [AC_MSG_ERROR([Cannot find LibSGX library, bailing out!])], [])
     acjf_found_libsgx="no"

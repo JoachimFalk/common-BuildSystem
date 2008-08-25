@@ -16,40 +16,36 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-dnl ACJF_CHECK_LIB_SYSTEMC_VPC check for cosupport library
-dnl ACJF_CHECK_LIB_SYSTEMC_VPC(
+dnl ACJF_CHECK_CECSIM_PYCON check for CECSIM-PyCon library
+dnl ACJF_CHECK_CECSIM_PYCON(
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>])
-AC_DEFUN([ACJF_CHECK_LIB_SYSTEMC_VPC],
+AC_DEFUN([ACJF_CHECK_CECSIM_PYCON],
 [dnl
 AC_LANG_PUSH([C++])
-ACJF_CHECK_LIB_SYSTEMC
+ACJF_CHECK_LIB_BOOST
 ACJF_CHECK_LIB_COSUPPORT
 
-acjf_PRE_SYSTEMC_VPC_CPPFLAGS="$CPPFLAGS"
-acjf_PRE_SYSTEMC_VPC_LDFLAGS="$LDFLAGS"
+acjf_CECSIM_PYCON_CPPFLAGS="$CPPFLAGS"
+acjf_CECSIM_PYCON_LDFLAGS="$LDFLAGS"
 CPPFLAGS="$CPPFLAGS $SYSTEMC_INCLUDE $COSUPPORT_INCLUDE"
 LDFLAGS="$LDFLAGS $SYSTEMC_LDFLAGS"
 ACJF_CHECK_LIB(
-  [SystemC-VPC],
-  [SystemC-VPC],
-  [
-#include <systemcvpc/FastLink.h>
-#define  main _main
-
-int sc_main(int argc, char *argv[]) { return 0; }],
-  [SystemC_VPC::FastLink f;],
-  [systemcvpc -lsystemc],
+  [CECSIM-PyCon],
+  [CECSIM-PyCon],
+  [#include <CECSim/Crossbar.hpp>],
+  [CECSim::Crossbar cb;],
+  [cecsim],
   [$1], [$2])
-CPPFLAGS="$acjf_PRE_SYSTEMC_VPC_CPPFLAGS"
-LDFLAGS="$acjf_PRE_SYSTEMC_VPC_LDFLAGS"
+CPPFLAGS="$acjf_CECSIM_PYCON_CPPFLAGS"
+LDFLAGS="$acjf_CECSIM_PYCON_LDFLAGS"
 
 if test x"$pkg_systemc_vpc_builddir" != x""; then
-  SYSTEMC_VPC_DEPENDENCIES="$pkg_systemc_vpc_builddir/libsystemcvpc.la"
+  CECSIM_PYCON_DEPENDENCIES="$pkg_cecsim_pycon_builddir/libcecsim.la"
 else
-  SYSTEMC_VPC_DEPENDENCIES=""
+  CECSIM_PYCON_DEPENDENCIES=""
 fi
-AC_SUBST([SYSTEMC_VPC_DEPENDENCIES])
+AC_SUBST([CECSIM_PYCON_DEPENDENCIES])
 
 AC_LANG_POP
 ])
