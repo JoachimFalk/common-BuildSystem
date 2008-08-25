@@ -52,25 +52,48 @@ if test x"$acjf_found_systemoc" != x"no"; then
   fi
 fi
 if test x"$acjf_found_systemoc" != x"no"; then
+  ACJF_CHECK_LIB_SGX(
+   [acjf_got_libsgx="yes";],
+   [acjf_got_libsgx="no";])
+  if test x"$acjf_got_libsgx" = x"no"; then
+    m4_if([$2], [], [AC_MSG_ERROR([Cannot find SGX library required by SysteMoC, bailing out!])], [])
+    acjf_found_systemoc="no"
+  fi
+fi
+if test x"$acjf_found_systemoc" != x"no"; then
+
   ACJF_CHECK_LIB_SYSTEMC_VPC(
    [acjf_got_systemcvpc="yes";],
    [acjf_got_systemcvpc="no";])
+  if test x"$acjf_got_systemcvpc" = x"yes"; then
+    LVPC="-lsystemcvpc"
+  fi
+
   ACJF_CHECK_LIB_WSDF(
    [acjf_got_libwsdf="yes";],
    [acjf_got_libwsdf="no";])
+  if test x"$acjf_got_libwsdf" = x"yes"; then
+    LWSDF="-lwsdf"
+  fi
 
   acjf_systemoc_CPPFLAGS="$CPPFLAGS";
-  CPPFLAGS="$CPPFLAGS $BOOST_INCLUDE $COSUPPORT_INCLUDE $SYSTEMC_VPC_INCLUDE $LIBWSDF_INCLUDE"
-  ACJF_CHECK_LIB(
+  acjf_systemoc_LDFLAGS="$LDFLAGS";
+  CPPFLAGS="$CPPFLAGS $BOOST_INCLUDE $COSUPPORT_INCLUDE $SYSTEMC_VPC_INCLUDE $LIBWSDF_INCLUDE $LIBSGX_INCLUDE"
+  LDFLAGS="$LDFLAGS $BOOST_LDFLAGS $COSUPPORT_LDFLAGS $SYSTEMC_VPC_LDFLAGS $LIBWSDF_LDFLAGS $LIBSGX_LDFLAGS"
+ACJF_CHECK_LIB(
     [SysteMoC],
     [SysteMoC],
     [#include <systemoc/smoc_config.h>
+     #include <systemc.h>
+     #define main _main
+     int sc_main(int, char**) { return 0; }
     ],
     [int x;],
-    [systemoc],
+    [systemoc -lsystemc $LVPC $LWSDF -lsgx -lcosupport-streams -lcosupport-systemc -lcosupport-smartptr -lcosupport-xerces],
     [acjf_found_systemoc="no";]
     [acjf_found_systemoc="";])
   CPPFLAGS="$acjf_systemoc_CPPFLAGS"
+  LDFLAGS="$acjf_systemoc_LDFLAGS"
   if test x"$acjf_found_systemoc" = x"no"; then
     m4_if([$2], [], [AC_MSG_ERROR([Cannot find SysteMoC library, bailing out!])], [])
     acjf_found_systemoc="no"
