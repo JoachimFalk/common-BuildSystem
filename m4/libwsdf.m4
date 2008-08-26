@@ -23,6 +23,14 @@ dnl  [<code if not found, default is bailout>])
 AC_DEFUN([ACJF_CHECK_LIB_WSDF],
 [dnl
 AC_LANG_PUSH([C++])
+
+ACJF_CHECK_LIB_SYSTEMC
+ACJF_CHECK_LIB_COSUPPORT
+
+acjf_libwsdf_CPPFLAGS="$CPPFLAGS";
+acjf_libwsdf_LDFLAGS="$LDFLAGS";
+CPPFLAGS="$CPPFLAGS $SYSTEMC_INCLUDE $COSUPPORT_INCLUDE"
+LDFLAGS="$LDFLAGS $SYSTEMC_LDFLAGS $COSUPPORT_LDFLAGS"
 ACJF_CHECK_LIB(
   [libWSDF],
   [LibWSDF],
@@ -30,12 +38,10 @@ ACJF_CHECK_LIB(
 #include <iostream>
 #include <wsdf/smoc_wsdf_edge.hpp>],
   [smoc_wsdf_edge_descr my_edge(std::cin);],
-  [WSDF],
+  [wsdf -lsystemc -lcosupport-streams],
   [$1], [$2])
-
-dnl WTF@Keinert? Where are acjf_PRE_LIBWSDF_CPPFLAGS acjf_PRE_LIBWSDF_LDFLAGS stored before?
-dnl CPPFLAGS="$acjf_PRE_LIBWSDF_CPPFLAGS"
-dnl LDFLAGS="$acjf_PRE_LIBWSDF_LDFLAGS"
+CPPFLAGS="$acjf_libwsdf_CPPFLAGS"
+LDFLAGS="$acjf_libwsdf_LDFLAGS"
 
 if test x"$pkg_libwsdf_builddir" != x""; then
   LIBWSDF_DEPENDENCIES="$pkg_libwsdf_builddir/libwsdf.la"
