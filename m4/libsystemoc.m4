@@ -43,6 +43,15 @@ if test x"$acjf_found_systemoc" != x"no"; then
   fi
 fi
 if test x"$acjf_found_systemoc" != x"no"; then
+  ACJF_CHECK_LIB_XERCES(
+   [acjf_got_xerces="yes";],
+   [acjf_got_xerces="no";])
+  if test x"$acjf_got_xerces " = x"no"; then
+    m4_if([$2], [], [AC_MSG_ERROR([Cannot find Xerces library required by SysteMoC, bailing out!])], [])
+    acjf_found_systemoc="no"
+  fi
+fi
+if test x"$acjf_found_systemoc" != x"no"; then
   ACJF_CHECK_LIB_COSUPPORT(
    [acjf_got_cosupport="yes";],
    [acjf_got_cosupport="no";])
@@ -78,8 +87,8 @@ if test x"$acjf_found_systemoc" != x"no"; then
 
   acjf_systemoc_CPPFLAGS="$CPPFLAGS";
   acjf_systemoc_LDFLAGS="$LDFLAGS";
-  CPPFLAGS="$CPPFLAGS $BOOST_INCLUDE $COSUPPORT_INCLUDE $SYSTEMC_VPC_INCLUDE $LIBWSDF_INCLUDE $LIBSGX_INCLUDE"
-  LDFLAGS="$LDFLAGS $BOOST_LDFLAGS $COSUPPORT_LDFLAGS $SYSTEMC_VPC_LDFLAGS $LIBWSDF_LDFLAGS $LIBSGX_LDFLAGS"
+  CPPFLAGS="$CPPFLAGS $SYSTEMC_VPC_INCLUDE $LIBWSDF_INCLUDE $LIBSGX_INCLUDE $COSUPPORT_INCLUDE $SYSTEMC_INCLUDE $XERCES_INCLUDE $BOOST_INCLUDE"
+  LDFLAGS="$LDFLAGS $SYSTEMC_VPC_LDFLAGS $LIBWSDF_LDFLAGS $LIBSGX_LDFLAGS $COSUPPORT_LDFLAGS $SYSTEMC_LDFLAGS $XERCES_LDFLAGS $BOOST_LDFLAGS"
 ACJF_CHECK_LIB(
     [SysteMoC],
     [SysteMoC],
@@ -89,7 +98,7 @@ ACJF_CHECK_LIB(
      int sc_main(int, char**) { return 0; }
     ],
     [int x;],
-    [systemoc -lsystemc $LVPC $LWSDF -lsgx -lcosupport-streams -lcosupport-systemc -lcosupport-smartptr -lcosupport-xerces],
+    [systemoc $LVPC $LWSDF -lsgx -lcosupport-streams -lcosupport-smartptr -lcosupport-systemc -lcosupport-xerces -lsystemc -lxerces-c -lboost_program_options$BOOST_LIBPOSTFIX],
     [acjf_found_systemoc="no";]
     [acjf_found_systemoc="";])
   CPPFLAGS="$acjf_systemoc_CPPFLAGS"
@@ -98,7 +107,7 @@ ACJF_CHECK_LIB(
     m4_if([$2], [], [AC_MSG_ERROR([Cannot find SysteMoC library, bailing out!])], [])
     acjf_found_systemoc="no"
   else
-    SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $BOOST_INCLUDE $SYSTEMC_INCLUDE $COSUPPORT_INCLUDE"
+    SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $BOOST_INCLUDE $SYSTEMC_INCLUDE $COSUPPORT_INCLUDE $LIBSGX_INCLUDE"
   fi
 fi
 
@@ -192,9 +201,12 @@ else
   m4_if([$2], [], [true;], [$2])
 fi
 unset acjf_found_systemoc
-unset acjf_got_systemc
 unset acjf_got_boost
+unset acjf_got_systemc
+unset acjf_got_xerces
 unset acjf_got_cosupport
+unset acjf_got_libsgx
 unset acjf_got_systemcvpc
+unset acjf_got_libwsdf
 AC_LANG_POP
 ])
