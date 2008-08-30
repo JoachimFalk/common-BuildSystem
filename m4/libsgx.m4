@@ -43,10 +43,19 @@ if test x"$acjf_found_libsgx" != x"no"; then
   fi
 fi
 if test x"$acjf_found_libsgx" != x"no"; then
+  ACJF_CHECK_LIB_XERCES(
+   [acjf_got_xerces="yes";],
+   [acjf_got_xerces="no";])
+  if test x"$acjf_got_xerces" = x"no"; then
+    m4_if([$2], [], [AC_MSG_ERROR([Cannot find Xerces library required by LibSGX, bailing out!])], [])
+    acjf_found_libsgx="no"
+  fi
+fi
+if test x"$acjf_found_libsgx" != x"no"; then
   acjf_libsgx_CPPFLAGS="$CPPFLAGS";
   acjf_libsgx_LDFLAGS="$LDFLAGS";
-  CPPFLAGS="$CPPFLAGS $COSUPPORT_INCLUDE $XERCES_INCLUDE"
-  LDFLAGS="$LDFLAGS $COSUPPORT_LDFLAGS $XERCES_LDFLAGS"
+  CPPFLAGS="$CPPFLAGS $COSUPPORT_INCLUDE $XERCES_INCLUDE $BOOST_INCLUDE"
+  LDFLAGS="$LDFLAGS $COSUPPORT_LDFLAGS $XERCES_LDFLAGS $BOOST_LDFLAGS"
   ACJF_CHECK_LIB(
     [LibSGX],
     [LibSGX],
@@ -84,5 +93,6 @@ fi
 unset acjf_found_libsgx
 unset acjf_got_boost
 unset acjf_got_cosupport
+unset acjf_got_xerces
 AC_LANG_POP
 ])
