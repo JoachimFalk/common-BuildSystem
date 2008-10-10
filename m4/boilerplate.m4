@@ -18,20 +18,39 @@ dnl Boston, MA 02111-1307, USA.
 
 dnl ACJF_INIT
 AC_DEFUN([ACJF_INIT],[
-m4_define([ACJF_VAR_SUBPROJECT_DIR], [])dnl
-m4_define([ACJF_VAR_SUBSTVARFIXUP], [[AM_LDFLAGS,AM_CPPFLAGS]])dnl
-acjf_top_builddir=`pwd`
-acjf_top_srcdir=`cd "$srcdir" && pwd`
 AH_TOP(
 [/* vim: set sw=2 ts=8 syn=c: */
 
 #ifndef _INCLUDED_CONFIG_H
 #define _INCLUDED_CONFIG_H
 ])dnl
+m4_define([ACJF_VAR_SUBPROJECT_DIR], [])dnl
+m4_define([ACJF_VAR_SUBSTVARFIXUP], [[AM_LDFLAGS,AM_CPPFLAGS]])dnl
+acjf_top_builddir=`pwd`
+acjf_top_srcdir=`cd "$srcdir" && pwd`
+m4_define([ACJF_VAR_ROOT_BUILDDIR], m4_esyscmd([
+  dir="."
+  while test ! -d "$dir/BuildSystem"; do
+    if test x`cd "$dir" && pwd` = x"/"; then
+      exit 0;
+    fi
+    dir="../$dir"
+  done
+  # echo -n now newline
+  echo -n "$dir"
+]))dnl
+m4_if(ACJF_VAR_ROOT_BUILDDIR, [], [AC_MSG_ERROR([Cannot find BuildSystem, bailing out!])])
+AC_CONFIG_AUX_DIR(ACJF_VAR_ROOT_BUILDDIR/BuildSystem)
+acjf_root_srcdir="$srcdir/ACJF_VAR_ROOT_BUILDDIR"
+acjf_root_builddir="ACJF_VAR_ROOT_BUILDDIR"
 ])
 
 dnl ACJF_DONE
-AC_DEFUN([ACJF_DONE],[AC_REQUIRE([ACJF_INIT])dnl
+AC_DEFUN([ACJF_DONE],[
+AC_REQUIRE([ACJF_INIT])dnl
+AH_BOTTOM(
+[#endif /* _INCLUDED_CONFIG_H */
+])
 ACJF_M4_FOREACH([ACJF_VAR_SUBSTVAR], ACJF_VAR_SUBSTVARFIXUP,
  [ACJF_VAR_SUBSTVAR=`echo "$ACJF_VAR_SUBSTVAR" | sed dnl Note that [ 	] contains a TAB character!!!
     -e "s@\(-I\|-L\|^\|[ 	]\)$acjf_top_srcdir\(/\|$\|[ 	]\)@\1\\$(top_srcdir)\2@g" dnl
@@ -46,9 +65,18 @@ case $ac_aux_dir in
     ;;
 esac
 AC_SUBST([auxdir])dnl
-AH_BOTTOM(
-[#endif /* _INCLUDED_CONFIG_H */
-])])
+case $acjf_root_srcdir in
+  $srcdir/*)
+    root_srcdir='$(top_srcdir)/'`echo $acjf_root_srcdir | sed -e "s|^$srcdir/||"`
+    ;;
+  *)
+    root_srcdir='$(top_builddir)/'"$acjf_root_srcdir";
+    ;;
+esac
+AC_SUBST([root_srcdir])dnl
+root_builddir='$(top_builddir)/'"$acjf_root_builddir";
+AC_SUBST([root_builddir])dnl
+])
 
 # m4_si nclude([subproject subdir/configure.in.frag])
 ## do not remove space between m4_si and nclude because
