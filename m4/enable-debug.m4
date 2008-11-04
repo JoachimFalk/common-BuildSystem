@@ -36,7 +36,7 @@ AC_ARG_ENABLE(
 )
 AC_MSG_RESULT($enable_debug)
 if test "x$enable_debug" = "xyes"; then
-  if test "$ac_test_CFLAGS" = set; then
+  if test "$ac_test_CFLAGS" = set -o "$ac_test_CPPFLAGS" = set; then
     CFLAGS="$CFLAGS $2"
   elif test $ac_cv_prog_cc_g = yes; then
     if test "$GCC" = yes; then
@@ -47,7 +47,7 @@ if test "x$enable_debug" = "xyes"; then
   else
     CFLAGS="$2"
   fi
-  if test "$ac_test_CXXFLAGS" = set; then
+  if test "$ac_test_CXXFLAGS" = set -o "$ac_test_CPPFLAGS" = set; then
     CXXFLAGS="$CXXFLAGS $2"
   elif test $ac_cv_prog_cxx_g = yes; then
     if test "$GCC" = yes; then
@@ -59,7 +59,7 @@ if test "x$enable_debug" = "xyes"; then
     CXXFLAGS="$2"
   fi
 else
-  if test "$ac_test_CFLAGS" = set; then
+  if test "$ac_test_CFLAGS" = set -o "$ac_test_CPPFLAGS" = set; then
     CFLAGS="$CFLAGS $3"
   else
     if test "$GCC" = yes; then
@@ -68,7 +68,7 @@ else
       CFLAGS="-O $3"
     fi
   fi
-  if test "$ac_test_CXXFLAGS" = set; then
+  if test "$ac_test_CXXFLAGS" = set -o "$ac_test_CPPFLAGS" = set; then
     CXXFLAGS="$CXXFLAGS $3"
   else
     if test "$GCC" = yes; then

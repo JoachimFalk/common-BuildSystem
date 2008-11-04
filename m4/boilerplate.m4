@@ -18,6 +18,8 @@ dnl Boston, MA 02111-1307, USA.
 
 dnl ACJF_INIT
 AC_DEFUN([ACJF_INIT],[
+ac_test_CPPFLAGS=${CPPFLAGS+set}
+ac_save_CPPFLAGS=$CPPFLAGS
 AH_TOP(
 [/* vim: set sw=2 ts=8 syn=c: */
 
