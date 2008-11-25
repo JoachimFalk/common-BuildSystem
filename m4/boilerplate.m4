@@ -32,7 +32,7 @@ acjf_top_builddir=`pwd`
 acjf_top_srcdir=`cd "$srcdir" && pwd`
 m4_define([ACJF_VAR_ROOT_BUILDDIR], m4_esyscmd([
   dir="."
-  while test ! -d "$dir/BuildSystem"; do
+  while test ! -d "$dir/BuildSystem" -o -L "$dir/BuildSystem"; do
     if test x`cd "$dir" && pwd` = x"/"; then
       exit 0;
     fi
