@@ -379,28 +379,28 @@ dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := false
 AC_DEFUN([ACJF_CHECK_LIB],
 [ACJF_ARG_WITHPKG([$1], [$2])
 AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN([$1])[_USE_SRCDIR_VERSION], false)
-acjf_found_pkg=""
+#[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])=""
 m4_if([$2], [], [], [dnl
 if test x"$[acjf_]ACJF_M4_CANON_DC([$1])[_use_srcdir_version]" != x"no"; then
   ACJF_CHECK_PKG([$1], [$2],
-    [acjf_found_pkg="yes"],
-    [acjf_found_pkg=""])
+    [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])="yes"],
+    [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])=""])
 fi
-if test x"$[acjf_]ACJF_M4_CANON_DC([$1])[_use_srcdir_version]" != x"yes" -a x"$acjf_found_pkg" != x"yes"; then
+if test x"$[acjf_]ACJF_M4_CANON_DC([$1])[_use_srcdir_version]" != x"yes" -a x"$[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])" != x"yes"; then
 ])
   ACJF_CHECK_HEADER([$1], [$3], [$4], [$[acjf_]ACJF_M4_CANON_DC([$1])[_search_includedirs]],
-    [acjf_found_pkg=""],
-    [acjf_found_pkg="no"])
-  if test x"$acjf_found_pkg" != x"no"; then
+    [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])=""],
+    [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])="no"])
+  if test x"$[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])" != x"no"; then
     acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $ACJF_M4_CANON_DN([$1])_INCLUDE";
     ACJF_CHECK_LIBONLY([$1], [$3], [$4], [$5], [$[acjf_]ACJF_M4_CANON_DC([$1])[_search_libdirs]],
-      [acjf_found_pkg="yes"],
-      [acjf_found_pkg="no"])
+      [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])="yes"],
+      [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])="no"])
     CPPFLAGS="$acjf_CPPFLAGS"
     unset acjf_CPPFLAGS
   fi
 m4_if([$2], [], [], [fi])
-if test x"$acjf_found_pkg" = x"yes"; then
+if test x"$[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])" = x"yes"; then
   m4_if([$6], [], 
    [true;],
    [$6])
@@ -409,5 +409,5 @@ else
    [AC_MSG_ERROR([Cannot find $1 package, bailing out!])],
    [$7])
 fi
-unset acjf_found_pkg
+unset [acjf_found_pkg_]ACJF_M4_CANON_DC([$1])
 ])

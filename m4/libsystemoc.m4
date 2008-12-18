@@ -43,6 +43,15 @@ if test x"$acjf_found_systemoc" != x"no"; then
   fi
 fi
 if test x"$acjf_found_systemoc" != x"no"; then
+  ACJF_CHECK_LIB_TLM1(
+   [acjf_got_tlm1="yes";],
+   [acjf_got_tlm1="no";])
+  if test x"$acjf_got_tlm1" = x"no"; then
+    m4_if([$2], [], [AC_MSG_ERROR([Cannot find tlm1 headers required by SysteMoC, bailing out!])], [])
+    acjf_found_systemoc="no"
+  fi
+fi
+if test x"$acjf_found_systemoc" != x"no"; then
   ACJF_CHECK_LIB_XERCES(
    [acjf_got_xerces="yes";],
    [acjf_got_xerces="no";])
@@ -107,7 +116,7 @@ ACJF_CHECK_LIB(
     m4_if([$2], [], [AC_MSG_ERROR([Cannot find SysteMoC library, bailing out!])], [])
     acjf_found_systemoc="no"
   else
-    SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $BOOST_INCLUDE $SYSTEMC_INCLUDE $COSUPPORT_INCLUDE $LIBSGX_INCLUDE"
+    SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $BOOST_INCLUDE $SYSTEMC_INCLUDE $TLM1_INCLUDE $COSUPPORT_INCLUDE $XERCES_INCLUDE $LIBSGX_INCLUDE"
   fi
 fi
 
@@ -203,6 +212,7 @@ fi
 unset acjf_found_systemoc
 unset acjf_got_boost
 unset acjf_got_systemc
+unset acjf_got_tlm1
 unset acjf_got_xerces
 unset acjf_got_cosupport
 unset acjf_got_libsgx
