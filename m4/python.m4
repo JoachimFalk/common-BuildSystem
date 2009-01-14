@@ -46,14 +46,16 @@ dnl be to use distutils.sysconfig, but this module isn't available in older
 dnl versions of Python.
 AC_MSG_CHECKING([for Python linkage])
 py_prefix=`$PYTHON -c 'import sys; print sys.prefix'`
+py_exec_prefix=`$PYTHON -c 'import sys; print sys.exec_prefix'`
 py_libdir="$py_prefix/lib/python$PYTHON_VERSION"
-PYTHON_LDFLAGS="-L$py_prefix/lib -Wl,-rpath $py_prefix/lib -L$py_libdir/config  -Wl,-rpath $py_libdir/config"
-PYTHON_INCLUDES="-I$py_prefix/include/python$PYTHON_VERSION"
+py_exec_libdir="$py_exec_prefix/lib/python$PYTHON_VERSION"
+PYTHON_LDFLAGS="-L$py_exec_prefix/lib -Wl,-rpath $py_exec_prefix/lib -L$py_exec_libdir/config -Wl,-rpath $py_exec_libdir/config"
+PYTHON_INCLUDES="-I$py_exec_prefix/include/python$PYTHON_VERSION -I$py_prefix/include/python$PYTHON_VERSION"
 py_linkage=""
 for py_linkpart in LIBS LIBC LIBM LOCALMODLIBS BASEMODLIBS \
                    LINKFORSHARED LDFLAGS ; do
     py_linkage="$py_linkage "`grep "^${py_linkpart}=" \
-                                   $py_libdir/config/Makefile \
+                                   $py_exec_libdir/config/Makefile \
                               | sed -e 's/^.*=//'`
 done
 PYTHON_LIBS="-lpython$PYTHON_VERSION $py_linkage"
