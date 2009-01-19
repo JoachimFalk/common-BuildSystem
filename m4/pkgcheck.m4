@@ -216,6 +216,74 @@ m4_pattern_allow(ACJF_M4_CANON_DN([$1])[_LIBPATH])dnl
 AC_SUBST(ACJF_M4_CANON_DN([$1])[_LIBPATH])dnl
 ])
 
+dnl ACJF_CHECK_HEADER_AND_LIB(
+dnl   <name of lib check (pkgname)>,
+dnl   <possible location in source tree>,
+dnl   <actual include directives>,
+dnl   <code in main routine for link check>,
+dnl   <lib name>,
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+dnl
+dnl This macro only performs the search for the headers and the library.
+dnl Some other macro must have set the acjf_pkgname_search_includedirs,
+dnl acjf_pkgname_search_libdir, and acjf_pkgname_use_srcdir_version
+dnl variables. It is preferable to set these variable by usage of the
+dnl ACJF_ARG_WITHPKG macro. Or use the ACJF_CHECK_LIB macro which
+dnl calls ACJF_ARG_WITHPKG and ACJF_CHECK_HEADER_AND_LIB in sequence.
+dnl Usage of ACJF_CHECK_HEADER_AND_LIB is only required for certain
+dnl packages which require custom code to find header and library paths.
+dnl
+dnl IF pkg found define:
+dnl   PKGNAME_INCLUDE
+dnl   PKGNAME_LDFLAGS
+dnl IF pkg is from srcdir:
+dnl   PKGNAME_INCPATH
+dnl   PKGNAME_LIBPATH
+dnl   pkg_pkgname_srcdir
+dnl   pkg_pkgname_builddir
+dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := true
+dnl IF pkg is from extern:
+dnl   PKGNAME_INCPATH if possible
+dnl   PKGNAME_LIBPATH if possible
+dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := false
+AC_DEFUN([ACJF_CHECK_HEADER_AND_LIB],
+[ACJF_ARG_WITHPKG([$1], [$2])
+m4_pattern_allow([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_USE_SRCDIR_VERSION])
+AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN([$1])[_USE_SRCDIR_VERSION], false)
+#[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])=""
+m4_if([$2], [], [], [dnl
+if test x"$[acjf_]ACJF_M4_CANON_DC([$1])[_use_srcdir_version]" != x"no"; then
+  ACJF_CHECK_PKG([$1], [$2],
+    [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])="yes"],
+    [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])=""])
+fi
+if test x"$[acjf_]ACJF_M4_CANON_DC([$1])[_use_srcdir_version]" != x"yes" -a x"$[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])" != x"yes"; then
+])
+  ACJF_CHECK_HEADER([$1], [$3], [$4], [$[acjf_]ACJF_M4_CANON_DC([$1])[_search_includedirs]],
+    [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])=""],
+    [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])="no"])
+  if test x"$[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])" != x"no"; then
+    acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $ACJF_M4_CANON_DN([$1])_INCLUDE";
+    ACJF_CHECK_LIBONLY([$1], [$3], [$4], [$5], [$[acjf_]ACJF_M4_CANON_DC([$1])[_search_libdirs]],
+      [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])="yes"],
+      [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])="no"])
+    CPPFLAGS="$acjf_CPPFLAGS"
+    unset acjf_CPPFLAGS
+  fi
+m4_if([$2], [], [], [fi])
+if test x"$[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])" = x"yes"; then
+  m4_if([$6], [], 
+   [true;],
+   [$6])
+else
+  m4_if([$7], [],
+   [AC_MSG_ERROR([Cannot find $1 package, bailing out!])],
+   [$7])
+fi
+unset [acjf_found_pkg_]ACJF_M4_CANON_DC([$1])
+])
+
 dnl OBSOLETE ACJF_CHECK_PKG USAGE: 
 dnl
 dnl ACJF_CHECK_PKG(
@@ -376,39 +444,7 @@ dnl IF pkg is from extern:
 dnl   PKGNAME_INCPATH if possible
 dnl   PKGNAME_LIBPATH if possible
 dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := false
-AC_DEFUN([ACJF_CHECK_LIB],
-[ACJF_ARG_WITHPKG([$1], [$2])
-m4_pattern_allow([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_USE_SRCDIR_VERSION])
-AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN([$1])[_USE_SRCDIR_VERSION], false)
-#[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])=""
-m4_if([$2], [], [], [dnl
-if test x"$[acjf_]ACJF_M4_CANON_DC([$1])[_use_srcdir_version]" != x"no"; then
-  ACJF_CHECK_PKG([$1], [$2],
-    [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])="yes"],
-    [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])=""])
-fi
-if test x"$[acjf_]ACJF_M4_CANON_DC([$1])[_use_srcdir_version]" != x"yes" -a x"$[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])" != x"yes"; then
-])
-  ACJF_CHECK_HEADER([$1], [$3], [$4], [$[acjf_]ACJF_M4_CANON_DC([$1])[_search_includedirs]],
-    [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])=""],
-    [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])="no"])
-  if test x"$[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])" != x"no"; then
-    acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $ACJF_M4_CANON_DN([$1])_INCLUDE";
-    ACJF_CHECK_LIBONLY([$1], [$3], [$4], [$5], [$[acjf_]ACJF_M4_CANON_DC([$1])[_search_libdirs]],
-      [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])="yes"],
-      [[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])="no"])
-    CPPFLAGS="$acjf_CPPFLAGS"
-    unset acjf_CPPFLAGS
-  fi
-m4_if([$2], [], [], [fi])
-if test x"$[acjf_found_pkg_]ACJF_M4_CANON_DC([$1])" = x"yes"; then
-  m4_if([$6], [], 
-   [true;],
-   [$6])
-else
-  m4_if([$7], [],
-   [AC_MSG_ERROR([Cannot find $1 package, bailing out!])],
-   [$7])
-fi
-unset [acjf_found_pkg_]ACJF_M4_CANON_DC([$1])
+AC_DEFUN([ACJF_CHECK_LIB], [
+ACJF_ARG_WITHPKG([$1], [$2])
+ACJF_CHECK_HEADER_AND_LIB($@)
 ])
