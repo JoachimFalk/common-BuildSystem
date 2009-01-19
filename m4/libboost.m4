@@ -39,7 +39,7 @@ if test x"$acjf_found_pkg" = x"no"; then
   m4_if([$2], [], [AC_MSG_ERROR([Cannot find boost headers, bailing out!])], [true;])
 fi
 acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $BOOST_INCLUDE";
-ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [[-gcc41],[-gcc],[]], [dnl
+ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [[],[-gcc],[-gcc43],[-gcc42],[-gcc41],[-gcc40],[-gcc34],[-gcc33]], [dnl
   if test x"$acjf_found_pkg" = x""; then
 dnl  m4_if(
 dnl    ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX), [],
