@@ -55,8 +55,8 @@ AH_BOTTOM(
 ])
 ACJF_M4_FOREACH([ACJF_VAR_SUBSTVAR], ACJF_VAR_SUBSTVARFIXUP,
  [ACJF_VAR_SUBSTVAR=`echo "$ACJF_VAR_SUBSTVAR" | sed dnl Note that [ 	] contains a TAB character!!!
-    -e "s@\(-I\|-L\|^\|[ 	]\)$acjf_top_srcdir\(/\|$\|[ 	]\)@\1\\$(top_srcdir)\2@g" dnl
-    -e "s@\(-I\|-L\|^\|[ 	]\)$acjf_top_builddir\(/\|$\|[ 	]\)@\1\\$(top_builddir)\2@g"`
+    -e ["s@\(-I\|-L\|^\|[ 	]\)$acjf_top_srcdir\(/\|$\|[ 	]\)@\1\\$(top_srcdir)\2@g"] dnl
+    -e ["s@\(-I\|-L\|^\|[ 	]\)$acjf_top_builddir\(/\|$\|[ 	]\)@\1\\$(top_builddir)\2@g"]`
   AC_SUBST(ACJF_VAR_SUBSTVAR)])dnl
 case $ac_aux_dir in
   $srcdir/*)
