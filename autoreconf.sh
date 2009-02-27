@@ -1,5 +1,5 @@
 #! /bin/sh
-# Copyright (C) 2001 - 2006 Joachim Falk <joachim.falk@gmx.de>
+# Copyright (C) 2001 - 2009 Joachim Falk <joachim.falk@gmx.de>
 # 
 # This file is part of the BuildSystem distribution of Joachim Falk;
 # you can redistribute it and/or modify it under the terms of the
@@ -16,35 +16,214 @@
 # the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+if test -n "${BASH_VERSION+set}" && (set -o posix) >/dev/null 2>&1; then
+  set -o posix
+fi
+
+# NLS nuisances.
+for as_var in \
+  LANG LANGUAGE LC_ADDRESS LC_ALL LC_COLLATE LC_CTYPE LC_IDENTIFICATION \
+  LC_MEASUREMENT LC_MESSAGES LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER \
+  LC_TELEPHONE LC_TIME
+do
+  if (set +x; test -n "`(eval $as_var=C; export $as_var) 2>&1`"); then
+    eval $as_var=C; export $as_var
+  else
+    unset $as_var
+  fi
+done
+
+# Name of the executable.
+as_me=`basename "$0"`
+
 BUILDSYSTEM=`readlink -fn $0`
 BUILDSYSTEM=`dirname $BUILDSYSTEM`
 
-cd `dirname $0`
+#cd `dirname $0`
+unset SHELL
 
-if [ -z "$ACLOCAL" ]; then
-  export ACLOCAL="aclocal"
+DIRS=""
+
+OPT_FORCE="--force"
+OPT_VERBOSE="--verbose"
+OPT_SYMLINK="--symlink"
+OPT_INSTALL="--install"
+OPT_RECURSIVE=""
+
+while test $# != 0
+do
+  case $1 in
+    --*=*)
+      ac_option=`expr "x$1" : 'x\([^=]*\)='`
+      ac_optarg=`expr "x$1" : 'x[^=]*=\(.*\)'`
+      ac_shift=:
+      ;;
+    --*)
+      ac_option=$1
+      ac_optarg=$2
+      ac_shift=shift
+      ;;
+    *)
+      # This is not an option, so the user has probably given explicit
+      # arguments.
+      ac_option=$1
+      ac_shift=:
+  esac
+  case $ac_option in
+    --aclocal-prog)
+      ACLOCAL="$ac_optarg"; $ac_shift;
+      ;;
+    --libtoolize-prog)
+      LIBTOOLIZE="$ac_optarg"; $ac_shift;
+      ;;
+    --automake-prog)
+      AUTOMAKE="$ac_optarg"; $ac_shift;
+      ;;
+    --autoheader-prog)
+      AUTOHEADER="$ac_optarg"; $ac_shift;
+      ;;
+    --autopoint-prog)
+      AUTOPOINT="$ac_optarg"; $ac_shift;
+      ;;
+    --autoreconf-prog)
+      AUTORECONF="$ac_optarg"; $ac_shift;
+      ;;
+    --force)
+      OPT_FORCE="--force"
+      ;;
+    --no-force)
+      OPT_FORCE=""
+      ;;
+    --verbose)
+      OPT_VERBOSE="--verbose"
+      ;;
+    --no-verbose)
+      OPT_VERBOSE=""
+      ;;
+    --recursive)
+      OPT_RECURSIVE=""
+      ;;
+    --no-recursive)
+      OPT_RECURSIVE="--no-recursive"
+      ;;
+    --install)
+      OPT_INSTALL="--install"
+      ;;
+    --no-install)
+      OPT_INSTALL=""
+      ;;
+    --symlink)
+      OPT_INSTALL="--install"
+      OPT_SYMLINK="--symlink"
+      ;;
+    --no-symlink)
+      OPT_INSTALL=""
+      OPT_SYMLINK=""
+      ;;
+    --copy)
+      OPT_INSTALL="--install"
+      OPT_SYMLINK=""
+      ;;
+    --no-copy)
+      OPT_INSTALL=""
+      OPT_SYMLINK="--symlink"
+      ;;
+    --help)
+      echo "$as_me [OPTIONS] DIRECTORIES
+
+Runs \`autoconf\', \`autoheader\', \`aclocal\', \`automake\', \`autopoint\', and
+\`libtoolize\' where appropriate repeatedly to remake the GNU Build System files
+in specified DIRECTORIES and their subdirectories (defaulting to \`.\').
+
+  --help                      This message.
+
+  Program location options:
+
+  --aclocal-prog=<prog>       Where to find aclocal (Default: aclocal)
+  --libtoolize-prog=<prog>    Where to find libtoolize (Default: libtoolize)
+  --automake-prog=<prog>      Where to find automake (Default: automake)
+  --autoheader-prog=<prog>    Where to find autoheader (Default: autoheader)
+  --autopoint-prog=<prog>     Where to find autopoint (Default: autopoint)
+  --autoreconf-prog=<prog>    Where to find autoreconf (Default: autoreconf)
+
+  Boolean options:
+
+  --no-<option>               Disable boolean option --<option>
+
+  --force                     Consider all files obsolete (Default: yes)
+  --verbose                   Verbosely report processing (Default: yes)
+  --recursive                 rebuild sub-packages (Default: yes)
+  --install                   Install missing auxiliary files
+  --copy                      Implies install and copies missing auxiliary files
+  --symlink                   Implies install and symlinks missing auxiliary files (Default)
+"
+        exit 0;
+      ;;
+    -*)
+      echo "$as_me: error: unrecognized option: $1
+    Try \`$0 --help' for more information."
+      exit 1;
+      ;;
+    *)
+      DIRS="\"$1\" $DIRS";
+      ;;
+  esac
+  shift
+done
+
+if test x"$ACLOCAL" = x""; then
+  ACLOCAL="aclocal"
 fi
-if [ -z "$LIBTOOLIZE" ]; then
-  export LIBTOOLIZE="libtoolize"
+if test x"$LIBTOOLIZE" = x""; then
+  LIBTOOLIZE="libtoolize"
 fi
-if [ -z "$AUTOMAKE" ]; then
-  export AUTOMAKE="automake"
+if test x"$AUTOMAKE" = x""; then
+  AUTOMAKE="automake"
+fi
+if test x"$AUTOHEADER" = x""; then
+  AUTOHEADER="autoheader"
+fi
+if test x"$AUTORECONF" = x""; then
+  AUTORECONF="autoreconf"
+fi
+if test x"$AUTOPOINT" = x""; then
+  AUTOPOINT="autopoint"
 fi
 
 #ACLOCAL="$ACLOCAL -I $BUILDSYSTEM/m4"
 AUTOMAKE="$AUTOMAKE --foreign"
 
+export ACLOCAL
+export LIBTOOLIZE
+export AUTOMAKE
+export AUTOHEADER
+export AUTOPOINT
+
 # $LIBTOOLIZE --force
 # $ACLOCAL    -I BuildSystem/m4
 # $AUTOMAKE   --add-missing
 
-# cleanup
-rm -rf `find -name "autom4te.cache"`  \
-  $BUILDSYSTEM/config.guess           \
-  $BUILDSYSTEM/config.sub             \
-  $BUILDSYSTEM/depcomp                \
-  $BUILDSYSTEM/install-sh             \
-  $BUILDSYSTEM/ltmain.shmissing       \
-  $BUILDSYSTEM/mkinstalldirs
+if test x"$OPT_FORCE" != x""; then
+  # cleanup
+  rm -f \
+    $BUILDSYSTEM/config.guess           \
+    $BUILDSYSTEM/config.sub             \
+    $BUILDSYSTEM/depcomp                \
+    $BUILDSYSTEM/install-sh             \
+    $BUILDSYSTEM/ltmain.sh              \
+    $BUILDSYSTEM/missing                \
+    $BUILDSYSTEM/mkinstalldirs
+fi
 
-autoreconf --install --symlink --force --verbose
+if test x"$DIRS" = x""; then
+  DIRS="."
+fi
+if test x"$OPT_INSTALL" = x""; then
+  OPT_SYMLINK="" # --symlink make no sense without --install
+fi
+
+for dir in $DIRS; do
+  ( cd "$dir" &&
+    { test x"$OPT_FORCE" = x"" || rm -rf `find . -name "autom4te.cache"`; } &&
+    $AUTORECONF $OPT_INSTALL $OPT_SYMLINK $OPT_FORCE $OPT_VERBOSE $OPT_RECURSIVE )
+done
