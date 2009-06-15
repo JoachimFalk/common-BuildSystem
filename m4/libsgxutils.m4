@@ -56,7 +56,7 @@ if test x"$acjf_found_libsgxutils" != x"no"; then
   CPPFLAGS="$CPPFLAGS $BOOST_INCLUDE $COSUPPORT_INCLUDE"
   ACJF_CHECK_LIB(
     [LibSGXUtils],
-    [SGXUtils],
+    [LibSGXUtils SGXUtils],
     [#include <sgx.hpp>
      #include <sgxutils/RecursiveProblemGraphObjVisitor.hpp>
 
