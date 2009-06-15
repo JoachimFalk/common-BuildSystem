@@ -165,7 +165,7 @@ in specified DIRECTORIES and their subdirectories (defaulting to \`.\').
       exit 1;
       ;;
     *)
-      DIRS="\"$1\" $DIRS";
+      DIRS="$1 $DIRS";
       ;;
   esac
   shift
@@ -223,7 +223,6 @@ if test x"$OPT_INSTALL" = x""; then
 fi
 
 for dir in $DIRS; do
-  ( cd "$dir" &&
-    { test x"$OPT_FORCE" = x"" || rm -rf `find . -name "autom4te.cache"`; } &&
-    $AUTORECONF $OPT_INSTALL $OPT_SYMLINK $OPT_FORCE $OPT_VERBOSE $OPT_RECURSIVE )
+  { test x"$OPT_FORCE" = x"" || rm -rf `find "$dir" -name "autom4te.cache"`; } &&
+    $AUTORECONF $OPT_INSTALL $OPT_SYMLINK $OPT_FORCE $OPT_VERBOSE $OPT_RECURSIVE "$dir"
 done
