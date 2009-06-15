@@ -43,8 +43,6 @@ ACJF_CHECK_LIB(
 #include <assert.h>
 #define  main _main
 
-int sc_main(int argc, char *argv[]) { return 0; }],
-  [
 SC_MODULE(foo) {
 public:
   sc_port<tlm::tlm_put_if<int> > output;
@@ -69,8 +67,13 @@ protected:
       wait(sc_time(10,SC_NS));
     }
   }
-} bar("bar")
-  ],
+};
+
+int sc_main(int argc, char *argv[]) {
+  foo bar("bar");
+  return 0;
+} ],
+  [],
   [systemc],
   [$1], [$2])
 

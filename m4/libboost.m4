@@ -39,23 +39,25 @@ if test x"$acjf_found_pkg" = x"no"; then
   m4_if([$2], [], [AC_MSG_ERROR([Cannot find boost headers, bailing out!])], [true;])
 fi
 acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $BOOST_INCLUDE";
-ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [[],[-gcc],[-gcc43],[-gcc42],[-gcc41],[-gcc40],[-gcc34],[-gcc33]], [dnl
+
+ACJF_M4_FOREACH([ACJF_VAR_BOOSTMTPOSTFIX], [[],[-mt]], [dnl
   if test x"$acjf_found_pkg" = x""; then
-dnl  m4_if(
-dnl    ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX), [],
-dnl    [[]],
-dnl    [[, with ]ACJF_VAR_BOOSTPOSTFIX[ postfix]])
-    ACJF_CHECK_LIBONLY(
-      [boost],
-      [#include <boost/regex.hpp>],
-      [boost::regex_constants::match_flag_type x;],
-      [boost_regex]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX),
-      [$acjf_boost_search_libdirs],
-      [acjf_found_pkg="yes";
-       BOOST_LIBPOSTFIX="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)";],
-      [false;])
+    ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [[],[-gcc],[-gcc44],[-gcc43],[-gcc42],[-gcc41],[-gcc40],[-gcc34],[-gcc33],[-xlc]], [dnl
+      if test x"$acjf_found_pkg" = x""; then
+        ACJF_CHECK_LIBONLY(
+          [boost],
+          [#include <boost/regex.hpp>],
+          [boost::regex_constants::match_flag_type x;],
+          [boost_regex]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX),
+          [$acjf_boost_search_libdirs],
+          [acjf_found_pkg="yes";
+           BOOST_LIBPOSTFIX="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX)";],
+          [false;])
+      fi
+    ])
   fi
 ])
+
 if test x"$acjf_found_pkg" = x""; then
   acjf_found_pkg="no";
   m4_if([$2], [], [AC_MSG_ERROR([Cannot find boost library, bailing out!])], [])
@@ -64,10 +66,6 @@ else
 fi
 ACJF_M4_FOREACH([ACJF_VAR_BOOSTMTPOSTFIX], [[$BOOST_LIBPOSTFIX],[$BOOST_LIBPOSTFIX-mt]], [dnl
   if test x"$acjf_found_pkg" = x""; then
-dnl  m4_if(
-dnl    ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX), [],
-dnl    [[]],
-dnl    [[, with ]ACJF_VAR_BOOSTMTPOSTFIX[ postfix]])
     ACJF_CHECK_LIBONLY(
       [boost multithreaded version],
       [#include <boost/thread.hpp>

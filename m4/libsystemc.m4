@@ -31,8 +31,16 @@ ACJF_CHECK_LIB(
 #include <systemc.h>
 #define  main _main
 
-int sc_main(int argc, char *argv[]) { return 0; }],
-  [SC_MODULE(foo) { SC_CTOR(foo) {} } bar("bar")],
+SC_MODULE(foo) {
+public:
+  SC_CTOR(foo) {}
+};
+
+int sc_main(int argc, char *argv[]) {
+  foo bar("bar");
+  return 0;
+} ],
+  [],
   [systemc],
   [$1], [$2])
 AC_LANG_POP
