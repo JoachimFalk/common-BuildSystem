@@ -29,16 +29,16 @@ AC_DEFUN([ACJF_ARG_WITHPKG],
 [acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]=""
 [acjf_with_]ACJF_M4_CANON_DC([$1])=""
 
-AC_ARG_WITH(ACJF_M4_DOWNCASE([$1]),
-  [  --with-]ACJF_M4_DOWNCASE([$1])[         Prefix path for $1],
+AC_ARG_WITH(ACJF_M4_DOWNCASE([$1]), AS_HELP_STRING(
+  [--with-]ACJF_M4_DOWNCASE([$1]), [Prefix path for $1]),
   [acjf_with_]ACJF_M4_CANON_DC([$1])[="$withval"])
 
-AC_ARG_WITH(ACJF_M4_DOWNCASE([$1])[-include],
-  [  --with-]ACJF_M4_DOWNCASE([$1])[-include Include path for $1],
+AC_ARG_WITH(ACJF_M4_DOWNCASE([$1])[-include], AS_HELP_STRING(
+  [--with-]ACJF_M4_DOWNCASE([$1])[-include], [Include path for $1]),
   [acjf_with_]ACJF_M4_CANON_DC([$1])[_include="$withval"])
 
-AC_ARG_WITH(ACJF_M4_DOWNCASE([$1])[-lib],
-  [  --with-]ACJF_M4_DOWNCASE([$1])[-lib     Library path for $1],
+AC_ARG_WITH(ACJF_M4_DOWNCASE([$1])[-lib], AS_HELP_STRING(
+  [--with-]ACJF_M4_DOWNCASE([$1])[-lib], [Library path for $1]),
   [acjf_with_]ACJF_M4_CANON_DC([$1])[_lib="$withval"])
 
 if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" = x""; then
