@@ -49,7 +49,7 @@ py_prefix=`$PYTHON -c 'import sys; print sys.prefix'`
 py_exec_prefix=`$PYTHON -c 'import sys; print sys.exec_prefix'`
 py_libdir="$py_prefix/lib/python$PYTHON_VERSION"
 py_exec_libdir="$py_exec_prefix/lib/python$PYTHON_VERSION"
-PYTHON_LDFLAGS="-L$py_exec_prefix/lib -Wl,-rpath $py_exec_prefix/lib -L$py_exec_libdir/config -Wl,-rpath $py_exec_libdir/config"
+PYTHON_LDFLAGS="-L$py_exec_prefix/lib -L$py_exec_libdir/config"
 PYTHON_INCLUDES="-I$py_exec_prefix/include/python$PYTHON_VERSION -I$py_prefix/include/python$PYTHON_VERSION"
 py_linkage=""
 for py_linkpart in LIBS LIBC LIBM LOCALMODLIBS BASEMODLIBS \
