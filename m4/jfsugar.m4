@@ -1,5 +1,5 @@
 dnl vim: set sw=2 ts=8 syn=config:
-dnl Copyright (C) 2001 - 2006 Joachim Falk <joachim.falk@gmx.de>
+dnl Copyright (C) 2001 - 2009 Joachim Falk <joachim.falk@gmx.de>
 dnl 
 dnl This file is part of the BuildSystem distribution of Joachim Falk;
 dnl you can redistribute it and/or modify it under the terms of the
@@ -321,6 +321,145 @@ AC_DEFUN([ACJF_M4_LIST_HASELEM],
     [$3],
     [ACJF_M4_LIST_HASELEM(ACJF_M4_LIST_TAIL([$1]), [$2], [$3], [$4])])])[]dnl
 ])dnl
+dnl
+dnl Macros for operations on list variables.
+dnl
+dnl ACJF_M4_LISTVAR_REVERSE([<listvar>])
+dnl Example:
+dnl   m4_pushdef([listvar], [[a,b,c,d,ef,g,h]])dnl
+dnl   ACJF_M4_LISTVAR_REVERSE([listvar])dnl
+dnl   listvar
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   h,g,ef,d,c,b,a
+dnl
+dnl Example:
+dnl   m4_pushdef([listvar], [[a,[b,[c,d]],[e],[f],g,h]])dnl
+dnl   ACJF_M4_LISTVAR_REVERSE([listvar])dnl
+dnl   listvar
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   h,g,[f],[e],[b,[c,d]],a
+AC_DEFUN([ACJF_M4_LISTVAR_REVERSE], [m4_define([$1], ACJF_M4_QUOTE(ACJF_M4_LIST_REVERSE($1)))])dnl
+dnl ACJF_M4_LISTVAR_POP_FRONT([<listvar>])
+dnl Example:
+dnl   m4_pushdef([listvar], [[a,[b,[c,d]],[e],[f],g,h]])dnl
+dnl   ACJF_M4_LISTVAR_POP_FRONT([listvar])dnl
+dnl   listvar
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   [b,[c,d]],[e],[f],g,h
+dnl
+dnl Example:
+dnl   m4_pushdef([listvar], [[[b,[c,d]],a]])dnl
+dnl   ACJF_M4_LISTVAR_POP_FRONT([listvar])dnl
+dnl   listvar
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   a
+AC_DEFUN([ACJF_M4_LISTVAR_POP_FRONT], [m4_define([$1], ACJF_M4_QUOTE(ACJF_M4_LIST_POP_FRONT($1)))])dnl
+dnl ACJF_M4_LISTVAR_PUSH_FRONT([<new_item>], [<listvar>])
+dnl Example:
+dnl   m4_pushdef([listvar], [[b,c,d,e,f]])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_FRONT([a],[listvar])dnl
+dnl   listvar
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   a,b,c,d,e,f
+dnl
+dnl Example:
+dnl   m4_pushdef([listvar], [[]])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_FRONT([],[listvar])dnl
+dnl   ACJF_M4_QUOTE(listvar)
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   []
+dnl
+dnl Example:
+dnl   m4_pushdef([listvar], [[]])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_FRONT([a],[listvar])dnl
+dnl   ACJF_M4_QUOTE(listvar)
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   [a]
+dnl
+dnl Example:
+dnl   m4_pushdef([listvar], [[a]])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_FRONT([],[listvar])dnl
+dnl   ACJF_M4_QUOTE(listvar)
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   [a]
+dnl
+dnl Example:
+dnl   m4_pushdef([listvar], [[a,[b,[c,d]],[e],[f],g,h]])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_FRONT([x,[y,z]],[listvar])dnl
+dnl   ACJF_M4_QUOTE(listvar)
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   [x,[y,z],a,[b,[c,d]],[e],[f],g,h]
+AC_DEFUN([ACJF_M4_LISTVAR_PUSH_FRONT], [m4_define([$2], ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_FRONT([$1],$2)))])dnl
+dnl ACJF_M4_LISTVAR_POP_BACK([<item1>,<item2>,...])
+dnl Example:
+dnl   m4_pushdef([listvar], [[a,b,c,d,ef,g,h]])dnl
+dnl   ACJF_M4_LISTVAR_POP_BACK([listvar])dnl
+dnl   listvar
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   a,b,c,d,ef,g
+dnl
+dnl Example:
+dnl   m4_pushdef([listvar], [[a,[b,[c,d]],[e],[f],g,h]])dnl
+dnl   ACJF_M4_LISTVAR_POP_BACK([listvar])dnl
+dnl   listvar
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   a,[b,[c,d]],[e],[f],g
+AC_DEFUN([ACJF_M4_LISTVAR_POP_BACK], [m4_define([$1], ACJF_M4_QUOTE(ACJF_M4_LIST_POP_BACK($1)))])dnl
+dnl ACJF_M4_LISTVAR_PUSH_BACK([<new_item>], [<listvar>])
+dnl Example:
+dnl   m4_pushdef([listvar], [[b,c,d,e,f]])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_BACK([a],[listvar])dnl
+dnl   ACJF_M4_QUOTE(listvar)
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   [b,c,d,e,f,a]
+dnl
+dnl Example:
+dnl   m4_pushdef([listvar], [[]])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_BACK([],[listvar])dnl
+dnl   ACJF_M4_QUOTE(listvar)
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   []
+dnl
+dnl Example:
+dnl   m4_pushdef([listvar], [[]])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_BACK([a],[listvar])dnl
+dnl   ACJF_M4_QUOTE(listvar)
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   [a]
+dnl
+dnl Example:
+dnl   m4_pushdef([listvar], [[a]])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_BACK([],[listvar])dnl
+dnl   ACJF_M4_QUOTE(listvar)
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   [a]
+dnl
+dnl Example:
+dnl   m4_pushdef([listvar], [[a,[b,[c,d]],[e],[f],g,h]])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_BACK([x,[y,z]],[listvar])dnl
+dnl   ACJF_M4_QUOTE(listvar)
+dnl   m4_popdef([listvar])dnl
+dnl Result:
+dnl   [a,[b,[c,d]],[e],[f],g,h,x,[y,z]]
+AC_DEFUN([ACJF_M4_LISTVAR_PUSH_BACK], [m4_define([$2], ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_BACK([$1],$2)))])dnl
+dnl
+dnl Macros for looping constructs
+dnl
 dnl ACJF_M4_WHILE(<test code>, <code while body>)
 dnl Example:
 dnl   m4_pushdef([i],10)dnl
