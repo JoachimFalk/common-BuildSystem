@@ -20,52 +20,38 @@ dnl ACJF_CHECK_LIBBOOST(
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_BOOST],
-[AC_LANG_PUSH([C++])
-ACJF_ARG_WITHPKG([boost], [])
-
-acjf_found_pkg=""
-if test x"$acjf_found_pkg" != x"no"; then
-  ACJF_CHECK_HEADER(
-    [boost],
-    [#include <boost/config.hpp>],
-    [#ifndef BOOST_CONFIG_HPP
-     # error "not boost"
-     #endif],
-    [$acjf_boost_search_includedirs],
-    [acjf_found_pkg=""],
-    [acjf_found_pkg="no"])
-fi
-if test x"$acjf_found_pkg" = x"no"; then
-  m4_if([$2], [], [AC_MSG_ERROR([Cannot find boost headers, bailing out!])], [true;])
-fi
-acjf_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$acjf_CPPFLAGS $BOOST_INCLUDE";
-
+[ACJF_ARG_WITHPKG([boost], [])
+AC_LANG_PUSH([C++])
+acjf_var_found_pkg=""
 ACJF_M4_FOREACH([ACJF_VAR_BOOSTMTPOSTFIX], [[],[-mt]], [dnl
-  if test x"$acjf_found_pkg" = x""; then
-    ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [[],[-gcc],[-gcc44],[-gcc43],[-gcc42],[-gcc41],[-gcc40],[-gcc34],[-gcc33],[-xlc]], [dnl
-      if test x"$acjf_found_pkg" = x""; then
-        ACJF_CHECK_LIBONLY(
-          [boost],
-          [#include <boost/regex.hpp>],
-          [boost::regex_constants::match_flag_type x;],
-          [boost_regex]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX),
-          [$acjf_boost_search_libdirs],
-          [acjf_found_pkg="yes";
-           BOOST_LIBPOSTFIX="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX)";],
-          [false;])
-      fi
-    ])
-  fi
+  ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [[],[-gcc],[-gcc44],[-gcc43],[-gcc42],[-gcc41],[-gcc40],[-gcc34],[-gcc33],[-xlc]], [dnl
+dnl echo "[-lboost]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX): $acjf_var_found_pkg"
+    if test x"$acjf_var_found_pkg" = x""; then
+      ACJF_CHECK_HEADER_AND_LIB(
+        [boost],
+        [], [
+#include <boost/config.hpp>
+#include <boost/regex.hpp>
+        ], [
+#ifndef BOOST_CONFIG_HPP
+# error "not boost"
+#endif
+boost::regex_constants::match_flag_type x;
+        ],
+        [boost_regex]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX),
+        [acjf_var_found_pkg="yes";
+         BOOST_LIBPOSTFIX="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX)";],
+        [false;])
+    fi
+  ])
 ])
-
-if test x"$acjf_found_pkg" = x""; then
-  acjf_found_pkg="no";
-  m4_if([$2], [], [AC_MSG_ERROR([Cannot find boost library, bailing out!])], [])
-else
-  acjf_found_pkg="";
+if test x"$acjf_var_found_pkg" = x"yes"; then
+  unset acjf_var_found_pkg
 fi
 ACJF_M4_FOREACH([ACJF_VAR_BOOSTMTPOSTFIX], [[$BOOST_LIBPOSTFIX],[$BOOST_LIBPOSTFIX-mt]], [dnl
-  if test x"$acjf_found_pkg" = x""; then
+  if test x"$acjf_var_found_pkg" = x""; then
+    acjf_CPPFLAGS="$CPPFLAGS"
+    CPPFLAGS="$BOOST_INCLUDE $CPPFLAGS"
     ACJF_CHECK_LIBONLY(
       [boost multithreaded version],
       [#include <boost/thread.hpp>
@@ -75,28 +61,23 @@ ACJF_M4_FOREACH([ACJF_VAR_BOOSTMTPOSTFIX], [[$BOOST_LIBPOSTFIX],[$BOOST_LIBPOSTF
        th.join();],
       [boost_thread]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX),
       [$BOOST_LIBPATH],
-      [acjf_found_pkg="yes";
+      [acjf_var_found_pkg="yes";
        BOOST_LIBMTPOSTFIX="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX)";],
       [false;])
+    CPPFLAGS="$acjf_CPPFLAGS"
+    unset acjf_CPPFLAGS
   fi
 ])
-if test x"$acjf_found_pkg" = x""; then
-  acjf_found_pkg="no";
-  m4_if([$2], [], [AC_MSG_ERROR([Cannot find boost multithreaded version library, bailing out!])], [])
+AC_LANG_POP
+
+if test x"$acjf_var_found_pkg" = x"yes"; then
+  unset acjf_var_found_pkg
+  m4_if([$1], [], [true;], [$1])
 else
-  acjf_found_pkg="yes";
+  unset acjf_var_found_pkg
+  m4_if([$2], [], [AC_MSG_ERROR([Cannot find boost, bailing out!])], [$2])
 fi
-CPPFLAGS="$acjf_CPPFLAGS"
-unset acjf_CPPFLAGS
 
 AC_SUBST([BOOST_LIBPOSTFIX])
 AC_SUBST([BOOST_LIBMTPOSTFIX])
-AC_LANG_POP
-
-if test x"$acjf_found_pkg" = x"yes"; then
-  m4_if([$1], [], [true;], [$1])
-else
-  m4_if([$2], [], [true;], [$2])
-fi
-unset acjf_found_pkg
 ])
