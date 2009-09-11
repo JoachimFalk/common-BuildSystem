@@ -30,6 +30,8 @@ m4_define([ACJF_VAR_SUBPROJECT_DIR], [])dnl
 m4_define([ACJF_VAR_SUBSTVARFIXUP], [[AM_LDFLAGS,AM_CPPFLAGS]])dnl
 acjf_top_builddir=`pwd`
 acjf_top_srcdir=`cd "$srcdir" && pwd`
+acjf_std_include="standard include search path"
+acjf_std_lib="standard library search path"
 m4_define([ACJF_VAR_ROOT_BUILDDIR], m4_esyscmd([
   dir="."
   while test ! -d "$dir/BuildSystem" -o -L "$dir/BuildSystem"; do
@@ -45,7 +47,13 @@ m4_if(ACJF_VAR_ROOT_BUILDDIR, [], [AC_MSG_ERROR([Cannot find BuildSystem, bailin
 AC_CONFIG_AUX_DIR(ACJF_VAR_ROOT_BUILDDIR/BuildSystem)
 acjf_root_srcdir="$srcdir/ACJF_VAR_ROOT_BUILDDIR"
 acjf_root_builddir="ACJF_VAR_ROOT_BUILDDIR"
+m4_define([ACJF_VAR_SHELLDUMMYVAR_COUNTER], 0)
 ])
+
+dnl ACJF_GEN_ANONYMOUS_SHELL_VAR
+AC_DEFUN([ACJF_GEN_ANONYMOUS_SHELL_VAR],
+[[_acjf_shell_var_anon_]ACJF_VAR_SHELLDUMMYVAR_COUNTER[_]dnl
+m4_define([ACJF_VAR_SHELLDUMMYVAR_COUNTER], m4_eval(ACJF_VAR_SHELLDUMMYVAR_COUNTER+1))])
 
 dnl ACJF_DONE
 AC_DEFUN([ACJF_DONE],[
