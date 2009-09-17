@@ -24,6 +24,12 @@ m4_define([_ACJF_M4_OPENSQUAREBRACKET],
 m4_define([_ACJF_M4_CLOSESQUAREBRACKET],
   m4_changequote(<,>)<m4_changequote(<,>)<]>m4_changequote([,])>m4_changequote([,]))dnl
 AC_DEFUN([ACJF_M4_QUOTE], [[$@]])dnl
+dnl ACJF_M4_UNQUOTE(<arg>)
+dnl 
+dnl Example:
+dnl   ACJF_M4_UNQUOTE([foo],[bar])
+dnl Result:
+dnl   unquoted_foo,unquoted_bar
 AC_DEFUN([ACJF_M4_UNQUOTE], [$*])dnl
 AC_DEFUN([ACJF_M4_FLATEN],
 [m4_if($#, 0, [],
