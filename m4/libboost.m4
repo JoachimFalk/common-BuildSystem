@@ -16,68 +16,82 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-dnl ACJF_CHECK_LIBBOOST(
+dnl ACJF_CHECK_LIB_BOOSTTESTMACRO(
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
-AC_DEFUN([ACJF_CHECK_LIB_BOOST],
-[ACJF_ARG_WITHPKG([boost], [])
-AC_LANG_PUSH([C++])
-acjf_var_found_pkg=""
-ACJF_M4_FOREACH([ACJF_VAR_BOOSTMTPOSTFIX], [[],[-mt]], [dnl
-  ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [[],[-gcc],[-gcc44],[-gcc43],[-gcc42],[-gcc41],[-gcc40],[-gcc34],[-gcc33],[-xlc]], [dnl
+AC_DEFUN([ACJF_CHECK_LIB_BOOSTTESTMACRO], [
+acjf_old_LIBS="$LIBS"
+acjf_var_found_pkg_st=""
+acjf_var_found_pkg_mt=""
+ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [[],[-gcc],[-gcc44],[-gcc43],[-gcc42],[-gcc41],[-gcc40],[-gcc34],[-gcc33],[-xlc]], [dnl
+  ACJF_M4_FOREACH([ACJF_VAR_BOOSTMTPOSTFIX], [[],[-mt]], [dnl
 dnl echo "[-lboost]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX): $acjf_var_found_pkg"
-    if test x"$acjf_var_found_pkg" = x""; then
-      ACJF_CHECK_HEADER_AND_LIB(
-        [boost],
-        [], [
+    if test x"$acjf_var_found_pkg_st" != x"yes"; then
+      acjf_cv_boost_libpostfix="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX)"
+      LIBS="-lboost_regex$acjf_cv_boost_libpostfix $acjf_old_LIBS"
+      AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <boost/config.hpp>
 #include <boost/regex.hpp>
-        ], [
+        ]], [[
 #ifndef BOOST_CONFIG_HPP
 # error "not boost"
 #endif
 boost::regex_constants::match_flag_type x;
-        ],
-        [boost_regex]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX),
-        [acjf_var_found_pkg="yes";
-         BOOST_LIBPOSTFIX="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX)";],
-        [false;])
+        ]])],
+        [acjf_var_found_pkg_st="yes"])
+    fi
+    if test x"$acjf_var_found_pkg_mt" != x"yes"; then
+      acjf_cv_boost_libmtpostfix="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX)"
+      LIBS="-lboost_thread$acjf_cv_boost_libmtpostfix $acjf_old_LIBS"
+      AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+#include <boost/config.hpp>
+#include <boost/thread.hpp>
+void dummy() { return; }
+        ]], [[
+#ifndef BOOST_CONFIG_HPP
+# error "not boost"
+#endif
+boost::thread th(dummy);
+th.join();
+        ]])],
+        [acjf_var_found_pkg_mt="yes"])
     fi
   ])
-])
-if test x"$acjf_var_found_pkg" = x"yes"; then
-  unset acjf_var_found_pkg
-fi
-ACJF_M4_FOREACH([ACJF_VAR_BOOSTMTPOSTFIX], [[$BOOST_LIBPOSTFIX],[$BOOST_LIBPOSTFIX-mt]], [dnl
-  if test x"$acjf_var_found_pkg" = x""; then
-    acjf_CPPFLAGS="$CPPFLAGS"
-    CPPFLAGS="$BOOST_INCLUDE $CPPFLAGS"
-    ACJF_CHECK_LIBONLY(
-      [boost multithreaded version],
-      [#include <boost/thread.hpp>
-
-       void dummy() { return; }],
-      [boost::thread th(dummy);
-       th.join();],
-      [boost_thread]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX),
-      [$BOOST_LIBPATH],
-      [acjf_var_found_pkg="yes";
-       BOOST_LIBMTPOSTFIX="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX)";],
-      [false;])
-    CPPFLAGS="$acjf_CPPFLAGS"
-    unset acjf_CPPFLAGS
+  if test x"$acjf_var_found_pkg_st" != x"yes" -o \
+          x"$acjf_var_found_pkg_mt" != x"yes"; then
+    acjf_var_found_pkg_st=""
+    acjf_var_found_pkg_mt=""
   fi
 ])
-AC_LANG_POP
-
-if test x"$acjf_var_found_pkg" = x"yes"; then
-  unset acjf_var_found_pkg
-  m4_if([$1], [], [true;], [$1])
+if test x"$acjf_var_found_pkg_st" = x"yes"; then
+  unset acjf_var_found_pkg_st
+  unset acjf_var_found_pkg_mt
+  m4_if([$1], [], [true], [$1])
 else
-  unset acjf_var_found_pkg
-  m4_if([$2], [], [AC_MSG_ERROR([Cannot find boost, bailing out!])], [$2])
+  unset acjf_var_found_pkg_st
+  unset acjf_var_found_pkg_mt
+  m4_if([$2], [], [false], [$2])
 fi
+])
 
-AC_SUBST([BOOST_LIBPOSTFIX])
-AC_SUBST([BOOST_LIBMTPOSTFIX])
+dnl ACJF_CHECK_LIBBOOST(
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+AC_DEFUN([ACJF_CHECK_LIB_BOOST], [
+  ACJF_ARG_WITHPKG([boost], [])
+  AC_LANG_PUSH([C++])
+  ACJF_CHECK_LIB_TESTER([boost], [],
+    [ACJF_CHECK_LIB_BOOSTTESTMACRO],
+    [acjf_var_found_pkg=yes],
+    [acjf_var_found_pkg=no])
+  AC_LANG_POP
+  if test x"$acjf_var_found_pkg" = x"yes"; then
+    unset acjf_var_found_pkg
+    m4_if([$1], [], [true;], [$1])
+  else
+    unset acjf_var_found_pkg
+    m4_if([$2], [], [AC_MSG_ERROR([Cannot find boost, bailing out!])], [$2])
+  fi
+  AC_SUBST([BOOST_LIBPOSTFIX])
+  AC_SUBST([BOOST_LIBMTPOSTFIX])
 ])
