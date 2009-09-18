@@ -87,6 +87,8 @@ AC_DEFUN([ACJF_CHECK_LIB_BOOST], [
   AC_LANG_POP
   if test x"$acjf_var_found_pkg" = x"yes"; then
     unset acjf_var_found_pkg
+    BOOST_LIBPOSTFIX=acjf_cv_boost_libpostfix
+    BOOST_LIBMTPOSTFIX=acjf_cv_boost_libmtpostfix
     m4_if([$1], [], [true;], [$1])
   else
     unset acjf_var_found_pkg
