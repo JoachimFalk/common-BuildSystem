@@ -20,10 +20,13 @@ dnl ACJF_SYSTEMC check for systemc library (obsolete)
 AU_DEFUN([ACJF_SYSTEMC], [ACJF_CHECK_LIB_SYSTEMC],
   [ACJF_SYSTEMC is considered obsolete use ACJF_CHECK_LIB_SYSTEMC instead.])
 
-dnl ACJF_SYSTEMC check for systemc library
+dnl ACJF_CHECK_LIB_SYSTEMC(
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+dnl
+dnl check for systemc library
 AC_DEFUN([ACJF_CHECK_LIB_SYSTEMC],
-[dnl
-AC_LANG_PUSH([C++])
+[AC_LANG_PUSH([C++])
 ACJF_CHECK_LIB(
   [SystemC],
   [],
