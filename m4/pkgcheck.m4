@@ -28,7 +28,10 @@ dnl   acjf_<pkgname>_search_list
 AC_DEFUN([ACJF_ARG_WITHPKG], [AC_REQUIRE([ACJF_INIT])dnl
 ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
 m4_pushdef([ACJF_VAR_TAGS], m4_if([$2], [], [[extern]], [[$2]]))
-
+dnl add intern to tags if we find a compile tag
+m4_define([ACJF_VAR_TAGS], m4_if(m4_bregexp(ACJF_VAR_TAGS, [compile]), [-1],
+ [ACJF_VAR_TAGS],
+ [ACJF_VAR_TAGS [intern]]))
 [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]=""
 m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
  [[acjf_with_]ACJF_M4_CANON_DC([$1])[_include]=""
@@ -402,7 +405,7 @@ dnl NEW ACJF_CHECK_PKG USAGE:
 dnl
 dnl ACJF_CHECK_PKG(
 dnl   <pkgname>,
-dnl   <srcdir subdirectory name>
+dnl   <possible location in source tree>,
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>])
 dnl
@@ -443,7 +446,10 @@ AC_DEFUN([ACJF_CHECK_PKG], [AC_REQUIRE([ACJF_INIT])dnl
   m4_popdef([ACJF_VAR_CODE_IF_FALSE])
 ])
 
-dnl ACJF_NEED_PKG(<packet>)
+dnl ACJF_NEED_PKG(
+dnl   <pkgname>,
+dnl   <possible location in source tree>)
+dnl
 dnl Take the same actions as ACJF_CHECK_PKG but also adds
 dnl PKGNAME_INCLUDE to AM_CPPFLAGS and
 dnl PGKNAME_LDFLAGS to AM_LDFLAGS
@@ -484,4 +490,28 @@ dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := false
 AC_DEFUN([ACJF_CHECK_LIB], [dnl
 ACJF_ARG_WITHPKG([$1], m4_if([$2], [], [], [[intern]])[ extern])dnl
 ACJF_CHECK_LIB_TESTER([$1], [$2], ACJF_CHECK_LIB_TESTMACROGEN([$3], [$4], [$5]), [$6], [$7])dnl
+])
+
+dnl ACJF_CONFIG_PKG(
+dnl   <pkgname>,
+dnl   <srcdir subdirectory name>)
+dnl
+dnl create --with-pkgname option to selectively activate and deactivate
+dnl compilation of the package.
+AC_DEFUN([ACJF_CONFIG_PKG], [dnl
+  m4_if(m4_eval([$#<=1]), [1],
+   [m4_pushdef([ACJF_VAR_PKGNAME], [[$1]])
+    m4_pushdef([ACJF_VAR_SUBDIR], [[$1]])],
+   [m4_pushdef([ACJF_VAR_PKGNAME], [[$1]])
+    m4_pushdef([ACJF_VAR_SUBDIR], [[$2]])])
+  ACJF_ARG_WITHPKG(ACJF_VAR_PKGNAME, [compile])
+  if echo ["$acjf_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_search_list " | grep "^[ 	]*acjf_bundled[ 	]"] >/dev/null; then
+    if test -d "$srcdir/ACJF_VAR_SUBDIR"; then
+      AC_CONFIG_SUBDIRS(ACJF_VAR_SUBDIR)
+    elif test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" = x"yes"; then
+      AC_MSG_ERROR([source tree version for ]ACJF_VAR_PKGNAME[ is missing!])
+    fi
+  fi
+  m4_popdef([ACJF_VAR_PKGNAME])
+  m4_popdef([ACJF_VAR_SUBDIR])
 ])
