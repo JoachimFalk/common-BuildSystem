@@ -159,6 +159,8 @@ dnl This macro generates a macro ACJF_M4_ANONYMOUS_XXX testing for presence
 dnl of the given library. The generated macro takes two arguments, i.e.,
 dnl
 dnl   ACJF_M4_ANONYMOUS_XXX(
+dnl     <name of lib check (pkgname)>,
+dnl     <description shell variable>,
 dnl     <code if found, default does nothing>,
 dnl     <code if not found, default does nothing>)
 AC_DEFUN([ACJF_CHECK_LIB_TESTMACROGEN], [AC_REQUIRE([ACJF_INIT])dnl
@@ -181,10 +183,11 @@ m4_define(ACJF_VAR_ANONYMOUS_M4_MACRO, ACJF_M4_QUOTEDARGS([
       fi
     done
     LIBS="$LIBS $acjf_old_LIBS";
+    AC_MSG_CHECKING([for §1 package in $§2])
     AC_LINK_IFELSE(
       [AC_LANG_PROGRAM([[$1]], [[$2]])],
-      [§1],
-      [§2])
+      [AC_MSG_RESULT([yes]); §3],
+      [AC_MSG_RESULT([no]); §4])
   ])
 ]))dnl
 m4_popdef([ACJF_VAR_ANONYMOUS_M4_MACRO])dnl
@@ -248,8 +251,8 @@ if test x"${[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]+set}" != x"set";
   acjf_search_desc="disabled"
   for acjf_var_item in $[acjf_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_search_list]; do
     eval acjf_search_desc=\$${acjf_var_item}_desc;
-    AC_MSG_CHECKING([for ACJF_VAR_PKGNAME package $acjf_search_desc])
     if test x"$acjf_var_item" = x"acjf_bundled"; then
+      AC_MSG_CHECKING([for ACJF_VAR_PKGNAME package in $acjf_search_desc])
       m4_if(ACJF_VAR_SUBDIR_LIST, [], [false],
        [acjf_var_pkgname_srcdir="/invalid";
         m4_pushdef([_ACJF_VAR_DIR],ACJF_VAR_SUBPROJECT_DIR[dummy])dnl
@@ -280,6 +283,7 @@ if test x"${[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]+set}" != x"set";
         # cleanup
         unset acjf_var_subdir
         if test x"$acjf_var_pkgname_srcdir" != x"/invalid"; then
+          AC_MSG_RESULT([yes])
           [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]="$acjf_top_srcdir/$acjf_var_pkgname_srcdir"
           [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]="$acjf_top_builddir/$acjf_var_pkgname_srcdir"
           if test -d "$srcdir/$acjf_var_pkgname_srcdir/pkginclude"; then
@@ -289,6 +293,8 @@ if test x"${[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]+set}" != x"set";
           fi
           [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]"
           break
+        else
+          AC_MSG_RESULT([no])
         fi])
     else
       eval acjf_search_include=\$${acjf_var_item}_include;
@@ -307,16 +313,14 @@ if test x"${[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]+set}" != x"set";
       fi
       LIBS="$acjf_LIBS"
       ACJF_M4_UNQUOTE(ACJF_VAR_TEST_MACRO[(
+       ACJF_VAR_PKGNAME,
+       [acjf_search_desc],
        [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath="$acjf_search_include";
         acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath="$acjf_search_lib"; break],
        [false])])
     fi
-    AC_MSG_RESULT([no])
     acjf_search_desc="not found"
   done
-  if test x"$acjf_search_desc" != x"not found" -a x"$acjf_search_desc" != x"disabled"; then
-    AC_MSG_RESULT([yes])
-  fi
 fi
 
 CPPFLAGS="$acjf_CPPFLAGS"; LDFLAGS="$acjf_LDFLAGS"; LIBS="$acjf_LIBS";
