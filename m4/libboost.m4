@@ -119,7 +119,8 @@ AC_DEFUN([ACJF_CHECK_LIB_BOOST], [
     m4_if([$1], [], [true;], [$1])
   else
     unset acjf_var_found_pkg
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find boost, bailing out!])], [$2])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find boost, bailing out!])],
+      [m4_if([$2], [], [true;], [$2])])
   fi
   AC_SUBST([BOOST_LIBPOSTFIX])
   AC_SUBST([BOOST_LIBMTPOSTFIX])

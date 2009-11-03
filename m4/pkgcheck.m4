@@ -228,6 +228,10 @@ m4_pushdef([ACJF_VAR_TEST_MACRO], [[$3]])dnl
 m4_pushdef([ACJF_VAR_CODE_IF_TRUE], [[$4]])dnl
 m4_pushdef([ACJF_VAR_CODE_IF_FALSE], [[$5]])dnl
 
+dnl dnl For debug
+dnl echo "CODE IF TRUE: _[]ACJF_M4_CANON_DC(ACJF_VAR_CODE_IF_TRUE)[]_"
+dnl echo "CODE IF FALSE: _[]ACJF_M4_CANON_DC(ACJF_VAR_CODE_IF_FALSE)[]_"
+
 unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE]
 unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH]
 unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS]
@@ -349,12 +353,14 @@ if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]" != x"not found" 
     ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS="$]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS -L$acjf_var_item2"];
   done
   m4_if(ACJF_VAR_CODE_IF_TRUE, [], 
-   [true;],
-   ACJF_VAR_CODE_IF_TRUE)
+    [true;],
+    ACJF_VAR_CODE_IF_TRUE)
 else
-  m4_if(ACJF_VAR_CODE_IF_FALSE, [],
-   [AC_MSG_ERROR([Cannot find ACJF_VAR_PKGNAME package, bailing out!])],
-   ACJF_VAR_CODE_IF_FALSE)
+  m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [],
+    [AC_MSG_ERROR([Cannot find ACJF_VAR_PKGNAME package, bailing out!])],
+    [m4_if(ACJF_VAR_CODE_IF_FALSE, [], 
+      [true;],
+      ACJF_VAR_CODE_IF_FALSE)])
 fi
 
 m4_if(ACJF_VAR_SUBDIR_LIST, [], [],

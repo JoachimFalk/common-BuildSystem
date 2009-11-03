@@ -29,7 +29,7 @@ if test x"$acjf_found_libsgx" != x"no"; then
    [acjf_got_boost="yes";],
    [acjf_got_boost="no";])
   if test x"$acjf_got_boost" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find boost library required by LibSGX, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find boost library required by LibSGX, bailing out!])], [])
     acjf_found_libsgx="no"
   fi
 fi
@@ -38,7 +38,7 @@ if test x"$acjf_found_libsgx" != x"no"; then
    [acjf_got_cosupport="yes";],
    [acjf_got_cosupport="no";])
   if test x"$acjf_got_cosupport" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find CoSupport library required by LibSGX, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find CoSupport library required by LibSGX, bailing out!])], [])
     acjf_found_libsgx="no"
   fi
 fi
@@ -47,7 +47,7 @@ if test x"$acjf_found_libsgx" != x"no"; then
    [acjf_got_xerces="yes";],
    [acjf_got_xerces="no";])
   if test x"$acjf_got_xerces" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find Xerces library required by LibSGX, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find Xerces library required by LibSGX, bailing out!])], [])
     acjf_found_libsgx="no"
   fi
 fi
@@ -62,12 +62,12 @@ if test x"$acjf_found_libsgx" != x"no"; then
     [#include <sgx.hpp>],
     [SystemCoDesigner::SGX::NetworkGraphAccess ngx("some-file.sgx");],
     [sgx -lcosupport-xerces -lxerces-c -lcosupport-initializer -lcosupport-streams],
-    [acjf_found_libsgx="no";]
+    [acjf_found_libsgx="no";],
     [acjf_found_libsgx="";])
   CPPFLAGS="$acjf_libsgx_CPPFLAGS"
   LDFLAGS="$acjf_libsgx_LDFLAGS"
   if test x"$acjf_found_libsgx" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find LibSGX library, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find LibSGX library, bailing out!])], [])
     acjf_found_libsgx="no"
   else
     LIBSGX_INCLUDE="$LIBSGX_INCLUDE $BOOST_INCLUDE $COSUPPORT_INCLUDE"

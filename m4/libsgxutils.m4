@@ -29,7 +29,7 @@ if test x"$acjf_found_libsgxutils" != x"no"; then
    [acjf_got_boost="yes";],
    [acjf_got_boost="no";])
   if test x"$acjf_got_boost" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find boost library required by LibSGXUtils, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find boost library required by LibSGXUtils, bailing out!])], [])
     acjf_found_libsgxutils="no"
   fi
 fi
@@ -38,7 +38,7 @@ if test x"$acjf_found_libsgxutils" != x"no"; then
    [acjf_got_cosupport="yes";],
    [acjf_got_cosupport="no";])
   if test x"$acjf_got_cosupport" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find CoSupport library required by LibSGXUtils, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find CoSupport library required by LibSGXUtils, bailing out!])], [])
     acjf_found_libsgxutils="no"
   fi
 fi
@@ -47,7 +47,7 @@ if test x"$acjf_found_libsgxutils" != x"no"; then
    [acjf_got_libsgx="yes";],
    [acjf_got_libsgx="no";])
   if test x"$acjf_got_libsgx" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find LibSGX library required by LibSGXUtils, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find LibSGX library required by LibSGXUtils, bailing out!])], [])
     acjf_found_libsgxutils="no"
   fi
 fi
@@ -77,7 +77,7 @@ if test x"$acjf_found_libsgxutils" != x"no"; then
     [acjf_found_libsgxutils="";])
   CPPFLAGS="$acjf_libsgxutils_CPPFLAGS"
   if test x"$acjf_found_libsgxutils" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find LibSGXUtils library, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find LibSGXUtils library, bailing out!])], [])
     acjf_found_libsgxutils="no"
   else
     LIBSGXUTILS_INCLUDE="$LIBSGXUTILS_INCLUDE $LIBSGX_INCLUDE $BOOST_INCLUDE $COSUPPORT_INCLUDE"

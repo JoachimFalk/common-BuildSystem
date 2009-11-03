@@ -29,7 +29,7 @@ if test x"$acjf_found_systemoc" != x"no"; then
    [acjf_got_boost="yes";],
    [acjf_got_boost="no";])
   if test x"$acjf_got_boost" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find boost library required by SysteMoC, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find boost library required by SysteMoC, bailing out!])], [])
     acjf_found_systemoc="no"
   fi
 fi
@@ -38,7 +38,7 @@ if test x"$acjf_found_systemoc" != x"no"; then
    [acjf_got_systemc="yes";],
    [acjf_got_systemc="no";])
   if test x"$acjf_got_systemc " = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find SystemC library required by SysteMoC, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find SystemC library required by SysteMoC, bailing out!])], [])
     acjf_found_systemoc="no"
   fi
 fi
@@ -47,7 +47,7 @@ if test x"$acjf_found_systemoc" != x"no"; then
    [acjf_got_tlm1="yes";],
    [acjf_got_tlm1="no";])
   if test x"$acjf_got_tlm1" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find tlm1 headers required by SysteMoC, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find tlm1 headers required by SysteMoC, bailing out!])], [])
     acjf_found_systemoc="no"
   fi
 fi
@@ -56,7 +56,7 @@ if test x"$acjf_found_systemoc" != x"no"; then
    [acjf_got_xerces="yes";],
    [acjf_got_xerces="no";])
   if test x"$acjf_got_xerces " = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find Xerces library required by SysteMoC, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find Xerces library required by SysteMoC, bailing out!])], [])
     acjf_found_systemoc="no"
   fi
 fi
@@ -65,7 +65,7 @@ if test x"$acjf_found_systemoc" != x"no"; then
    [acjf_got_cosupport="yes";],
    [acjf_got_cosupport="no";])
   if test x"$acjf_got_cosupport" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find CoSupport library required by SysteMoC, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find CoSupport library required by SysteMoC, bailing out!])], [])
     acjf_found_systemoc="no"
   fi
 fi
@@ -74,7 +74,7 @@ if test x"$acjf_found_systemoc" != x"no"; then
    [acjf_got_libsgx="yes";],
    [acjf_got_libsgx="no";])
   if test x"$acjf_got_libsgx" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find SGX library required by SysteMoC, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find SGX library required by SysteMoC, bailing out!])], [])
     acjf_found_systemoc="no"
   fi
 fi
@@ -113,7 +113,7 @@ ACJF_CHECK_LIB(
   CPPFLAGS="$acjf_systemoc_CPPFLAGS"
   LDFLAGS="$acjf_systemoc_LDFLAGS"
   if test x"$acjf_found_systemoc" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find SysteMoC library, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find SysteMoC library, bailing out!])], [])
     acjf_found_systemoc="no"
   else
     SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $BOOST_INCLUDE $SYSTEMC_INCLUDE $TLM1_INCLUDE $COSUPPORT_INCLUDE $XERCES_INCLUDE $LIBSGX_INCLUDE"
@@ -158,7 +158,7 @@ if test x"$acjf_found_systemoc" != x"no"; then
   AM_CONDITIONAL([SYSTEMOC_ENABLE_VPC], test x"$acjf_cv_systemoc_vpc_support" = x"yes")
   if test x"$acjf_cv_systemoc_vpc_support" = x"yes" -a \
           x"$acjf_got_systemcvpc" != x"yes"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find SystemC-VPC library required by SysteMoC, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find SystemC-VPC library required by SysteMoC, bailing out!])], [])
     acjf_found_systemoc="no"
   else
     if test x"$acjf_cv_systemoc_vpc_support" != x"no"; then
@@ -195,7 +195,7 @@ if test x"$acjf_found_systemoc" != x"no"; then
   AM_CONDITIONAL([SYSTEMOC_ENABLE_WSDF], test x"$acjf_cv_systemoc_wsdf_support" = x"yes")
   if test x"$acjf_cv_systemoc_wsdf_support" = x"yes" -a \
           x"$acjf_got_libwsdf" != x"yes"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find libWSDF library required by SysteMoC, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find libWSDF library required by SysteMoC, bailing out!])], [])
     acjf_found_systemoc="no"
   else
     if test x"$acjf_cv_systemoc_wsdf_support" != x"no"; then

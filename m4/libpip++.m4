@@ -29,7 +29,7 @@ if test x"$acjf_found_libpippp" != x"no"; then
    [acjf_got_pip="yes";],
    [acjf_got_pip="no";])
   if test x"$acjf_got_pip" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find PIP library required by pip++, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find PIP library required by pip++, bailing out!])], [])
     acjf_found_libpippp="no"
   fi
 fi
@@ -38,7 +38,7 @@ if test x"$acjf_found_libpippp" != x"no"; then
    [acjf_got_cosupport="yes";],
    [acjf_got_cosupport="no";])
   if test x"$acjf_got_cosupport" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find CoSupport library required by pip++, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find CoSupport library required by pip++, bailing out!])], [])
     acjf_found_libpip++="no"
   fi
 fi
@@ -55,7 +55,7 @@ if test x"$acjf_found_libpippp" != x"no"; then
     [acjf_found_libpippp="";])
   CPPFLAGS="$acjf_libpippp_CPPFLAGS"
   if test x"$acjf_found_libpippp" = x"no"; then
-    m4_if([$2], [], [AC_MSG_ERROR([Cannot find pip++ library, bailing out!])], [])
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find pip++ library, bailing out!])], [])
     acjf_found_libpippp="no"
   else
     PIP___INCLUDE="$PIP___INCLUDE $PIPLIB_INCLUDE $COSUPPORT_INCLUDE"

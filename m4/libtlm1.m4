@@ -28,7 +28,7 @@ ACJF_CHECK_LIB_SYSTEMC(
  [acjf_found_pkg_tlm1="";],
  [acjf_found_pkg_tlm1="no";])
 if test x"$acjf_found_pkg_tlm1" = x"no"; then
-  m4_if([$2], [], [AC_MSG_ERROR([Cannot find systemc library required by tlm, bailing out!])], [true;])
+  m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find systemc library required by tlm, bailing out!])], [true;])
 fi
 
 acjf_libtlm1_CPPFLAGS="$CPPFLAGS"; CPPFLAGS="$CPPFLAGS $SYSTEMC_INCLUDE"
