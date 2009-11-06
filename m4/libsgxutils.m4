@@ -53,7 +53,7 @@ if test x"$acjf_found_libsgxutils" != x"no"; then
 fi
 if test x"$acjf_found_libsgxutils" != x"no"; then
   acjf_libsgxutils_CPPFLAGS="$CPPFLAGS";
-  CPPFLAGS="$CPPFLAGS $BOOST_INCLUDE $COSUPPORT_INCLUDE"
+  CPPFLAGS="$CPPFLAGS $LIBSGX_INCLUDE $BOOST_INCLUDE $COSUPPORT_INCLUDE"
   ACJF_CHECK_LIB(
     [LibSGXUtils],
     [LibSGXUtils SGXUtils],
@@ -73,8 +73,8 @@ if test x"$acjf_found_libsgxutils" != x"no"; then
 
      return 0;],
     [sgxutils],
-    [acjf_found_libsgxutils="no";]
-    [acjf_found_libsgxutils="";])
+    [acjf_found_libsgxutils="yes";],
+    [acjf_found_libsgxutils="no";])
   CPPFLAGS="$acjf_libsgxutils_CPPFLAGS"
   if test x"$acjf_found_libsgxutils" = x"no"; then
     m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find LibSGXUtils library, bailing out!])], [])

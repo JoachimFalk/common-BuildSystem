@@ -23,9 +23,21 @@ m4_define([_ACJF_M4_OPENSQUAREBRACKET],
   m4_changequote(<,>)<m4_changequote(<,>)<[>m4_changequote([,])>m4_changequote([,]))dnl
 m4_define([_ACJF_M4_CLOSESQUAREBRACKET],
   m4_changequote(<,>)<m4_changequote(<,>)<]>m4_changequote([,])>m4_changequote([,]))dnl
+dnl ACJF_M4_NULL(<arg>)
+dnl
+dnl Example:
+dnl   [<]ACJF_M4_NULL([what-],[ever])[>]
+dnl Result:
+dnl   <>
+AC_DEFUN([ACJF_M4_NULL], [])dnl
+dnl ACJF_M4_QUOTE(<arg>)
+dnl Example:
+dnl   ACJF_M4_QUOTE([foo],[bar])
+dnl Result:
+dnl   [foo],[bar]
 AC_DEFUN([ACJF_M4_QUOTE], [[$@]])dnl
 dnl ACJF_M4_UNQUOTE(<arg>)
-dnl 
+dnl
 dnl Example:
 dnl   ACJF_M4_UNQUOTE([foo],[bar])
 dnl Result:

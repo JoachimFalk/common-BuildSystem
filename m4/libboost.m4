@@ -22,7 +22,7 @@ dnl  <description shell variable>,
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default does nothing>]])
 AC_DEFUN([ACJF_CHECK_LIB_BOOSTTESTMACRO], [
-acjf_old_LIBS="$LIBS"
+acjf_var_boost_old_LIBS="$LIBS"
 acjf_var_found_pkg_st=""
 acjf_var_found_pkg_mt=""
 ACJF_M4_FOREACH([ACJF_VAR_BOOSTVERSION], [[],[-1_40],[-1_39],[-1_38],[-1_37],[-1_36],[-1_35]], [dnl
@@ -31,7 +31,7 @@ ACJF_M4_FOREACH([ACJF_VAR_BOOSTVERSION], [[],[-1_40],[-1_39],[-1_38],[-1_37],[-1
 dnl   echo "[-lboost]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX): $acjf_var_found_pkg"
       if test x"$acjf_var_found_pkg_st" != x"yes"; then
         acjf_cv_boost_libpostfix="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX[]ACJF_VAR_BOOSTMTPOSTFIX[]ACJF_VAR_BOOSTVERSION)"
-        LIBS="-lboost_regex$acjf_cv_boost_libpostfix $acjf_old_LIBS"
+        LIBS="-lboost_regex$acjf_cv_boost_libpostfix $acjf_var_boost_old_LIBS"
         if test x"$acjf_cv_boost_libpostfix" != x""; then
           AC_MSG_CHECKING([for $1 package in $$2 with library postfix $acjf_cv_boost_libpostfix])
         else
@@ -52,7 +52,7 @@ boost::regex_constants::match_flag_type x;
       if test x"$acjf_var_found_pkg_st" = x"yes" -a \
               x"$acjf_var_found_pkg_mt" != x"yes"; then
         acjf_cv_boost_libmtpostfix="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX[]ACJF_VAR_BOOSTMTPOSTFIX[]ACJF_VAR_BOOSTVERSION)"
-        LIBS="-lboost_thread$acjf_cv_boost_libmtpostfix $acjf_old_LIBS"
+        LIBS="-lboost_thread$acjf_cv_boost_libmtpostfix $acjf_var_boost_old_LIBS"
         if test x"$acjf_cv_boost_libmtpostfix" != x""; then
           AC_MSG_CHECKING([for $1 multithreading support in $$2 with library postfix $acjf_cv_boost_libmtpostfix])
         else
@@ -81,6 +81,7 @@ th.join();
   ])
 ])
 if test x"$acjf_var_found_pkg_st" = x"yes"; then
+  unset acjf_var_boost_old_LIBS
   unset acjf_var_found_pkg_st
   unset acjf_var_found_pkg_mt
   if test x"$acjf_cv_boost_libpostfix" != x""; then
@@ -95,6 +96,7 @@ if test x"$acjf_var_found_pkg_st" = x"yes"; then
   fi
   m4_if([$3], [], [true], [$3])
 else
+  unset acjf_var_boost_old_LIBS
   unset acjf_var_found_pkg_st
   unset acjf_var_found_pkg_mt
   m4_if([$4], [], [false], [$4])
