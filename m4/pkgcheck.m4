@@ -26,6 +26,7 @@ dnl   extern: provide extern tag to --with-xxx option
 dnl set shell vars
 dnl   acjf_<pkgname>_search_list
 AC_DEFUN([ACJF_ARG_WITHPKG], [AC_REQUIRE([ACJF_INIT])dnl
+m4_divert_push([INIT_PREPARE])
 ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
 m4_pushdef([ACJF_VAR_TAGS], m4_if([$2], [], [[extern]], [[$2]]))
 dnl add intern to tags if we find a compile tag
@@ -148,7 +149,9 @@ m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
 dnl unset [acjf_with_]ACJF_M4_CANON_DC([$1])
 
 m4_popdef([ACJF_VAR_TAGS])
-])])
+])
+m4_divert_pop([INIT_PREPARE])
+])
 
 dnl ACJF_CHECK_LIB_TESTMACROGEN(
 dnl   <actual include directives>,
