@@ -253,6 +253,7 @@ dnl
 dnl IF pkg found define:
 dnl   PKGNAME_INCLUDE
 dnl   PKGNAME_LDFLAGS
+dnl   PKGNAME_FOUND
 dnl IF pkg is from srcdir:
 dnl   PKGNAME_INCPATH
 dnl   PKGNAME_LIBPATH
@@ -381,6 +382,7 @@ fi
 
 if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]" != x"not found" -a \
         x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]" != x"disabled"; then
+  ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND]="yes"
   ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]"
   ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE]=""
   for ACJF_VAR_ANON_SHELLVARPREFIX[item2] in $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]; do
@@ -395,6 +397,7 @@ if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]" != x"not found" 
     [true;],
     ACJF_VAR_CODE_IF_TRUE)
 else
+  ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND]="no"
   m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [],
     [AC_MSG_ERROR([Cannot find ACJF_VAR_PKGNAME package, bailing out!])],
     [m4_if(ACJF_VAR_CODE_IF_FALSE, [], 
@@ -479,8 +482,9 @@ dnl After execution of the macro
 dnl
 dnl IF pkg found define:
 dnl   PKGNAME_INCLUDE
-dnl   PKGNAME_INCPATH
 dnl   PKGNAME_LDFLAGS
+dnl   PKGNAME_FOUND
+dnl   PKGNAME_INCPATH
 dnl   PKGNAME_LIBPATH
 dnl   pkg_pkgname_srcdir
 dnl   pkg_pkgname_builddir
@@ -543,6 +547,7 @@ dnl
 dnl IF pkg found define:
 dnl   PKGNAME_INCLUDE
 dnl   PKGNAME_LDFLAGS
+dnl   PKGNAME_FOUND
 dnl IF pkg is from srcdir:
 dnl   PKGNAME_INCPATH
 dnl   PKGNAME_LIBPATH
