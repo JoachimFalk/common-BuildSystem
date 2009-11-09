@@ -28,7 +28,6 @@ dnl ignore AM_CONDITIONAL in the called macros
 m4_pushdef([AM_CONDITIONAL], m4_defn([ACJF_M4_NULL]))
 
 acjf_var_systemoc_error=""
-acjf_var_systemoc_libs=""
 acjf_var_systemoc_found=""
 acjf_cv_systemoc_sgx_support=""
 acjf_cv_systemoc_vpc_support=""
@@ -98,39 +97,31 @@ if test x"$acjf_var_systemoc_found" != x"no"; then
    [AC_MSG_RESULT([no]); acjf_cv_systemoc_wsdf_support="no";])
 fi
 if test x"$acjf_var_systemoc_found" != x"no"; then
-  ACJF_CHECK_LIB_SYSTEMC(
-   [CPPFLAGS="$CPPFLAGS $SYSTEMC_INCLUDE"; LDFLAGS="$LDFLAGS $SYSTEMC_LDFLAGS"; acjf_var_systemoc_libs="$acjf_var_systemoc_libs -lsystemc";],
-   [acjf_var_systemoc_error="missing SystemC"; acjf_var_systemoc_found="no";])
-fi
-if test x"$acjf_var_systemoc_found" != x"no"; then
-  ACJF_CHECK_LIB_TLM1(
-   [CPPFLAGS="$CPPFLAGS $TLM1_INCLUDE"; LDFLAGS="$LDFLAGS $TLM1_LDFLAGS";],
-   [acjf_var_systemoc_error="missing TLM v1.0"; acjf_var_systemoc_found="no";])
-fi
-if test x"$acjf_var_systemoc_found" != x"no"; then
-  ACJF_CHECK_LIB_BOOST(
-   [CPPFLAGS="$CPPFLAGS $BOOST_INCLUDE"; LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"; acjf_var_systemoc_libs="$acjf_var_systemoc_libs -lboost_program_options$BOOST_LIBPOSTFIX";],
-   [acjf_var_systemoc_error="missing boost"; acjf_var_systemoc_found="no";])
-fi
-if test x"$acjf_var_systemoc_found" != x"no"; then
-  ACJF_CHECK_LIB_COSUPPORT(
-   [CPPFLAGS="$CPPFLAGS $COSUPPORT_INCLUDE"; LDFLAGS="$LDFLAGS $COSUPPORT_LDFLAGS"; acjf_var_systemoc_libs="$acjf_var_systemoc_libs -lcosupport-streams -lcosupport-smartptr -lcosupport-systemc";],
-   [acjf_var_systemoc_error="missing CoSupport"; acjf_var_systemoc_found="no";])
+  CPPFLAGS="$CPPFLAGS $SYSTEMC_INCLUDE"; LDFLAGS="$LDFLAGS $SYSTEMC_LDFLAGS"; LIBS="$LIBS -lsystemc"
+  CPPFLAGS="$CPPFLAGS $TLM1_INCLUDE";
+  CPPFLAGS="$CPPFLAGS $BOOST_INCLUDE"; LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"; LIBS="$LIBS -lboost_program_options$BOOST_LIBPOSTFIX"
+  CPPFLAGS="$CPPFLAGS $COSUPPORT_INCLUDE"; LDFLAGS="$LDFLAGS $COSUPPORT_LDFLAGS"; LIBS="$LIBS -lcosupport-smartptr -lcosupport-systemc"
 fi
 if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_sgx_support" = x"yes"; then
-  ACJF_CHECK_LIB_SGX(
-   [CPPFLAGS="$CPPFLAGS $LIBSGX_INCLUDE"; LDFLAGS="$LDFLAGS $LIBSGX_LDFLAGS"; acjf_var_systemoc_libs="$acjf_var_systemoc_libs -lsgx";],
-   [acjf_var_systemoc_error="missing LibSGX"; acjf_var_systemoc_found="no";])
+  if test x"$LIBSGX_FOUND" = x"yes"; then
+    CPPFLAGS="$CPPFLAGS $LIBSGX_INCLUDE"; LDFLAGS="$LDFLAGS $LIBSGX_LDFLAGS"; LIBS="$LIBS -lsgx"
+  else
+    acjf_var_systemoc_error="LibSGX library"; acjf_var_systemoc_found="no";
+  fi
 fi
 if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_vpc_support" = x"yes"; then
-  ACJF_CHECK_LIB_SYSTEMC_VPC(
-   [CPPFLAGS="$CPPFLAGS $SYSTEMC_VPC_INCLUDE"; LDFLAGS="$LDFLAGS $SYSTEMC_VPC_LDFLAGS"; acjf_var_systemoc_libs="$acjf_var_systemoc_libs -lsystemcvpc";],
-   [acjf_var_systemoc_error="missing VPC"; acjf_var_systemoc_found="no";])
+  if test x"$SYSTEMC_VPC_FOUND" = x"yes"; then
+    CPPFLAGS="$CPPFLAGS $SYSTEMC_VPC_INCLUDE"; LDFLAGS="$LDFLAGS $SYSTEMC_VPC_LDFLAGS"; LIBS="$LIBS -lsystemcvpc"
+  else
+    acjf_var_systemoc_error="SystemC VPC library"; acjf_var_systemoc_found="no";
+  fi
 fi
 if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_wsdf_support" = x"yes"; then
-  ACJF_CHECK_LIB_WSDF(
-   [CPPFLAGS="$CPPFLAGS $LIBWSDF_INCLUDE"; LDFLAGS="$LDFLAGS $LIBWSDF_LDFLAGS"; acjf_var_systemoc_libs="$acjf_var_systemoc_libs -lwsdf";],
-   [acjf_var_systemoc_error="missing LibWSDF"; acjf_var_systemoc_found="no";])
+  if test x"$LIBWSDF_FOUND" = x"yes"; then
+    CPPFLAGS="$CPPFLAGS $LIBWSDF_INCLUDE"; LDFLAGS="$LDFLAGS $LIBWSDF_LDFLAGS"; LIBS="$LIBS -lwsdf"
+  else
+    acjf_var_systemoc_error="LibWSDF library"; acjf_var_systemoc_found="no";
+  fi
 fi
 if test x"$acjf_var_systemoc_found" != x"no" -o x"$acjf_var_systemoc_error" != x""; then
   if test x"$$2" = x"$acjf_bundled_desc"; then
@@ -154,7 +145,6 @@ int x;
     if test x"$acjf_var_systemoc_error" != x""; then
       AC_MSG_RESULT([$acjf_var_systemoc_error]);
     else
-      LIBS="$LIBS $acjf_var_systemoc_libs"
       AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <systemoc/smoc_config.h>
 #include <systemc.h>
@@ -173,7 +163,6 @@ dnl unignore AM_CONDITIONAL
 m4_popdef([AM_CONDITIONAL])
 
 unset acjf_var_systemoc_error
-unset acjf_var_systemoc_libs
 if test x"$acjf_var_systemoc_found" = x"yes"; then
   unset acjf_var_systemoc_found
   m4_if([$3], [], [true], [$3])
@@ -191,12 +180,40 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
   ACJF_ARG_WITHPKG([SysteMoC], [intern extern])
-  AC_LANG_PUSH([C++])
-  ACJF_CHECK_LIB_TESTER([SysteMoC], [SysteMoC],
-    [ACJF_CHECK_LIB_SYSTEMOCTESTMACRO],
-    [acjf_var_found_pkg=yes],
-    [acjf_var_found_pkg=no])
-  AC_LANG_POP
+  
+  SYSTEMOC_FOUND=""; acjf_var_systemoc_missing=""
+  if test x"$SYSTEMOC_FOUND" != x"no"; then
+    ACJF_CHECK_LIB_BOOST([],
+      [SYSTEMOC_FOUND="no"; acjf_var_systemoc_missing="boost library"])
+  fi
+  if test x"$SYSTEMOC_FOUND" != x"no"; then
+    ACJF_CHECK_LIB_SYSTEMC([],
+      [SYSTEMOC_FOUND="no"; acjf_var_systemoc_missing="SystemC library"])
+  fi
+  if test x"$SYSTEMOC_FOUND" != x"no"; then
+    ACJF_CHECK_LIB_TLM1([],
+      [SYSTEMOC_FOUND="no"; acjf_var_systemoc_missing="tlm1 headers"])
+  fi
+  if test x"$SYSTEMOC_FOUND" != x"no"; then
+    ACJF_CHECK_LIB_COSUPPORT([],
+      [SYSTEMOC_FOUND="no"; acjf_var_systemoc_missing="CoSupport library"])
+  fi
+  if test x"$SYSTEMOC_FOUND" != x"no"; then
+    ACJF_CHECK_LIB_SGX([], [false]) dnl may be needed but may also be optional
+    ACJF_CHECK_LIB_SYSTEMC_VPC([], [false]) dnl may be needed but may also be optional
+    ACJF_CHECK_LIB_WSDF([], [false]) dnl may be needed but may also be optional
+  fi
+  if test x"$SYSTEMOC_FOUND" != x"no"; then
+    ACJF_CHECK_LIB_BOOST([],
+      [SYSTEMOC_FOUND="no"; acjf_var_systemoc_missing="boost library"])
+  fi
+  if test x"$SYSTEMOC_FOUND" != x"no"; then
+    AC_LANG_PUSH([C++])
+    ACJF_CHECK_LIB_TESTER([SysteMoC], [SysteMoC],
+      [ACJF_CHECK_LIB_SYSTEMOCTESTMACRO],
+      [true], [false])
+    AC_LANG_POP
+  fi
   
   if test x"$pkg_libsystemoc_builddir" != x""; then
     SYSTEMOC_DEPENDENCIES="$pkg_libsystemoc_builddir/libsystemoc.la"
@@ -212,8 +229,7 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
   AM_CONDITIONAL([SYSTEMOC_ENABLE_VPC], test x"$acjf_cv_systemoc_vpc_support" = x"yes")
   AM_CONDITIONAL([SYSTEMOC_ENABLE_WSDF], test x"$acjf_cv_systemoc_wsdf_support" = x"yes")
   
-  if test x"$acjf_var_found_pkg" = x"yes"; then
-    unset acjf_var_found_pkg
+  if test x"$SYSTEMOC_FOUND" = x"yes"; then
     SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $BOOST_INCLUDE $SYSTEMC_INCLUDE $TLM1_INCLUDE $COSUPPORT_INCLUDE"
     if test x"$acjf_cv_systemoc_sgx_support" = x"yes"; then
       SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $LIBSGX_INCLUDE"
@@ -226,8 +242,12 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
     fi
     m4_if([$1], [], [true;], [$1])
   else
-    unset acjf_var_found_pkg
-    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find SysteMoC, bailing out!])],
-      [m4_if([$2], [], [true;], [$2])])
+    m4_if([$1$2], [],
+     [if test x"$acjf_var_systemoc_missing" != x""; then
+        AC_MSG_ERROR([Cannot find $acjf_var_systemoc_missing required by SysteMoC, bailing out!])
+       else
+        AC_MSG_ERROR([Cannot find SysteMoC, bailing out!])
+       fi
+     ], [m4_if([$2], [], [true;], [$2])])
   fi
 ])
