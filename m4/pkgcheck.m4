@@ -366,13 +366,18 @@ if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]" = x"$acjf_bundle
   ], [
     _ACJF_SOURCE_TREE_LOCATION_SEARCHER(ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir])
     if test x"$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]" != x"/invalid"; then
-      [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]="$srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]"
+      dnl we need abs pathes ($acjf_top_srcdir) here to enable a correct fixup also for relative configure calls.
+      [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]="$acjf_top_srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]" 
+      dnl we need abs pathes ($acjf_top_builddir) here to enable a correct fixup also for relative configure calls.
       [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]="$acjf_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]"
       if test -d "$srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/pkginclude"; then
-        [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="$srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/pkginclude $acjf_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/pkginclude"
+        dnl we need abs pathes ($acjf_top_srcdir/$acjf_top_builddir) here to enable a correct fixup also for relative configure calls.
+        [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="$acjf_top_srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/pkginclude $acjf_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/pkginclude"
       else
-        [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="$srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir] $acjf_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir] $acjf_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/include"
+        dnl we need abs pathes ($acjf_top_srcdir/$acjf_top_builddir) here to enable a correct fixup also for relative configure calls.
+        [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="$acjf_top_srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir] $acjf_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir] $acjf_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/include"
       fi
+      dnl we need abs pathes ($acjf_top_builddir) here to enable a correct fixup also for relative configure calls.
       [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]="$acjf_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]"
     else
       AC_MSG_ERROR([Internal error: internal location specified for ACJF_VAR_PKGNAME but source tree location given in configure.in is nonexistent!])
