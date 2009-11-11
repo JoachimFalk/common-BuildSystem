@@ -20,32 +20,56 @@ dnl ACJF_CHECK_CECSIM_PYCON check for CECSIM-PyCon library
 dnl ACJF_CHECK_CECSIM_PYCON(
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>])
-AC_DEFUN([ACJF_CHECK_CECSIM_PYCON],
-[dnl
-AC_LANG_PUSH([C++])
-ACJF_CHECK_LIB_BOOST
-ACJF_CHECK_LIB_COSUPPORT
-
-acjf_CECSIM_PYCON_CPPFLAGS="$CPPFLAGS"
-acjf_CECSIM_PYCON_LDFLAGS="$LDFLAGS"
-CPPFLAGS="$CPPFLAGS $SYSTEMC_INCLUDE $COSUPPORT_INCLUDE"
-LDFLAGS="$LDFLAGS $SYSTEMC_LDFLAGS $COSUPPORT_LDFLAGS"
-ACJF_CHECK_LIB(
-  [CECSIM-PyCon],
-  [CECSIM-PyCon],
-  [#include <CECSim/Crossbar.hpp>],
-  [CECSim::Crossbar cb;],
-  [cecsim -lcosupport-streams],
-  [$1], [$2])
-CPPFLAGS="$acjf_CECSIM_PYCON_CPPFLAGS"
-LDFLAGS="$acjf_CECSIM_PYCON_LDFLAGS"
-
-if test x"$pkg_systemc_vpc_builddir" != x""; then
-  CECSIM_PYCON_DEPENDENCIES="$pkg_cecsim_pycon_builddir/libcecsim.la"
-else
-  CECSIM_PYCON_DEPENDENCIES=""
-fi
-AC_SUBST([CECSIM_PYCON_DEPENDENCIES])
-
-AC_LANG_POP
+AC_DEFUN([ACJF_CHECK_CECSIM_PYCON], [
+  ACJF_CONFIG_PKG([CECSIM-PyCon], [intern])
+  
+  CECSIM_PYCON_FOUND=""; acjf_var_cecsim_pycon_missing=""
+  if test x"$CECSIM_PYCON_FOUND" != x"no"; then
+    ACJF_CHECK_LIB_BOOST([],
+      [CECSIM_PYCON_FOUND="no"; acjf_var_cecsim_pycon_missing="boost library"])
+  fi
+  if test x"$CECSIM_PYCON_FOUND" != x"no"; then
+    ACJF_CHECK_LIB_COSUPPORT([],
+      [CECSIM_PYCON_FOUND="no"; acjf_var_cecsim_pycon_missing="CoSupport library"])
+  fi
+  if test x"$CECSIM_PYCON_FOUND" != x"no"; then
+    acjf_CECSIM_PYCON_CPPFLAGS="$CPPFLAGS"
+    acjf_CECSIM_PYCON_LDFLAGS="$LDFLAGS"
+    AC_LANG_PUSH([C++])
+    CPPFLAGS="$CPPFLAGS $BOOST_INCLUDE $COSUPPORT_INCLUDE"
+    LDFLAGS="$LDFLAGS $BOOST_LDFLAGS $COSUPPORT_LDFLAGS"
+    ACJF_CHECK_LIB(
+      [CECSIM-PyCon],
+      [CECSIM-PyCon],
+      [#include <CECSim/Crossbar.hpp>],
+      [CECSim::Crossbar cb;],
+      [cecsim -lcosupport-streams],
+      [$1], [$2])
+    CPPFLAGS="$acjf_CECSIM_PYCON_CPPFLAGS"
+    LDFLAGS="$acjf_CECSIM_PYCON_LDFLAGS"
+    AC_LANG_POP
+  fi
+  
+  if test x"$pkg_cecsim_pycon_builddir" != x""; then
+    CECSIM_PYCON_DEPENDENCIES="$pkg_cecsim_pycon_builddir/libcecsim.la"
+  else
+    CECSIM_PYCON_DEPENDENCIES=""
+  fi
+  AC_SUBST([CECSIM_PYCON_DEPENDENCIES])
+  
+  m4_define([ACJF_VAR_SUBSTVARFIXUP], ACJF_M4_QUOTE(
+    ACJF_M4_LIST_PUSH_BACK([CECSIM_PYCON_DEPENDENCIES], ACJF_VAR_SUBSTVARFIXUP)))dnl
+  
+  if test x"$CECSIM_PYCON_FOUND" = x"yes"; then
+    CECSIM_PYCON_INCLUDE="$CECSIM_PYCON_INCLUDE $BOOST_INCLUDE $COSUPPORT_INCLUDE"
+    m4_if([$1], [], [true;], [$1])
+  else
+    m4_if([$1$2], [],
+     [if test x"$acjf_var_cecsim_pycon_missing" != x""; then
+        AC_MSG_ERROR([Cannot find $acjf_var_cecsim_pycon_missing required by CECSIM-PyCon, bailing out!])
+       else
+        AC_MSG_ERROR([Cannot find CECSIM-PyCon, bailing out!])
+       fi
+     ], [m4_if([$2], [], [true;], [$2])])
+  fi
 ])
