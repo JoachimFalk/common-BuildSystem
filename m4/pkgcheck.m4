@@ -83,21 +83,37 @@ if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" != x"no"; then
       if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_include]" = x""; then
         for acjf_var_item in $[acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]; do
           if echo "$acjf_var_item" | grep "[[/\\]]lib[[/\\]]*$" 1>/dev/null; then
-            [acjf_with_]ACJF_M4_CANON_DC([$1])[_include]="$[acjf_with_]ACJF_M4_CANON_DC([$1])[_include] `dirname $acjf_var_item`/include";
+            if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_include]" != x""; then
+              [acjf_with_]ACJF_M4_CANON_DC([$1])[_include]="$[acjf_with_]ACJF_M4_CANON_DC([$1])[_include] `dirname $acjf_var_item`/include";
+            else
+              [acjf_with_]ACJF_M4_CANON_DC([$1])[_include]="`dirname $acjf_var_item`/include";
+            fi
           fi
         done
         for acjf_var_item in $[acjf_with_]ACJF_M4_CANON_DC([$1]); do
-          [acjf_with_]ACJF_M4_CANON_DC([$1])[_include]="$[acjf_with_]ACJF_M4_CANON_DC([$1])[_include] $acjf_var_item/include";
+          if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_include]" != x""; then
+            [acjf_with_]ACJF_M4_CANON_DC([$1])[_include]="$[acjf_with_]ACJF_M4_CANON_DC([$1])[_include] $acjf_var_item/include";
+          else
+            [acjf_with_]ACJF_M4_CANON_DC([$1])[_include]="$acjf_var_item/include";
+          fi
         done
       fi
       if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]" = x""; then
         for acjf_var_item in $[acjf_with_]ACJF_M4_CANON_DC([$1])[_include]; do
           if echo "$acjf_var_item" | grep "[[/\\]]include[[/\\]]*$" 1>/dev/null; then
-            [acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]="$[acjf_with_]ACJF_M4_CANON_DC([$1])[_lib] `dirname $acjf_var_item`/lib";
+            if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]" != x""; then
+              [acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]="$[acjf_with_]ACJF_M4_CANON_DC([$1])[_lib] `dirname $acjf_var_item`/lib";
+            else
+              [acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]="`dirname $acjf_var_item`/lib";
+            fi
           fi
         done
         for acjf_var_item in $[acjf_with_]ACJF_M4_CANON_DC([$1]); do
-          [acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]="$[acjf_with_]ACJF_M4_CANON_DC([$1])[_lib] $acjf_var_item/lib";
+          if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]" != x""; then
+            [acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]="$[acjf_with_]ACJF_M4_CANON_DC([$1])[_lib] $acjf_var_item/lib";
+          else
+            [acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]="$acjf_var_item/lib";
+          fi
         done
       fi
       [acjf_with_]ACJF_M4_CANON_DC([$1])=yes
@@ -143,9 +159,12 @@ if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" != x"no"; then
   m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
 fi
 
-m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
- [unset [acjf_with_]ACJF_M4_CANON_DC([$1])[_include]
-  unset [acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]])
+dnl Do not unset as [acjf_with_]ACJF_M4_CANON_DC([$1])[_include/_lib] could be
+dnl registered on the [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]!
+dnl
+dnl m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
+dnl  [unset [acjf_with_]ACJF_M4_CANON_DC([$1])[_include]
+dnl   unset [acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]])
 dnl unset [acjf_with_]ACJF_M4_CANON_DC([$1])
 
 m4_popdef([ACJF_VAR_TAGS])
