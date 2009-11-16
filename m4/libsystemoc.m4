@@ -24,8 +24,8 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default does nothing>]])
 AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOCTESTMACRO], [
 
-dnl ignore AM_CONDITIONAL in the called macros
-m4_pushdef([AM_CONDITIONAL], m4_defn([ACJF_M4_NULL]))
+dnl dnl ignore AM_CONDITIONAL in the called macros
+dnl m4_pushdef([AM_CONDITIONAL], m4_defn([ACJF_M4_NULL]))
 
 acjf_var_systemoc_error=""
 acjf_var_systemoc_found=""
@@ -159,8 +159,8 @@ int x;
   fi
 fi
 
-dnl unignore AM_CONDITIONAL
-m4_popdef([AM_CONDITIONAL])
+dnl dnl unignore AM_CONDITIONAL
+dnl m4_popdef([AM_CONDITIONAL])
 
 unset acjf_var_systemoc_error
 if test x"$acjf_var_systemoc_found" = x"yes"; then
