@@ -62,11 +62,13 @@ compileheader.mk: $(HEADERS)
 
 %.c: %.re2c
 	{ [ -d $(dir $@) ] || mkdir -p $(dir $@); } && \
-	  re2c -b -o $@ $<
+	  re2c -b -o $@ $< || \
+	{ rm -f $@; false; }
 
 %.cpp: %.re2cpp
 	{ [ -d $(dir $@) ] || mkdir -p $(dir $@); } && \
-	  re2c -b -o $@ $<
+	  re2c -b -o $@ $< || \
+	{ rm -f $@; false; }
 
 doxygen-doc: doxygen-doc-recursive
 
