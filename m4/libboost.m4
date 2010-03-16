@@ -80,8 +80,9 @@ th.join();
     fi
   ])
 ])
+LIBS="$acjf_var_boost_old_LIBS"
+unset acjf_var_boost_old_LIBS
 if test x"$acjf_var_found_pkg_st" = x"yes"; then
-  unset acjf_var_boost_old_LIBS
   unset acjf_var_found_pkg_st
   unset acjf_var_found_pkg_mt
   if test x"$acjf_cv_boost_libpostfix" != x""; then
@@ -96,7 +97,6 @@ if test x"$acjf_var_found_pkg_st" = x"yes"; then
   fi
   m4_if([$3], [], [true], [$3])
 else
-  unset acjf_var_boost_old_LIBS
   unset acjf_var_found_pkg_st
   unset acjf_var_found_pkg_mt
   m4_if([$4], [], [false], [$4])

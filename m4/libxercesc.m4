@@ -16,14 +16,67 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-AC_DEFUN([ACJF_CHECK_LIB_XERCES],
-[AC_LANG_PUSH([C++])
-ACJF_CHECK_LIB(
-  [xerces],
-  [],
-  [#include <xercesc/util/PlatformUtils.hpp>],
-  [xercesc::XMLPlatformUtils::Initialize();],
-  [xerces-c],
-  [$1], [$2])
-AC_LANG_POP
+dnl ACJF_CHECK_LIB_XERCESTESTMACRO(
+dnl  <name of lib check (pkgname)>,
+dnl  <description shell variable>,
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default does nothing>]])
+AC_DEFUN([ACJF_CHECK_LIB_XERCESTESTMACRO], [
+acjf_var_xerces_old_LIBS="$LIBS"
+acjf_var_found_pkg=""
+
+ACJF_M4_FOREACH([ACJF_VAR_PTHREADAUX], [[],[-lpthread]], [dnl
+dnl echo "ACJF_M4_UNQUOTE(ACJF_VAR_PTHREADAUX): $acjf_var_found_pkg"
+  if test x"$acjf_var_found_pkg" = x""; then
+    acjf_cv_xerces_auxlibs="ACJF_M4_UNQUOTE(ACJF_VAR_PTHREADAUX)"
+    LIBS="-lxerces-c $acjf_cv_xerces_auxlibs $acjf_var_xerces_old_LIBS"
+    if test x"$acjf_cv_xerces_auxlibs" != x""; then
+      AC_MSG_CHECKING([for $1 libraray in $$2 with auxiliary library $acjf_cv_xerces_auxlibs])
+    else
+      AC_MSG_CHECKING([for $1 libraray in $$2])
+    fi
+    AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+#include <xercesc/util/PlatformUtils.hpp>
+      ]], [[
+xercesc::XMLPlatformUtils::Initialize();
+      ]])],
+      [AC_MSG_RESULT([yes]); acjf_var_found_pkg="yes"],
+      [AC_MSG_RESULT([no])])
+  fi
+])
+LIBS="$acjf_var_xerces_old_LIBS"
+unset acjf_var_xerces_old_LIBS
+if test x"$acjf_var_found_pkg" = x"yes"; then
+  unset acjf_var_found_pkg
+  if test x"$acjf_cv_xerces_auxlibs" != x""; then
+    $2="$$2 with auxiliary library $acjf_cv_xerces_auxlibs"
+  fi
+  m4_if([$3], [], [true], [$3])
+else
+  unset acjf_var_found_pkg
+  m4_if([$4], [], [false], [$4])
+fi
+])
+
+dnl ACJF_CHECK_LIBXERCES(
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+AC_DEFUN([ACJF_CHECK_LIB_XERCES], [
+  ACJF_ARG_WITHPKG([xerces], [])
+  AC_LANG_PUSH([C++])
+  ACJF_CHECK_LIB_TESTER([xerces], [],
+    [ACJF_CHECK_LIB_XERCESTESTMACRO],
+    [acjf_var_found_pkg=yes],
+    [acjf_var_found_pkg=no])
+  AC_LANG_POP
+  if test x"$acjf_var_found_pkg" = x"yes"; then
+    unset acjf_var_found_pkg
+    XERCES_AUXLIBS="$acjf_cv_xerces_auxlibs"
+    m4_if([$1], [], [true;], [$1])
+  else
+    unset acjf_var_found_pkg
+    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find xerces library, bailing out!])],
+      [m4_if([$2], [], [true;], [$2])])
+  fi
+  AC_SUBST([XERCES_AUXLIBS])
 ])

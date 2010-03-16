@@ -74,7 +74,7 @@ if test x"$acjf_found_libacx" != x"no"; then
   #include <acx.hpp>],
     [SystemCoDesigner::ACX::ActorCollectionAccess ac("dummy.acx");
      std::vector<std::string> types = ac.getAllActorTypes();],
-    [acx cosupport-xerces xerces-c cosupport-xalan xalan-c cosupport-initializer cosupport-streams],
+    [acx cosupport-xerces xerces-c $XERCES_AUXLIBS cosupport-xalan xalan-c cosupport-initializer cosupport-streams],
     [acjf_found_libacx="yes";],
     [acjf_found_libacx="no";])
   CPPFLAGS="$acjf_libacx_CPPFLAGS"

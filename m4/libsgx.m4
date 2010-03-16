@@ -61,7 +61,7 @@ if test x"$acjf_found_libsgx" != x"no"; then
     [LibSGX],
     [#include <sgx.hpp>],
     [SystemCoDesigner::SGX::NetworkGraphAccess ngx("some-file.sgx");],
-    [sgx -lcosupport-xerces -lxerces-c -lcosupport-initializer -lcosupport-streams],
+    [sgx cosupport-xerces xerces-c $XERCES_AUXLIBS cosupport-initializer cosupport-streams],
     [acjf_found_libsgx="yes";],
     [acjf_found_libsgx="no";])
   CPPFLAGS="$acjf_libsgx_CPPFLAGS"
