@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.1--patch-16
+Archive: joachim.falk@gmx.de--2004-jf-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Mon Jun 12 11:35:37 CEST 2006
+Standard-date: 2006-06-12 09:35:37 GMT
+Modified-files: m4/all.m4
+New-patches: joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-16
+Summary: 
+ * Added ACJF_SUBPROJECT macro which sets
+   ACJF_VAR_SUBPROJECT_DIR for use in subprojects
+Keywords: 
+
+
+

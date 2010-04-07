@@ -1,0 +1,15 @@
+Revision: BuildSystem--mainline--0.2--patch-29
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Jun  9 11:03:15 CEST 2008
+Standard-date: 2008-06-09 09:03:15 GMT
+Modified-files: m4/libsystemoc.m4 m4/pkgcheck.m4
+    m4/stdint.m4 m4/vacopy.m4 m4/var.m4
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-29
+Summary: 
+ * Replaced obsolete AC_TRY_COMPILE and AC_TRY_LINK with AC_COMPILE_IFELSE and AC_LINK_IFELSE.
+ * Use AC_PREPROC_IFELSE to test for VPC and WSDF support in SysteMoC.
+Keywords: 
+
+
+

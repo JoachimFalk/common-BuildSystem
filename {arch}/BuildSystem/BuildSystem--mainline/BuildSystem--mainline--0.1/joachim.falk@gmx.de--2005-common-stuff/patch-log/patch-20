@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.1--patch-20
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Jun 13 10:05:00 CEST 2005
+Standard-date: 2005-06-13 08:05:00 GMT
+Modified-files: m4/systemc.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-20
+Summary: 
+ * ACJF_SYSTEMC now uses ACJF_CHECK_LIBONLY
+Keywords: 
+
+
+

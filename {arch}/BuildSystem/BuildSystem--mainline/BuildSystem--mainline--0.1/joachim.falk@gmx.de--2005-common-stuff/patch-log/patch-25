@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.1--patch-25
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Sep 12 14:42:23 CEST 2005
+Standard-date: 2005-09-12 12:42:23 GMT
+Modified-files: m4/boost.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-25
+Summary: 
+ * Use ACJF_CHECK_LIBONLY for libcheck
+Keywords: 
+
+
+

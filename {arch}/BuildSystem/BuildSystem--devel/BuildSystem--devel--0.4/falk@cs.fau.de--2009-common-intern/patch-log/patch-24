@@ -1,0 +1,14 @@
+Revision: BuildSystem--devel--0.4--patch-24
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Nov 16 18:27:16 CET 2009
+Standard-date: 2009-11-16 17:27:16 GMT
+Modified-files: m4/libsystemoc.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-24
+Summary: 
+ - @libsystemoc.m4: disable AM_CONDITIONAL redirection in the test macro. Not needed anymore.
+
+Keywords: 
+
+
+

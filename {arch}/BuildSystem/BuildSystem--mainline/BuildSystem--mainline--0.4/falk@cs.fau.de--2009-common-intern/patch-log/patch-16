@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.4--patch-16
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Mar 22 17:19:26 CET 2010
+Standard-date: 2010-03-22 16:19:26 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--mainline--0.4--patch-16
+Summary: 
+ * Added forgotten m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND]) for ACJF_CHECK_LIB_TESTER macro.
+Keywords: 
+
+
+

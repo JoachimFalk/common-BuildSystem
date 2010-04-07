@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.1--patch-28
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri Sep 16 16:25:06 CEST 2005
+Standard-date: 2005-09-16 14:25:06 GMT
+Modified-files: m4/all.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-28
+Summary: 
+ * Fix bug in ACJF_CHECK_HEADER and ACJF_CHECK_LIBONLY m4 macros
+   which appears when --config-cache is used as configure parameter
+Keywords: 
+
+
+

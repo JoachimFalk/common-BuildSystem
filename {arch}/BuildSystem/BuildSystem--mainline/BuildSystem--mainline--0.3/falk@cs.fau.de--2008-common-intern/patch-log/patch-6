@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.3--patch-6
+Archive: falk@cs.fau.de--2008-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Wed Jul 16 09:51:48 CEST 2008
+Standard-date: 2008-07-16 07:51:48 GMT
+Modified-files: doxygen.am
+New-patches: falk@cs.fau.de--2008-common-intern/BuildSystem--mainline--0.3--patch-6
+Summary: 
+ * Updated doxygen.am produced pdf file now named (PACKAGE)-$(VERSION).pdf
+ * No longer automatically delete doxygen-doc subdir upon make doxygen-doc
+Keywords: 
+
+
+

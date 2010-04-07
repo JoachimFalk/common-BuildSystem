@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.2--patch-21
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Tue Apr 24 20:43:24 CEST 2007
+Standard-date: 2007-04-24 18:43:24 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-21
+Summary: 
+ * No longer chache result of ACJF_CHECK_PKG as the result
+   may change depending on current directory of the process
+Keywords: 
+
+
+

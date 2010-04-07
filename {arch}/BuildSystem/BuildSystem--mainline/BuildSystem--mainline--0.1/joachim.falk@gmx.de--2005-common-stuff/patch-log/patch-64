@@ -1,0 +1,59 @@
+Revision: BuildSystem--mainline--0.1--patch-64
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Fri Oct 20 17:17:59 CEST 2006
+Standard-date: 2006-10-20 15:17:59 GMT
+Modified-files: jfrules.mk
+New-patches: joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-17
+    joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-18
+    joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-19
+    joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-20
+    joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-21
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-64
+Summary: 
+ * Merge from joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1 branch
+ - Fixed auto cleaning of re2c generated sources
+ - Added auto cleaning of *-sh copies
+Keywords: 
+
+
+
+Patches applied:
+
+ * joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-17
+   
+ * Merge from joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1 branch
+ - Fixed bug in config.cache usage of ACJF_CHECK_LIBONLY macro
+
+ * joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-18
+   
+ * Merge from joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1
+ - Removed ACJF_SUBPROJECT macro instead redefined m4_sinclude
+   This is necessary because the m4_sinclude macro name is hardcoded in aclocal
+ - Work arround aclocal brokenness with respect to m4_sinclude
+ - Use m4_pattern_forbid for ACJF_ to be more paranoid
+
+ * joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-19
+   
+ * Merge from joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1 branch
+ - Be more paranoid for pkg include headers dependencies add Makefile dependency
+ - Added ACJF_DUMMY_MACRO macro in m4/dummy.m4 for testing purpose
+ - Added ACJF_M4_WHILE to jfsuggar.m4
+ - Defined m4_pattern_forbid in test-jfsugar.m4 environemnt
+   for ./test-jfsugar.sh test script
+ - FIXED ACJF_NEED_PKG macro
+ - FIXED ACJF_NEED_PKG to try as last ditch effort $top_srcdir/..
+ - BUGFIX: Fixed m4_sinclude macro automagic ACJF_VAR_SUBPROJECT_DIR definition
+
+ * joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-20
+   
+ * Merge from joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1 branch
+ - Added ACJF_M4_CANON_DC macro to jfsuggar.m4
+ - Fixed ACJF_NEED_PKG macro added
+   pkg_xxx_builddir and pkg_xxx_srcdir substitutes
+
+ * joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-21
+   
+ * Fixed auto cleaning of re2c generated sources
+ * Added auto cleaning of *-sh copies
+

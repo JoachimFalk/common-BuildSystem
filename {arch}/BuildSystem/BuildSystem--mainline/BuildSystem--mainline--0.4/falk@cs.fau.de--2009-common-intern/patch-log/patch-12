@@ -1,0 +1,21 @@
+Revision: BuildSystem--mainline--0.4--patch-12
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Tue Nov 24 18:23:14 CET 2009
+Standard-date: 2009-11-24 17:23:14 GMT
+Modified-files: m4/libwsdf.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-26
+    falk@cs.fau.de--2009-common-intern/BuildSystem--mainline--0.4--patch-12
+Summary: 
+ * Merge from BuildSystem--devel--0.4 branch
+ - Typo fixup libWSDF => LibWSDF.
+Keywords: 
+
+
+
+Patches applied:
+
+ * falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-26
+   
+ * Typo fixup libWSDF => LibWSDF.
+

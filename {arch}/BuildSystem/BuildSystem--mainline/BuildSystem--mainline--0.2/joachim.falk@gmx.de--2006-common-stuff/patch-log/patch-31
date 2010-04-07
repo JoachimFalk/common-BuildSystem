@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.2--patch-31
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Jun  9 14:30:12 CEST 2008
+Standard-date: 2008-06-09 12:30:12 GMT
+Modified-files: test-jfsugar.m4
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-31
+Summary: 
+ * More unquote definition for test-jfsuggar.m4 YES NO new old NEW OLD
+Keywords: 
+
+
+

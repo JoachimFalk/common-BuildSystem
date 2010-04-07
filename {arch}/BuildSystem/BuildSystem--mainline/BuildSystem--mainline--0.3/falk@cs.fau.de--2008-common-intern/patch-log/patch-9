@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.3--patch-9
+Archive: falk@cs.fau.de--2008-common-intern
+Creator: Christian Zebelein <christian.zebelein@cs.fau.de>
+Date: Tue Aug 26 10:01:26 CEST 2008
+Standard-date: 2008-08-26 08:01:26 GMT
+Modified-files: m4/libwsdf.m4
+New-patches: falk@cs.fau.de--2008-common-intern/BuildSystem--mainline--0.3--patch-9
+Summary: 
+  * fixed bug in libwsdf.m4 if LibWSDF is used as installed package
+Keywords: 
+
+
+

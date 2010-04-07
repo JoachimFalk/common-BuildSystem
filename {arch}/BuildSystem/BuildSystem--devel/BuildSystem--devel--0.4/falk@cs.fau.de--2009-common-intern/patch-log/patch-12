@@ -1,0 +1,14 @@
+Revision: BuildSystem--devel--0.4--patch-12
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri Nov  6 11:33:22 CET 2009
+Standard-date: 2009-11-06 10:33:22 GMT
+Modified-files: m4/libboost.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-12
+Summary: 
+ * @libboost.m4: renamed some internal variables to contain boost to prevent
+   potential override of these variables by other parts of the BuildSystem.
+Keywords: 
+
+
+

@@ -1,0 +1,20 @@
+Revision: BuildSystem--mainline--0.2--patch-28
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri Jun  6 18:30:11 CEST 2008
+Standard-date: 2008-06-06 16:30:11 GMT
+New-files: m4/.arch-ids/libcosupport.m4.id
+    m4/.arch-ids/libsystemcvpc.m4.id
+    m4/.arch-ids/libsystemoc.m4.id m4/libcosupport.m4
+    m4/libsystemcvpc.m4 m4/libsystemoc.m4
+Modified-files: m4/pkgcheck.m4
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-28
+Summary: 
+ * Added ACJF_CHECK_LIB MACRO
+ * Added ACJF_CHECK_LIB_COSUPPORT
+ * Added ACJF_CHECK_LIB_SYSTEMC_VPC
+ * Added ACJF_CHECK_LIB_SYSTEMOC
+Keywords: 
+
+
+

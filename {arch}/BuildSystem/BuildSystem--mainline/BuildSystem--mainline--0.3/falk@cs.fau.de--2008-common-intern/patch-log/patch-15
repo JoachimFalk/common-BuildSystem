@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.3--patch-15
+Archive: falk@cs.fau.de--2008-common-intern
+Creator: Jens Gladigau <gladigau@codesign.informatik.uni-erlangen.de>
+Date: Sun Nov 16 13:26:34 CET 2008
+Standard-date: 2008-11-16 12:26:34 GMT
+New-patches: falk@cs.fau.de--2008-common-intern/BuildSystem--mainline--0.3--patch-15
+Summary: 
+  * symbolic linkt into our /usr/local fun which doesn't exist anymore
+  * ltmain.sh is now /usr/local/stow/libtool-1.5.18/share/libtool/ltmain.sh
+
+Keywords: 
+
+
+

@@ -1,0 +1,13 @@
+Revision: BuildSystem--devel--0.4--patch-2
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Thu Sep 17 10:27:55 CEST 2009
+Standard-date: 2009-09-17 08:27:55 GMT
+Modified-files: m4/jfsugar.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-2
+Summary: 
+ * Added ACJF_M4_UNQUOTE testcase to jfsugar.m4.
+Keywords: 
+
+
+

@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.4--patch-15
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Tue Mar 16 16:19:12 CET 2010
+Standard-date: 2010-03-16 15:19:12 GMT
+Modified-files: m4/libacx.m4 m4/libboost.m4 m4/libsgx.m4
+    m4/libxercesc.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--mainline--0.4--patch-15
+Summary: 
+ * Support a static libxerces-c.
+Keywords: 
+
+
+

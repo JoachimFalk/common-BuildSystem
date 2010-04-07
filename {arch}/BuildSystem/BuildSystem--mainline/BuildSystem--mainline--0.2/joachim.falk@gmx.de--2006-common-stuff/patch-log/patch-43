@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.2--patch-43
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Wed Jun 25 14:23:49 CEST 2008
+Standard-date: 2008-06-25 12:23:49 GMT
+Modified-files: m4/boilerplate.m4
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-43
+Summary: 
+ * Fixed sed action in boilerplate.m4 for ACJF_VAR_SUBSTVARFIXUP
+Keywords: 
+
+
+

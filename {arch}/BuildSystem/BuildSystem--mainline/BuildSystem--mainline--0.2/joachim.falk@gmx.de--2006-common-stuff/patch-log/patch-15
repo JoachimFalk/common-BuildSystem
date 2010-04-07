@@ -1,0 +1,15 @@
+Revision: BuildSystem--mainline--0.2--patch-15
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Thu Mar  8 15:58:13 CET 2007
+Standard-date: 2007-03-08 14:58:13 GMT
+Renamed-files: .arch-ids/test-jfsugar.sh.id .arch-ids/test-jfsugar.perl.id
+    test-jfsugar.sh test-jfsugar.perl
+Modified-files: m4/jfsugar.m4 test-jfsugar.perl
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-15
+Summary: 
+ * Added regression test script for jfsugar.m4
+Keywords: 
+
+
+

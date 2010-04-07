@@ -1,0 +1,21 @@
+Revision: BuildSystem--mainline--0.4--patch-6
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Nov  9 19:41:50 CET 2009
+Standard-date: 2009-11-09 18:41:50 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-19
+    falk@cs.fau.de--2009-common-intern/BuildSystem--mainline--0.4--patch-6
+Summary: 
+ * Merge from BuildSystem--devel--0.4 branch
+ - @pkcheck.m4: Set XXX_FOUND=yes if package was found, no otherwise.
+Keywords: 
+
+
+
+Patches applied:
+
+ * falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-19
+   
+ * @pkcheck.m4: Set XXX_FOUND=yes if package was found, no otherwise.
+

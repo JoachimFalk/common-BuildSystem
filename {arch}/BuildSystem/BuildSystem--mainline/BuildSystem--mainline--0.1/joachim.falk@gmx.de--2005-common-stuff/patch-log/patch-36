@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.1--patch-36
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Nov 14 17:42:35 CET 2005
+Standard-date: 2005-11-14 16:42:35 GMT
+Modified-files: m4/all.m4 m4/boost.m4 {arch}/=tagging-method
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-36
+Summary: 
+ * Fixed boost library recognition for both libboost-xxx and libboost-xxx-gcc
+Keywords: 
+
+
+

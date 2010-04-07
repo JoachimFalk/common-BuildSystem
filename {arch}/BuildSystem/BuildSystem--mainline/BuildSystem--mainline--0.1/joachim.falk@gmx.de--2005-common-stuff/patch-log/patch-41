@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.1--patch-41
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Thu Dec 15 13:43:05 CET 2005
+Standard-date: 2005-12-15 12:43:05 GMT
+Modified-files: m4/all.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-41
+Summary: 
+ * Fixed ACJF_NEED_PKG to generate absolute pathes for INCLUDES and LDFLAGS
+Keywords: 
+
+
+

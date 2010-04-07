@@ -1,0 +1,24 @@
+Revision: BuildSystem--mainline--0.1--patch-32
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Mon Oct  3 17:34:17 CEST 2005
+Standard-date: 2005-10-03 15:34:17 GMT
+Modified-files: m4/jfsugar.m4 test-jfsugar.m4
+New-patches: joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-3
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-32
+Summary: 
+ * Merge from joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1 Branch
+ - Fixed some jfsuggar.m4 macros
+ - Better and more examples in jfsuggar.m4
+
+Keywords: 
+
+
+
+Patches applied:
+
+ * joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-3
+   
+ * Fixed some jfsuggar macros
+ - Better and more examples of jfsuggar
+

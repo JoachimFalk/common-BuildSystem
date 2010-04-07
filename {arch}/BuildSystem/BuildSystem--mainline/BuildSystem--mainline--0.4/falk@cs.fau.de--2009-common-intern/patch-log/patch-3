@@ -1,0 +1,64 @@
+Revision: BuildSystem--mainline--0.4--patch-3
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri Nov  6 16:29:48 CET 2009
+Standard-date: 2009-11-06 15:29:48 GMT
+Modified-files: m4/boilerplate.m4 m4/jfsugar.m4
+    m4/libboost.m4 m4/libsgxutils.m4 m4/libsystemoc.m4
+    m4/pkgcheck.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-11
+    falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-12
+    falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-13
+    falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-14
+    falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-15
+    falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-16
+    falk@cs.fau.de--2009-common-intern/BuildSystem--mainline--0.4--patch-3
+Summary: 
+ * Merge from BuildSystem--devel--0.4 branch
+ - @jfsuggar.m4 added ACJF_M4_NULL macro which does nothing and discards all its arguments.
+ - @libboost.m4: renamed some internal variables to contain boost to prevent
+   potential override of these variables by other parts of the BuildSystem.
+ - @libsystemoc.m4: Total overhaul of ACJF_CHECK_LIB_SYSTEMOC to use new
+   reworked pkgcheck.m4 infrastructure.
+ - Improve pkgcheck.m4
+   allow recursive calls into ACJF_CHECK_LIB_TESTER
+   call <test macro> even if library is from source tree
+ - @libsystemoc.m4: Adapt to reworked pkgcheck.m4 infrastructure.
+ - @libsgxutils.m4: Bugfix had two bugs inverse logic and detection bug which
+   canceled each other out.
+
+Keywords: 
+
+
+
+Patches applied:
+
+ * falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-11
+   
+ * @jfsuggar.m4 added ACJF_M4_NULL macro which does nothing and discards all its arguments.
+
+ * falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-12
+   
+ * @libboost.m4: renamed some internal variables to contain boost to prevent
+   potential override of these variables by other parts of the BuildSystem.
+
+ * falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-13
+   
+ * @libsystemoc.m4: Total overhaul of ACJF_CHECK_LIB_SYSTEMOC to use new
+   reworked pkgcheck.m4 infrastructure.
+
+ * falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-14
+   
+ * Improve pkgcheck.m4
+ - allow recursive calls into ACJF_CHECK_LIB_TESTER
+ - call <test macro> even if library is from source tree
+
+ * falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-15
+   
+  * @libsystemoc.m4: Adapt to reworked pkgcheck.m4 infrastructure.
+
+ * falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-16
+   
+ * @libsgxutils.m4: Bugfix had two bugs inverse logic and detection bug which
+   canceled each other out.
+

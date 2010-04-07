@@ -1,0 +1,29 @@
+Revision: BuildSystem--mainline--0.1--patch-20
+Archive: joachim.falk@gmx.de--2004-jf-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Sun Jun 25 15:27:44 CEST 2006
+Standard-date: 2006-06-25 13:27:44 GMT
+Modified-files: m4/all.m4 m4/jfsugar.m4
+New-patches: joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-20
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-62
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-63
+Summary: 
+ * Merge from joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1 branch
+ - Added ACJF_M4_CANON_DC macro to jfsuggar.m4
+ - Fixed ACJF_NEED_PKG macro added
+   pkg_xxx_builddir and pkg_xxx_srcdir substitutes
+Keywords: 
+
+
+
+Patches applied:
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-62
+   
+ * Added ACJF_M4_CANON_DC macro to jfsuggar.m4
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-63
+   
+ * Fixed ACJF_NEED_PKG macro added
+ - pkg_xxx_builddir and pkg_xxx_srcdir substitutes
+

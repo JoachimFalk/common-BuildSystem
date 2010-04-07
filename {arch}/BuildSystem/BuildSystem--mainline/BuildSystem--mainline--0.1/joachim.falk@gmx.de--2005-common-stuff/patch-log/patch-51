@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.1--patch-51
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Jun 12 19:09:24 CEST 2006
+Standard-date: 2006-06-12 17:09:24 GMT
+Modified-files: m4/all.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-51
+Summary: 
+ * Fixed bug in config.cache usage of ACJF_CHECK_LIBONLY macro
+Keywords: 
+
+
+

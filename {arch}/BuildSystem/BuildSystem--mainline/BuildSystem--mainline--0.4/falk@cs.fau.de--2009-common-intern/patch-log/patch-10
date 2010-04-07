@@ -1,0 +1,21 @@
+Revision: BuildSystem--mainline--0.4--patch-10
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Wed Nov 11 16:20:20 CET 2009
+Standard-date: 2009-11-11 15:20:20 GMT
+Modified-files: m4/libpycecsim.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-23
+    falk@cs.fau.de--2009-common-intern/BuildSystem--mainline--0.4--patch-10
+Summary: 
+ * Merge from BuildSystem--devel--0.4 branch
+ - @libpycecsim.m4: Fixup ACJF_CHECK_CECSIM_PYCON to not only search for boost but also use the found boost headers.
+Keywords: 
+
+
+
+Patches applied:
+
+ * falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-23
+   
+ - @libpycecsim.m4: Fixup ACJF_CHECK_CECSIM_PYCON to not only search for boost but also use the found boost headers.
+

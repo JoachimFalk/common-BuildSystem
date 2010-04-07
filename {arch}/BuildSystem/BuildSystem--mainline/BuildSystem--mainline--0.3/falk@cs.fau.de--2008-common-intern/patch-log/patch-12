@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.3--patch-12
+Archive: falk@cs.fau.de--2008-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri Oct 10 16:59:25 CEST 2008
+Standard-date: 2008-10-10 14:59:25 GMT
+Modified-files: m4/boilerplate.m4
+New-patches: falk@cs.fau.de--2008-common-intern/BuildSystem--mainline--0.3--patch-12
+Summary: 
+ * Autosearch BuildSystem, autogenerate root_srcdir and root_builddir
+ - Note that root_srcdir and root_builddir can be relative pathes!
+Keywords: 
+
+
+

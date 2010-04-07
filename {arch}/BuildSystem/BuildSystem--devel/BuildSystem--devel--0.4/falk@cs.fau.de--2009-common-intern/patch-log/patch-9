@@ -1,0 +1,17 @@
+Revision: BuildSystem--devel--0.4--patch-9
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Tue Nov  3 18:58:44 CET 2009
+Standard-date: 2009-11-03 17:58:44 GMT
+Modified-files: m4/libboost.m4 m4/libpip++.m4 m4/libsgx.m4
+    m4/libsgxutils.m4 m4/libsystemoc.m4 m4/libtlm1.m4
+    m4/pkgcheck.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-9
+Summary: 
+ * General fixup. Only invoke AC_MSG_ERROR on failure if BOTH
+   <code if true> and <code if false> are unspecified. Previously
+   only the presence of <code if false> was checked for.
+Keywords: 
+
+
+

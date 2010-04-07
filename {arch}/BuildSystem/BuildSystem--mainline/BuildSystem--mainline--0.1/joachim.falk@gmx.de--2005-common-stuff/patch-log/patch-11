@@ -1,0 +1,16 @@
+Revision: BuildSystem--mainline--0.1--patch-11
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri May 20 11:10:14 CEST 2005
+Standard-date: 2005-05-20 09:10:14 GMT
+Modified-files: doxygen.am
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-11
+Summary: 
+ * moved .PHONY and .INTERMEDIATE in doxygen.am
+   out of DX_COND_doc conditional.
+   Otherwise automake complains if other Makefile.am fragments
+   use this special target whitout this conditional
+Keywords: 
+
+
+

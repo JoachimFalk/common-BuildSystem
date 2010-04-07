@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.2--patch-22
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Christian Zebelein <christian.zebelein@fen-net.de>
+Date: Fri Jul 27 13:36:00 CEST 2007
+Standard-date: 2007-07-27 11:36:00 GMT
+Modified-files: mkcompileheaderobj.sh
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-22
+Summary: 
+ * Added *.hh|*.hpp|*.hxx|*.tcc|*.tcpp|*.tcxx to mkcompileheader.sh
+
+Keywords: 
+
+
+

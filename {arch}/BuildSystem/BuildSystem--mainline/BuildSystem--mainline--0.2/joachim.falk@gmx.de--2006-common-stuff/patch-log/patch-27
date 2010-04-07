@@ -1,0 +1,28 @@
+Revision: BuildSystem--mainline--0.2--patch-27
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri Jun  6 12:14:27 CEST 2008
+Standard-date: 2008-06-06 10:14:27 GMT
+Renamed-files: m4/.arch-ids/boost.m4.id m4/.arch-ids/libboost.m4.id
+    m4/.arch-ids/gmp.m4.id m4/.arch-ids/libgmp.m4.id
+    m4/.arch-ids/iberty.m4.id m4/.arch-ids/libiberty.m4.id
+    m4/.arch-ids/pip.m4.id m4/.arch-ids/libpip.m4.id
+    m4/.arch-ids/systemc.m4.id m4/.arch-ids/libsystemc.m4.id
+    m4/.arch-ids/tcl.m4.id m4/.arch-ids/libtcl.m4.id
+    m4/.arch-ids/xalan.m4.id m4/.arch-ids/libxalanc.m4.id
+    m4/.arch-ids/xerces.m4.id m4/.arch-ids/libxercesc.m4.id
+    m4/boost.m4 m4/libboost.m4
+    m4/gmp.m4 m4/libgmp.m4
+    m4/iberty.m4 m4/libiberty.m4
+    m4/pip.m4 m4/libpip.m4
+    m4/systemc.m4 m4/libsystemc.m4
+    m4/tcl.m4 m4/libtcl.m4
+    m4/xalan.m4 m4/libxalanc.m4
+    m4/xerces.m4 m4/libxercesc.m4
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-27
+Summary: 
+ * Some renames ACJF_CHECK_LIB_XXX now all in libxxx.m4 files
+Keywords: 
+
+
+

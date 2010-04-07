@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.1--patch-4
+Archive: joachim.falk@gmx.de--2004-systemc-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Jan  3 16:32:45 CET 2005
+Standard-date: 2005-01-03 15:32:45 GMT
+New-files: m4/.arch-ids/systemc.m4.id m4/systemc.m4
+Modified-files: m4/all.m4
+New-patches: joachim.falk@gmx.de--2004-systemc-stuff/BuildSystem--mainline--0.1--patch-4
+Summary: Define ACJF_SYSTEMC
+Keywords: 
+
+
+

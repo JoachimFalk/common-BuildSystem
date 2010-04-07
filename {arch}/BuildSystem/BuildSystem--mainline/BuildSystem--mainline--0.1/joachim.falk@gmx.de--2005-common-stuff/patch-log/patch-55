@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.1--patch-55
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Wed Jun 21 11:21:50 CEST 2006
+Standard-date: 2006-06-21 09:21:50 GMT
+Modified-files: jfrules.mk
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-55
+Summary: 
+ * Be more paranoid for pkg include headers dependencies add Makefile dependency
+Keywords: 
+
+
+

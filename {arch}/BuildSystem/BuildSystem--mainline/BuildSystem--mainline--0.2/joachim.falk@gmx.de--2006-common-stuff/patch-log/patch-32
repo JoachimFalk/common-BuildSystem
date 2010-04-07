@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.2--patch-32
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Jun  9 14:33:07 CEST 2008
+Standard-date: 2008-06-09 12:33:07 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-32
+Summary: 
+ * Modified ACJF_CHECK_PKG to also take argument for the subdirectory the pkg
+   resides in. This subdirectory is now independent of the pkgname, e.g., CoSupport but Support subdir.
+Keywords: 
+
+
+

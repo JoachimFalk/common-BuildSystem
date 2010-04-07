@@ -1,0 +1,36 @@
+Revision: BuildSystem--mainline--0.1--patch-26
+Archive: joachim.falk@gmx.de--2004-jf-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Fri Mar  9 23:13:03 CET 2007
+Standard-date: 2007-03-09 22:13:03 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-26
+    joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-9
+Summary: 
+ * Merge from joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2 branch
+ - Use acjf_pkgfound to signal if ACJF_NEED_PKG found the package
+   ACJF_NEED_PKG now unset
+    - acjf_pkgdir
+    - acjf_pkg_srcdir
+    - acjf_pkg_builddir
+    - pkg_<pkgname>_srcdir
+    - pkg_<pkgname>_builddir
+   if the package was not found.
+
+Keywords: 
+
+
+
+Patches applied:
+
+ * joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-9
+   
+ * Use acjf_pkgfound to signal if ACJF_NEED_PKG found the package
+   ACJF_NEED_PKG now unset 
+     - acjf_pkgdir
+     - acjf_pkg_srcdir
+     - acjf_pkg_builddir
+     - pkg_<pkgname>_srcdir
+     - pkg_<pkgname>_builddir
+   if the package was not found.
+

@@ -1,0 +1,15 @@
+Revision: BuildSystem--mainline--0.1--patch-75
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Wed Jan 17 11:01:37 CET 2007
+Standard-date: 2007-01-17 10:01:37 GMT
+Modified-files: autoconf-env.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-75
+Summary: 
+ * Fixed autoconf-env.m4 
+   Use m4_dnl instead of simple dnl for copyright boilerplate
+   because dnl macro is only defined later on in autoconf-env.m4.
+Keywords: 
+
+
+

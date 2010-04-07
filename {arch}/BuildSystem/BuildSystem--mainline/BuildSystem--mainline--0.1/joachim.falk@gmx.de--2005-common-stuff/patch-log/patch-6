@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.1--patch-6
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Thu May  5 17:04:41 CEST 2005
+Standard-date: 2005-05-05 15:04:41 GMT
+Modified-files: autoreconf.sh m4/all.m4 m4/systemc.m4
+    m4/tcl.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-6
+Summary:
+  - Fixed some warning which are generated with automake version 1.9
+Keywords: 
+
+
+
