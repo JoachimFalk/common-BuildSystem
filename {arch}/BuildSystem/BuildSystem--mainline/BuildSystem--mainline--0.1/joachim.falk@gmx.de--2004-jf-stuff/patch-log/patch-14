@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.1--patch-14
+Archive: joachim.falk@gmx.de--2004-jf-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Sat Jun 10 12:11:34 CEST 2006
+Standard-date: 2006-06-10 10:11:34 GMT
+New-files: m4/.arch-ids/vacopy.m4.id m4/vacopy.m4
+Modified-files: m4/all.m4 m4/boost.m4 m4/jfsugar.m4
+    m4/python.m4 m4/systemc.m4 m4/xalan.m4 m4/xerces.m4
+New-patches: joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-14
+Summary: 
+Keywords: 
+
+
+

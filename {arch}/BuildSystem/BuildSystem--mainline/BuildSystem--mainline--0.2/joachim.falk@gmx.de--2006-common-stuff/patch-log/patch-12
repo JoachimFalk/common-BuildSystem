@@ -1,0 +1,15 @@
+Revision: BuildSystem--mainline--0.2--patch-12
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri Mar  2 13:07:35 CET 2007
+Standard-date: 2007-03-02 12:07:35 GMT
+Modified-files: mkcompileheaderobj.sh
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-12
+Summary: 
+ * Use absolute path of header for header compilation, fixes the
+   case where the header to compile is not directly in the compiler
+   include path
+Keywords: 
+
+
+

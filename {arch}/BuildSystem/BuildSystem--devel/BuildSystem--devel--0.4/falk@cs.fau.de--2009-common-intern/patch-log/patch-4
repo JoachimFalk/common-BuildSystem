@@ -1,0 +1,14 @@
+Revision: BuildSystem--devel--0.4--patch-4
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri Sep 18 17:24:05 CEST 2009
+Standard-date: 2009-09-18 15:24:05 GMT
+Modified-files: m4/boilerplate.m4 m4/libsystemc.m4
+    m4/pkgcheck.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-4
+Summary: 
+ * One the way to a reworked pkgcheck.m4 infrastructure (III).
+Keywords: 
+
+
+

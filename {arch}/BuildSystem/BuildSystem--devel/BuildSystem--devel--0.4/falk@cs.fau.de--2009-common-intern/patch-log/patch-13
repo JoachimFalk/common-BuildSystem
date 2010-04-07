@@ -1,0 +1,14 @@
+Revision: BuildSystem--devel--0.4--patch-13
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri Nov  6 11:34:59 CET 2009
+Standard-date: 2009-11-06 10:34:59 GMT
+Modified-files: m4/libsystemoc.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-13
+Summary: 
+ * @libsystemoc.m4: Total overhaul of ACJF_CHECK_LIB_SYSTEMOC to use new
+   reworked pkgcheck.m4 infrastructure.
+Keywords: 
+
+
+

@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.2--patch-35
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Jun  9 17:27:20 CEST 2008
+Standard-date: 2008-06-09 15:27:20 GMT
+Modified-files: m4/libboost.m4 m4/libsystemc.m4
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-35
+Summary: 
+ * Reimplemented ACJF_CHECK_LIB_SYSTEMC and ACJF_CHECK_LIB_BOOST on top of ACJF_CHECK_LIB
+Keywords: 
+
+
+

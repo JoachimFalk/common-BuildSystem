@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.2--patch-5
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Tue Nov 14 11:02:42 CET 2006
+Standard-date: 2006-11-14 10:02:42 GMT
+Modified-files: autoreconf.sh m4/jfsugar.m4
+    mkcompileheaderobj.sh test-jfsugar.m4 test-jfsugar.sh
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-5
+Summary: 
+ * Fixed previous commit
+Keywords: 
+
+
+

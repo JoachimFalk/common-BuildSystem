@@ -1,0 +1,16 @@
+Revision: BuildSystem--mainline--0.3--patch-17
+Archive: falk@cs.fau.de--2008-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Thu Dec 18 15:00:59 CET 2008
+Standard-date: 2008-12-18 14:00:59 GMT
+New-files: m4/.arch-ids/libtlm1.m4.id m4/libtlm1.m4
+Modified-files: m4/libsystemoc.m4 m4/libxercesc.m4
+    m4/pkgcheck.m4
+New-patches: falk@cs.fau.de--2008-common-intern/BuildSystem--mainline--0.3--patch-17
+Summary: 
+ * Fix xerces detection bug for SysteMoC
+ * Add tlm1 dependency for SysteMoC
+Keywords: 
+
+
+

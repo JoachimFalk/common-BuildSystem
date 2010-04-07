@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.1--patch-9
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Thu May 19 16:35:00 CEST 2005
+Standard-date: 2005-05-19 14:35:00 GMT
+Modified-files: m4/doxygen.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-9
+Summary:
+ * Fix typo in doxygen.m4
+   - AS_HELP_STRING => AC_HELP_STRING
+Keywords: 
+
+
+

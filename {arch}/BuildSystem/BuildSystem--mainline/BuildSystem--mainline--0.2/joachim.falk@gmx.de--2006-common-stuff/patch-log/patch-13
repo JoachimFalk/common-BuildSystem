@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.2--patch-13
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri Mar  2 13:08:30 CET 2007
+Standard-date: 2007-03-02 12:08:30 GMT
+Modified-files: jfrules.mk
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-13
+Summary: 
+ * Do not overwrite pkgincludedir if pkgincludeprefix is not defined
+Keywords: 
+
+
+

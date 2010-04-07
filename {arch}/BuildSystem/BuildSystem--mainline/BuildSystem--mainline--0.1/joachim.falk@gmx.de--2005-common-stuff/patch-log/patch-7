@@ -1,0 +1,20 @@
+Revision: BuildSystem--mainline--0.1--patch-7
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Wed May 11 11:33:29 CEST 2005
+Standard-date: 2005-05-11 09:33:29 GMT
+Modified-files: {arch}/=tagging-method
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-7
+Summary:
+ * changed arch tagging method now ignores
+   - config.guess
+   - config.sub
+   - ltmain.sh
+   - install-sh
+   - mkinstalldirs
+   - missing
+   - depcomp
+Keywords: 
+
+
+

@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.3--patch-14
+Archive: falk@cs.fau.de--2008-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri Nov  7 21:21:38 CET 2008
+Standard-date: 2008-11-07 20:21:38 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: falk@cs.fau.de--2008-common-intern/BuildSystem--mainline--0.3--patch-14
+Summary: 
+ * Define AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION also in ACJF_CHECK_PKG
+Keywords: 
+
+
+

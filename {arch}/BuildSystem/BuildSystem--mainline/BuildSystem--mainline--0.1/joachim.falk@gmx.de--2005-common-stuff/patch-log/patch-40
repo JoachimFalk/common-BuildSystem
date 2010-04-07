@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.1--patch-40
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Wed Dec 14 11:37:12 CET 2005
+Standard-date: 2005-12-14 10:37:12 GMT
+New-files: m4/.arch-ids/xalan.m4.id m4/xalan.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-40
+Summary: 
+ * Added ACJF_CHECK_LIB_XALAN macro
+Keywords: 
+
+
+

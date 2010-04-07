@@ -1,0 +1,16 @@
+Revision: BuildSystem--mainline--0.3--patch-7
+Archive: falk@cs.fau.de--2008-common-intern
+Creator: Christian Zebelein <christian.zebelein@cs.fau.de>
+Date: Mon Aug 25 11:15:40 CEST 2008
+Standard-date: 2008-08-25 09:15:40 GMT
+New-files: m4/.arch-ids/libpycecsim.m4.id m4/libpycecsim.m4
+Modified-files: m4/libsgx.m4 m4/libsystemcvpc.m4
+New-patches: falk@cs.fau.de--2008-common-intern/BuildSystem--mainline--0.3--patch-7
+Summary:
+  * fixed bugs in libsgx.m4 and libsystemcvpc.m4 if LibSGX and VPC are used
+    as installed packages
+  * added libpycecsim.m4
+Keywords: 
+
+
+

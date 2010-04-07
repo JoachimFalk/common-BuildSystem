@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.2--patch-11
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Wed Feb 28 10:42:40 CET 2007
+Standard-date: 2007-02-28 09:42:40 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-11
+Summary: 
+ * Eliminate forgotten debug echo FOO, echo BAR
+Keywords: 
+
+
+

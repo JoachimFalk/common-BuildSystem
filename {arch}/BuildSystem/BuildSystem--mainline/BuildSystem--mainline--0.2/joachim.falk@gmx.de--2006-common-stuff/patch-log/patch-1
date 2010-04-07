@@ -1,0 +1,26 @@
+Revision: BuildSystem--mainline--0.2--patch-1
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Mon Oct 30 17:52:31 CET 2006
+Standard-date: 2006-10-30 16:52:31 GMT
+New-files: m4/.arch-ids/boilerplate.m4.id
+    m4/.arch-ids/cross.m4.id
+    m4/.arch-ids/enable-debug.m4.id
+    m4/.arch-ids/size_t.m4.id m4/.arch-ids/stdint.m4.id
+    m4/.arch-ids/var.m4.id m4/boilerplate.m4 m4/cross.m4
+    m4/dustbin/.arch-ids/=id
+    m4/dustbin/.arch-ids/cflags.m4.id
+    m4/dustbin/.arch-ids/libs.m4.id m4/dustbin/cflags.m4
+    m4/dustbin/libs.m4 m4/enable-debug.m4 m4/size_t.m4
+    m4/stdint.m4 m4/var.m4
+New-directories: m4/dustbin m4/dustbin/.arch-ids
+Renamed-files: m4/.arch-ids/all.m4.id m4/.arch-ids/pkgcheck.m4.id
+    m4/all.m4 m4/pkgcheck.m4
+Modified-files: m4/iberty.m4 m4/pkgcheck.m4
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-1
+Summary: 
+ * Split up all.m4 into smaller chunks moved obsolete stuff to dustbin
+Keywords: 
+
+
+

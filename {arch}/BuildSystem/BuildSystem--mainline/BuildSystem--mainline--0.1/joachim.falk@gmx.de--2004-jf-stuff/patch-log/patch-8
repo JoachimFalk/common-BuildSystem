@@ -1,0 +1,21 @@
+Revision: BuildSystem--mainline--0.1--patch-8
+Archive: joachim.falk@gmx.de--2004-jf-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Sun May  7 17:46:47 CEST 2006
+Standard-date: 2006-05-07 15:46:47 GMT
+Modified-files: m4/boost.m4
+New-patches: joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-8
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-44
+Summary: 
+ * Merge from joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1 branch
+ - Fixed bug in boost.m4 forgot to set BOOST_LIBPOSTFIX
+Keywords: 
+
+
+
+Patches applied:
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-44
+   
+ * Fixed bug in boost.m4 forgot to set BOOST_LIBPOSTFIX
+

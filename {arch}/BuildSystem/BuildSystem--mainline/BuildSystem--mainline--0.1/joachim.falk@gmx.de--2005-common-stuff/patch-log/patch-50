@@ -1,0 +1,38 @@
+Revision: BuildSystem--mainline--0.1--patch-50
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Jun 12 11:36:53 CEST 2006
+Standard-date: 2006-06-12 09:36:53 GMT
+New-files: m4/.arch-ids/iberty.m4.id
+    m4/.arch-ids/vacopy.m4.id m4/iberty.m4 m4/vacopy.m4
+Modified-files: m4/all.m4 m4/boost.m4 m4/jfsugar.m4
+    m4/python.m4 m4/systemc.m4 m4/xalan.m4 m4/xerces.m4
+New-patches: joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-14
+    joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-15
+    joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-16
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-50
+Summary: 
+ * Merge from Joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1 branch
+ - Updated copyright notice
+ - Moved checks for libiberty from all.m4 to iberty.m4
+ - Added ACJF_SUBPROJECT macro which sets
+   ACJF_VAR_SUBPROJECT_DIR for use in subprojects
+
+Keywords: 
+
+
+
+Patches applied:
+
+ * joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-14
+   
+
+ * joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-15
+   
+ * Moved checks for libiberty from all.m4 to iberty.m4
+
+ * joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-16
+   
+ * Added ACJF_SUBPROJECT macro which sets
+   ACJF_VAR_SUBPROJECT_DIR for use in subprojects
+

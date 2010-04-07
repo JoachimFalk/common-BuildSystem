@@ -1,0 +1,21 @@
+Revision: BuildSystem--mainline--0.4--patch-8
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Wed Nov 11 12:58:30 CET 2009
+Standard-date: 2009-11-11 11:58:30 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-21
+    falk@cs.fau.de--2009-common-intern/BuildSystem--mainline--0.4--patch-8
+Summary: 
+ * Merge from BuildSystem--devel--0.4 branch
+ - @pkgcheck.m4: Fixup error in case of relative, i.e., ../configure, calls.
+Keywords: 
+
+
+
+Patches applied:
+
+ * falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-21
+   
+ * @pkgcheck.m4: Fixup error in case of relative, i.e., ../configure, calls.
+

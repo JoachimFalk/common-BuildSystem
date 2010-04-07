@@ -1,0 +1,47 @@
+Revision: BuildSystem--mainline--0.1--patch-7
+Archive: joachim.falk@gmx.de--2004-jf-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Fri Dec 16 22:35:39 CET 2005
+Standard-date: 2005-12-16 21:35:39 GMT
+New-files: m4/.arch-ids/xalan.m4.id m4/xalan.m4
+Modified-files: m4/all.m4
+Modified-directories: {arch}/BuildSystem/BuildSystem--mainline/BuildSystem--mainline--0.1/joachim.falk@gmx.de--2004-jf-stuff
+    {arch}/BuildSystem/BuildSystem--mainline/BuildSystem--mainline--0.1/joachim.falk@gmx.de--2004-jf-stuff/patch-log
+New-patches: joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-7
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-39
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-40
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-41
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-42
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-43
+Summary: 
+ * Syncup to joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1
+ - Added ACJF_CHECK_LIB_XALAN macro
+ - Fixed ACJF_NEED_PKG macro
+   to generate absolute pathes for INCLUDES and LDFLAGS
+   from srcdir and builddir
+Keywords: 
+
+
+
+Patches applied:
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-39
+   
+ * Syncup to joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-40
+   
+ * Added ACJF_CHECK_LIB_XALAN macro
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-41
+   
+ * Fixed ACJF_NEED_PKG to generate absolute pathes for INCLUDES and LDFLAGS
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-42
+   
+ * Added further search places to ACJF_NEED_PKG
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-43
+   
+ * fixed ACJF_NEED_PKG for the last time I hope
+

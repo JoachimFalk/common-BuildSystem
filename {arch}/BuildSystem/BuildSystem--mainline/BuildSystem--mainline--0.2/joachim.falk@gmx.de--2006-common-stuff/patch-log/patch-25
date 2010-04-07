@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.2--patch-25
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Mar 10 11:01:08 CET 2008
+Standard-date: 2008-03-10 10:01:08 GMT
+Modified-files: m4/boost.m4
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-25
+Summary: 
+ * Added check for multithreaded version of boost define BOOST_LIBMTPOSTFIX
+Keywords: 
+
+
+

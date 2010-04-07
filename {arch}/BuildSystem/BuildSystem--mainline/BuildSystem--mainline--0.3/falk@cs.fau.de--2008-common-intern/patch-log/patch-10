@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.3--patch-10
+Archive: falk@cs.fau.de--2008-common-intern
+Creator: Thomas Schlichter <schlichter@cs.fau.de>
+Date: Sat Aug 30 18:49:18 CEST 2008
+Standard-date: 2008-08-30 16:49:18 GMT
+Modified-files: m4/libsgx.m4
+New-patches: falk@cs.fau.de--2008-common-intern/BuildSystem--mainline--0.3--patch-10
+Summary: Improve libsgx detection
+ - Add boost search paths to CPPFLAGS and LDFLAGS
+ - Add check for Xerces
+Keywords: 
+
+
+

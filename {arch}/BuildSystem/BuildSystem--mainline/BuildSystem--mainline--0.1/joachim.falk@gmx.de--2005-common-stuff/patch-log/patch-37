@@ -1,0 +1,18 @@
+Revision: BuildSystem--mainline--0.1--patch-37
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Wed Nov 16 15:56:52 CET 2005
+Standard-date: 2005-11-16 14:56:52 GMT
+Modified-files: m4/all.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-37
+Summary: 
+ * Fixed ACJF_ARG_DEBUG macro
+ * Modified ACJF_CHECK_CROSSTOOL to not change CFLAGS or CXXFLAGS
+   - ACJF_CHECK_CROSSTOOL( CC, gcc)  auto added "-g -O2" to CFLAGS
+   - ACJF_CHECK_CROSSTOOL( CXX, g++) auto added "-g -O2" to CXXFLAGS
+   - AC_PROG_CC / AC_PROG_CXX still does auto add "-g -O2" if compiler
+     supports it and CFLAGS / CXXFLAGS where not set previously
+Keywords: 
+
+
+

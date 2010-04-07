@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.1--patch-14
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon May 30 18:22:43 CEST 2005
+Standard-date: 2005-05-30 16:22:43 GMT
+Modified-files: autoreconf.sh
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-14
+Summary: 
+ * Added cleanup commands to autoreconf.sh
+Keywords: 
+
+
+

@@ -1,0 +1,26 @@
+Revision: BuildSystem--mainline--0.1--patch-29
+Archive: joachim.falk@gmx.de--2004-jf-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Fri Mar  9 23:14:11 CET 2007
+Standard-date: 2007-03-09 22:14:11 GMT
+Modified-files: mkcompileheaderobj.sh
+New-patches: joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-29
+    joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-12
+Summary: 
+ * Merge from joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2 branch
+ - Use absolute path of header for header compilation, fixes the
+   case where the header to compile is not directly in the compiler
+   include path
+
+Keywords: 
+
+
+
+Patches applied:
+
+ * joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-12
+   
+ * Use absolute path of header for header compilation, fixes the
+   case where the header to compile is not directly in the compiler
+   include path
+

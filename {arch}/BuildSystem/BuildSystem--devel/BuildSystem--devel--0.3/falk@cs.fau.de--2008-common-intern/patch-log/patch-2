@@ -1,0 +1,15 @@
+Revision: BuildSystem--devel--0.3--patch-2
+Archive: falk@cs.fau.de--2008-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Jan 19 12:39:51 CET 2009
+Standard-date: 2009-01-19 11:39:51 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: falk@cs.fau.de--2008-common-intern/BuildSystem--devel--0.3--patch-2
+Summary: 
+ * Introduced additional macro ACJF_CHECK_HEADER_AND_LIB in m4/pkgcheck.m4 which
+   which is the header and library search code from ACJF_CHECK_LIB to facilitate
+   custom code for setup of header and library search pathes.
+Keywords: 
+
+
+

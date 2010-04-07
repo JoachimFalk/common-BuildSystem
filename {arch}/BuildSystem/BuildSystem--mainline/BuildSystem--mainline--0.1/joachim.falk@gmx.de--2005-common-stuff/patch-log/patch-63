@@ -1,0 +1,14 @@
+Revision: BuildSystem--mainline--0.1--patch-63
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Sun Jun 25 15:06:13 CEST 2006
+Standard-date: 2006-06-25 13:06:13 GMT
+Modified-files: m4/all.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-63
+Summary: 
+ * Fixed ACJF_NEED_PKG macro added
+ - pkg_xxx_builddir and pkg_xxx_srcdir substitutes
+Keywords: 
+
+
+

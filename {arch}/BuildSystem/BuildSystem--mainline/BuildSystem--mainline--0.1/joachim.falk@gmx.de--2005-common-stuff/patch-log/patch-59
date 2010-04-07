@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.1--patch-59
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Wed Jun 21 15:03:52 CEST 2006
+Standard-date: 2006-06-21 13:03:52 GMT
+Modified-files: m4/all.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-59
+Summary: 
+ * Fixed ACJF_NEED_PKG macro
+Keywords: 
+
+
+

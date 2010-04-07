@@ -1,0 +1,21 @@
+Revision: BuildSystem--mainline--0.4--patch-9
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Wed Nov 11 14:30:39 CET 2009
+Standard-date: 2009-11-11 13:30:39 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-22
+    falk@cs.fau.de--2009-common-intern/BuildSystem--mainline--0.4--patch-9
+Summary: 
+ * Merge from BuildSystem--devel--0.4 branch
+ - @pkgcheck.m4: Fixed options --with-xxx-lib and --with-xxx-include.
+Keywords: 
+
+
+
+Patches applied:
+
+ * falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-22
+   
+ * @pkgcheck.m4: Fixed options --with-xxx-lib and --with-xxx-include.
+

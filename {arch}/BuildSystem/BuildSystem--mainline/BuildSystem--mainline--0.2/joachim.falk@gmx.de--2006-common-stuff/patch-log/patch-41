@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.2--patch-41
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Thomas Schlichter <schlichter@cs.fau.de>
+Date: Wed Jun 25 12:28:42 CEST 2008
+Standard-date: 2008-06-25 10:28:42 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-41
+Summary: 
+ * Do not cache acjf_pkgdir_<pkgname>
+Keywords: 
+
+
+

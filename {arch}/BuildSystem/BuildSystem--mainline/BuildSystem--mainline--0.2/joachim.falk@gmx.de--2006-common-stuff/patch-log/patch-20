@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.2--patch-20
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Thu Apr  5 14:56:09 CEST 2007
+Standard-date: 2007-04-05 12:56:09 GMT
+Modified-files: m4/boost.m4
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-20
+Summary: 
+ * Fixed previously introduced bug to boost.m4
+Keywords: 
+
+
+

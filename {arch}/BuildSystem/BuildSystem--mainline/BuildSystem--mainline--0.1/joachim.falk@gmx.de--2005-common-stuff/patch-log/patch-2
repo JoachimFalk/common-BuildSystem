@@ -1,0 +1,12 @@
+Revision: BuildSystem--mainline--0.1--patch-2
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Sun Apr  3 15:24:26 CEST 2005
+Standard-date: 2005-04-03 13:24:26 GMT
+New-files: m4/.arch-ids/python.m4.id m4/python.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-2
+Summary: Added python.m4
+Keywords: 
+
+
+

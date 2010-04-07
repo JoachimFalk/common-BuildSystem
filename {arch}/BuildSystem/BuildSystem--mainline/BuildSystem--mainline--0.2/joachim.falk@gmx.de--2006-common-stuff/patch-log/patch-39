@@ -1,0 +1,15 @@
+Revision: BuildSystem--mainline--0.2--patch-39
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Keinert <keinert@codesign.informatik.uni-erlangen.de>
+Date: Thu Jun 19 20:04:24 CEST 2008
+Standard-date: 2008-06-19 18:04:24 GMT
+New-files: m4/.arch-ids/libwsdf.m4.id m4/libwsdf.m4
+Modified-files: m4/libsystemoc.m4
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-39
+Summary: 
+ - Add rules for libWSDF
+ - Include into rules for SysteMoC
+Keywords: 
+
+
+

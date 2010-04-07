@@ -1,0 +1,12 @@
+Revision: BuildSystem--mainline--0.1--patch-3
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Apr  4 09:52:09 CEST 2005
+Standard-date: 2005-04-04 07:52:09 GMT
+Modified-files: m4/python.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-3
+Summary: Fixes python.m4, now use LD_LIBRARY_PATH when --with-python=xxxx given
+Keywords: 
+
+
+

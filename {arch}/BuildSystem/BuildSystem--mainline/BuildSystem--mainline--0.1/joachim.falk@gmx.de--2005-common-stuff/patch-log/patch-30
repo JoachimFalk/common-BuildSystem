@@ -1,0 +1,15 @@
+Revision: BuildSystem--mainline--0.1--patch-30
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Mon Oct  3 16:55:37 CEST 2005
+Standard-date: 2005-10-03 14:55:37 GMT
+Modified-files: m4/xerces.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-30
+Summary: 
+ * Fixed xerces autodetection
+ - fixed same bug as in boost detection
+ - fixed header inclusion for xerces library detection
+Keywords: 
+
+
+

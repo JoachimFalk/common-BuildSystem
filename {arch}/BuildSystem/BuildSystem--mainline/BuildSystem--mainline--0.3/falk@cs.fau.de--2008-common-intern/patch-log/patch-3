@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.3--patch-3
+Archive: falk@cs.fau.de--2008-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri Jun 27 20:25:23 CEST 2008
+Standard-date: 2008-06-27 18:25:23 GMT
+Modified-files: m4/libwsdf.m4
+New-patches: falk@cs.fau.de--2008-common-intern/BuildSystem--mainline--0.3--patch-3
+Summary: 
+ * Fixed ACJF_CHECK_LIB_WSDF macro
+Keywords: 
+
+
+

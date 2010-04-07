@@ -1,0 +1,11 @@
+Revision: BuildSystem--mainline--0.3--patch-18
+Archive: falk@cs.fau.de--2008-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Tue Jan 13 15:56:25 CET 2009
+Standard-date: 2009-01-13 14:56:25 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: falk@cs.fau.de--2008-common-intern/BuildSystem--mainline--0.3--patch-18
+Summary: 
+ * Added missing m4_pattern_allow for PKG_XXX_USE_SRCDIR_VERSION in macro ACJF_CHECK_LIB
+Keywords: 
+

@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.2--patch-6
+Archive: joachim.falk@gmx.de--2006-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Tue Nov 14 11:33:59 CET 2006
+Standard-date: 2006-11-14 10:33:59 GMT
+Modified-files: doxygen.am
+New-patches: joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-6
+Summary: 
+ * Readded copyright of Oren Ben-Kiki for doxygen.am
+Keywords: 
+
+
+

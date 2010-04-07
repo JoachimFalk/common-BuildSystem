@@ -1,0 +1,21 @@
+Revision: BuildSystem--mainline--0.4--patch-7
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Nov  9 19:42:06 CET 2009
+Standard-date: 2009-11-09 18:42:06 GMT
+Modified-files: m4/libsystemoc.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-20
+    falk@cs.fau.de--2009-common-intern/BuildSystem--mainline--0.4--patch-7
+Summary: 
+ * Merge from BuildSystem--devel--0.4 branch
+ - Reverted libsystemoc.m4 patch. It breaks too much stuff.
+Keywords: 
+
+
+
+Patches applied:
+
+ * falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-20
+   
+ * Reverted libsystemoc.m4 patch. It breaks too much stuff.
+

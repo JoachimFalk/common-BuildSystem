@@ -1,0 +1,13 @@
+Revision: BuildSystem--devel--0.4--patch-19
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Nov  9 19:20:25 CET 2009
+Standard-date: 2009-11-09 18:20:25 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-19
+Summary: 
+ * @pkcheck.m4: Set XXX_FOUND=yes if package was found, no otherwise.
+Keywords: 
+
+
+

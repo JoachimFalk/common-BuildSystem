@@ -1,0 +1,22 @@
+Revision: BuildSystem--mainline--0.1--patch-28
+Archive: joachim.falk@gmx.de--2004-jf-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Fri Mar  9 23:13:48 CET 2007
+Standard-date: 2007-03-09 22:13:48 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-28
+    joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-11
+Summary: 
+ * Merge from joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2 branch
+ - Eliminate forgotten debug echo FOO, echo BAR
+
+Keywords: 
+
+
+
+Patches applied:
+
+ * joachim.falk@gmx.de--2006-common-stuff/BuildSystem--mainline--0.2--patch-11
+   
+ * Eliminate forgotten debug echo FOO, echo BAR
+

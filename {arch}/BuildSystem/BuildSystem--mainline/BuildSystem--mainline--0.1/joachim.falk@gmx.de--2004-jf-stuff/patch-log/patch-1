@@ -1,0 +1,22 @@
+Revision: BuildSystem--mainline--0.1--patch-1
+Archive: joachim.falk@gmx.de--2004-jf-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Fri Sep 30 20:47:59 CEST 2005
+Standard-date: 2005-09-30 18:47:59 GMT
+Modified-files: jfrules.mk m4/boost.m4 m4/systemc.m4
+New-patches: joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-1
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-29
+Summary: 
+ * Merge from joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1
+ - Be a little more lenient with base recognition of boost and systemc
+
+Keywords: 
+
+
+
+Patches applied:
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-29
+   
+ * Be a little more lenient with base recognition of boost and systemc
+

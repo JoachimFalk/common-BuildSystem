@@ -1,0 +1,14 @@
+Revision: BuildSystem--devel--0.4--patch-16
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri Nov  6 16:18:54 CET 2009
+Standard-date: 2009-11-06 15:18:54 GMT
+Modified-files: m4/libsgxutils.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-16
+Summary: 
+ * @libsgxutils.m4: Bugfix had two bugs inverse logic and detection bug which
+   canceled each other out.
+Keywords: 
+
+
+

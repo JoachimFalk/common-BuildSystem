@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.3--patch-26
+Archive: falk@cs.fau.de--2008-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Wed Apr 15 11:22:05 CEST 2009
+Standard-date: 2009-04-15 09:22:05 GMT
+Modified-files: m4/libsystemc.m4 m4/libtlm1.m4
+New-patches: falk@cs.fau.de--2008-common-intern/BuildSystem--mainline--0.3--patch-26
+Summary: 
+ * Hopefully make systemc and tlm checks AIX (xlC) conform.
+Keywords: 
+
+
+

@@ -1,0 +1,15 @@
+Revision: BuildSystem--mainline--0.1--base-0
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Thu Feb 24 10:57:57 CET 2005
+Standard-date: 2005-02-24 09:57:57 GMT
+New-patches: joachim.falk@gmx.de--2004-systemc-stuff/BuildSystem--mainline--0.1--base-0
+    joachim.falk@gmx.de--2004-systemc-stuff/BuildSystem--mainline--0.1--patch-1
+    joachim.falk@gmx.de--2004-systemc-stuff/BuildSystem--mainline--0.1--patch-2
+    joachim.falk@gmx.de--2004-systemc-stuff/BuildSystem--mainline--0.1--patch-3
+    joachim.falk@gmx.de--2004-systemc-stuff/BuildSystem--mainline--0.1--patch-4
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--base-0
+Continuation-of: joachim.falk@gmx.de--2004-systemc-stuff/BuildSystem--mainline--0.1--patch-4
+Summary: tag of joachim.falk@gmx.de--2004-systemc-stuff/BuildSystem--mainline--0.1--patch-4
+
+(automatically generated log message)

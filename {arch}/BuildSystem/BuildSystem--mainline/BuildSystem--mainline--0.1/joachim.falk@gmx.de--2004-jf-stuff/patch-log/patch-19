@@ -1,0 +1,62 @@
+Revision: BuildSystem--mainline--0.1--patch-19
+Archive: joachim.falk@gmx.de--2004-jf-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Wed Jun 21 16:08:14 CEST 2006
+Standard-date: 2006-06-21 14:08:14 GMT
+New-files: m4/.arch-ids/dummy.m4.id m4/dummy.m4
+Modified-files: jfrules.mk m4/all.m4 m4/jfsugar.m4
+    test-jfsugar.m4 {arch}/=tagging-method
+New-patches: joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-19
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-55
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-56
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-57
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-58
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-59
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-60
+    joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-61
+Summary: 
+ * Merge from joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1 branch
+ - Be more paranoid for pkg include headers dependencies add Makefile dependency
+ - Added ACJF_DUMMY_MACRO macro in m4/dummy.m4 for testing purpose
+ - Added ACJF_M4_WHILE to jfsuggar.m4
+ - Defined m4_pattern_forbid in test-jfsugar.m4 environemnt
+   for ./test-jfsugar.sh test script
+ - FIXED ACJF_NEED_PKG macro
+ - FIXED ACJF_NEED_PKG to try as last ditch effort $top_srcdir/..
+ - BUGFIX: Fixed m4_sinclude macro automagic ACJF_VAR_SUBPROJECT_DIR definition
+
+Keywords: 
+
+
+
+Patches applied:
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-55
+   
+ * Be more paranoid for pkg include headers dependencies add Makefile dependency
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-56
+   
+ * Added ACJF_DUMMY_MACRO macro in m4/dummy.m4 for testing purpose
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-57
+   
+ * Added ACJF_M4_WHILE to jfsuggar.m4
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-58
+   
+ * Defined m4_pattern_forbid in test-jfsugar.m4 environemnt
+   for ./test-jfsugar.sh test script
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-59
+   
+ * Fixed ACJF_NEED_PKG macro
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-60
+   
+ * BUGFIX: Fixed m4_sinclude macro automagic ACJF_VAR_SUBPROJECT_DIR definition
+
+ * joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-61
+   
+ * FIXED: ACJF_NEED_PKG to try as last ditch effort $top_srcdir/..
+

@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.1--patch-34
+Archive: joachim.falk@gmx.de--2004-jf-stuff
+Creator: Joachim Falk <joachim.falk@gmx.de>
+Date: Sat Mar 10 01:43:07 CET 2007
+Standard-date: 2007-03-10 00:43:07 GMT
+Modified-files: m4/doxygen.m4
+New-patches: joachim.falk@gmx.de--2004-jf-stuff/BuildSystem--mainline--0.1--patch-34
+Summary: 
+ * Fixed doxygen.m4 to work with automake1.10
+Keywords: 
+
+
+

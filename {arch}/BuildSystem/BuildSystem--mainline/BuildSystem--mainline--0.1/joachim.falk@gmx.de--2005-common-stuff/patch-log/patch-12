@@ -1,0 +1,17 @@
+Revision: BuildSystem--mainline--0.1--patch-12
+Archive: joachim.falk@gmx.de--2005-common-stuff
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Fri May 27 21:00:51 CEST 2005
+Standard-date: 2005-05-27 19:00:51 GMT
+New-files: .arch-ids/test-jfsugar.m4.id
+    .arch-ids/test-jfsugar.sh.id m4/.arch-ids/boost.m4.id
+    m4/.arch-ids/jfsugar.m4.id m4/boost.m4 m4/jfsugar.m4
+    test-jfsugar.m4 test-jfsugar.sh
+Modified-files: m4/all.m4
+New-patches: joachim.falk@gmx.de--2005-common-stuff/BuildSystem--mainline--0.1--patch-12
+Summary: 
+ * Boost recognition code
+Keywords: 
+
+
+

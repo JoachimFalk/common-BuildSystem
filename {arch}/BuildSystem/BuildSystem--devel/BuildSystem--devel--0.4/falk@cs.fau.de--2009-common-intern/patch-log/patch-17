@@ -1,0 +1,16 @@
+Revision: BuildSystem--devel--0.4--patch-17
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Mon Nov  9 15:29:26 CET 2009
+Standard-date: 2009-11-09 14:29:26 GMT
+Modified-files: m4/pkgcheck.m4
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--devel--0.4--patch-17
+Summary: 
+ - @m4/pkgcheck.m4: Fix problem where --with-xxx code was only generated once.
+   The generated code was inside an if branch which was not evaluated. This
+   cause the configure process to conclude the a package was disabled manually
+   when in fact it was not.
+Keywords: 
+
+
+
