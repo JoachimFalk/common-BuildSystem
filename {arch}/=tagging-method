@@ -141,7 +141,7 @@ exclude ^(\.arch-ids|\{arch\}|\.arch-inventory)$
 
 junk ^(,.*|stamp-.*|.*\.tex-dep|.*\.tex-stamp|.*cache|\.deps|autoscan\.log|config\.log|aclocal\.m4|obj|obj-[a-zA-Z0-9-]*|.*\.o|\.libs)$
 
-precious ^(\+.*|\.gdbinit|\.#ckpts-lock|=build\.*|=install\.*|CVS|CVS\.adm|RCS|RCSLOG|SCCS|TAGS|tags|\.svn|\.git.*|Makefile|Makefile\.in|config\.status|configure|config\.h\.in|\.cproject|\.project)$
+precious ^(\+.*|\.gdbinit|\.#ckpts-lock|=build\.*|=install\.*|CVS|CVS\.adm|RCS|RCSLOG|SCCS|TAGS|tags|\.svn|\.git.*|Makefile|Makefile\.in|config\.status|configure|config\.h\.in|\.cproject|\.project|config\.guess|config\.sub|depcomp|install-sh|ltmain\.sh|missing)$
 
 # Files matching the following regexp are classified as backup files, and
 # traversal does not descend into backup directories:

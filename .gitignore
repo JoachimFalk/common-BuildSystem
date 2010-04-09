@@ -1,3 +1,9 @@
 config.h.in
 configure
 Makefile.in
+config.guess
+config.sub
+depcomp
+install-sh
+ltmain.sh
+missing
