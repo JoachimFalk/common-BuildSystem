@@ -1,0 +1,13 @@
+Revision: BuildSystem--mainline--0.4--patch-17
+Archive: falk@cs.fau.de--2009-common-intern
+Creator: Joachim Falk <falk@cs.fau.de>
+Date: Thu Apr  8 10:14:44 CEST 2010
+Standard-date: 2010-04-08 08:14:44 GMT
+Modified-files: {arch}/=tagging-method
+New-patches: falk@cs.fau.de--2009-common-intern/BuildSystem--mainline--0.4--patch-17
+Summary: 
+ * Unified =tagging-method.
+Keywords: 
+
+
+
