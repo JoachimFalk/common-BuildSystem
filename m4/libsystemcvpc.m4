@@ -34,7 +34,7 @@ ACJF_CHECK_LIB(
   [SystemC-VPC],
   [SystemC-VPC],
   [
-#include <systemcvpc/FastLink.h>
+#include <vpc.hpp>
 #define  main _main
 
 int sc_main(int argc, char *argv[]) { return 0; }],
