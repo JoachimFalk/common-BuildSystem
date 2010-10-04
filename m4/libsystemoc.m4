@@ -215,8 +215,8 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
     AC_LANG_POP
   fi
   
-  if test x"$pkg_libsystemoc_builddir" != x""; then
-    SYSTEMOC_DEPENDENCIES="$pkg_libsystemoc_builddir/libsystemoc.la"
+  if test x"$pkg_systemoc_builddir" != x""; then
+    SYSTEMOC_DEPENDENCIES="$pkg_systemoc_builddir/libsystemoc.la"
   else
     SYSTEMOC_DEPENDENCIES=""
   fi
