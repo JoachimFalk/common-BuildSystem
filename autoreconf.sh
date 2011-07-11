@@ -227,7 +227,12 @@ if test x"$OPT_CLEANUP" != x""; then
     $BUILDSYSTEM/install-sh             \
     $BUILDSYSTEM/ltmain.sh              \
     $BUILDSYSTEM/missing                \
-    $BUILDSYSTEM/mkinstalldirs
+    $BUILDSYSTEM/mkinstalldirs          \
+    $BUILDSYSTEM/m4/libtool.m4          \
+    $BUILDSYSTEM/m4/lt~obsolete.m4      \
+    $BUILDSYSTEM/m4/ltoptions.m4        \
+    $BUILDSYSTEM/m4/ltsugar.m4          \
+    $BUILDSYSTEM/m4/ltversion.m4
 fi
 
 if test x"$DIRS" = x""; then
