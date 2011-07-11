@@ -106,21 +106,21 @@ if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_sgx_support"
   if test x"$LIBSGX_FOUND" = x"yes"; then
     CPPFLAGS="$CPPFLAGS $LIBSGX_INCLUDE"; LDFLAGS="$LDFLAGS $LIBSGX_LDFLAGS"; LIBS="$LIBS -lsgx"
   else
-    acjf_var_systemoc_error="LibSGX library"; acjf_var_systemoc_found="no";
+    acjf_var_systemoc_error="LibSGX library missing"; acjf_var_systemoc_found="no";
   fi
 fi
 if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_vpc_support" = x"yes"; then
   if test x"$SYSTEMC_VPC_FOUND" = x"yes"; then
     CPPFLAGS="$CPPFLAGS $SYSTEMC_VPC_INCLUDE"; LDFLAGS="$LDFLAGS $SYSTEMC_VPC_LDFLAGS"; LIBS="$LIBS -lsystemcvpc"
   else
-    acjf_var_systemoc_error="SystemC VPC library"; acjf_var_systemoc_found="no";
+    acjf_var_systemoc_error="SystemC VPC library missing"; acjf_var_systemoc_found="no";
   fi
 fi
 if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_wsdf_support" = x"yes"; then
   if test x"$LIBWSDF_FOUND" = x"yes"; then
     CPPFLAGS="$CPPFLAGS $LIBWSDF_INCLUDE"; LDFLAGS="$LDFLAGS $LIBWSDF_LDFLAGS"; LIBS="$LIBS -lwsdf"
   else
-    acjf_var_systemoc_error="LibWSDF library"; acjf_var_systemoc_found="no";
+    acjf_var_systemoc_error="LibWSDF library missing"; acjf_var_systemoc_found="no";
   fi
 fi
 if test x"$acjf_var_systemoc_found" != x"no" -o x"$acjf_var_systemoc_error" != x""; then
@@ -215,8 +215,8 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
     AC_LANG_POP
   fi
   
-  if test x"$pkg_libsystemoc_builddir" != x""; then
-    SYSTEMOC_DEPENDENCIES="$pkg_libsystemoc_builddir/libsystemoc.la"
+  if test x"$pkg_systemoc_builddir" != x""; then
+    SYSTEMOC_DEPENDENCIES="$pkg_systemoc_builddir/libsystemoc.la"
   else
     SYSTEMOC_DEPENDENCIES=""
   fi
