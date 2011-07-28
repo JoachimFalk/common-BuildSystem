@@ -30,7 +30,7 @@ dnl m4_pushdef([AM_CONDITIONAL], m4_defn([ACJF_M4_NULL]))
 acjf_var_systemoc_error=""
 acjf_var_systemoc_found=""
 acjf_cv_systemoc_sgx_support=""
-acjf_cv_systemoc_vpc_support=""
+acjf_cv_systemoc_enable_vpc=""
 acjf_cv_systemoc_wsdf_support=""
 if test x"$acjf_var_systemoc_found" != x"no"; then
   # Checks for header files.
@@ -77,8 +77,8 @@ if test x"$acjf_var_systemoc_found" != x"no"; then
 # error "NO VPC!"
 #endif
     ]])],
-   [AC_MSG_RESULT([yes]); acjf_cv_systemoc_vpc_support="yes";],
-   [AC_MSG_RESULT([no]); acjf_cv_systemoc_vpc_support="no";])
+   [AC_MSG_RESULT([yes]); acjf_cv_systemoc_enable_vpc="yes";],
+   [AC_MSG_RESULT([no]); acjf_cv_systemoc_enable_vpc="no";])
 fi
 if test x"$acjf_var_systemoc_found" != x"no"; then
   # Checks for header files.
@@ -109,7 +109,7 @@ if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_sgx_support"
     acjf_var_systemoc_error="LibSGX library missing"; acjf_var_systemoc_found="no";
   fi
 fi
-if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_vpc_support" = x"yes"; then
+if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_enable_vpc" = x"yes"; then
   if test x"$SYSTEMC_VPC_FOUND" = x"yes"; then
     CPPFLAGS="$CPPFLAGS $SYSTEMC_VPC_INCLUDE"; LDFLAGS="$LDFLAGS $SYSTEMC_VPC_LDFLAGS"; LIBS="$LIBS -lsystemcvpc"
   else
@@ -169,7 +169,7 @@ if test x"$acjf_var_systemoc_found" = x"yes"; then
 else
   unset acjf_var_systemoc_found
   unset acjf_cv_systemoc_sgx_support
-  unset acjf_cv_systemoc_vpc_support
+  unset acjf_cv_systemoc_enable_vpc
   unset acjf_cv_systemoc_wsdf_support
   m4_if([$4], [], [false], [$4])
 fi
@@ -226,7 +226,7 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
     ACJF_M4_LIST_PUSH_BACK([SYSTEMOC_DEPENDENCIES], ACJF_VAR_SUBSTVARFIXUP)))dnl
   
   AM_CONDITIONAL([SYSTEMOC_ENABLE_SGX], test x"$acjf_cv_systemoc_sgx_support" = x"yes")
-  AM_CONDITIONAL([SYSTEMOC_ENABLE_VPC], test x"$acjf_cv_systemoc_vpc_support" = x"yes")
+  AM_CONDITIONAL([SYSTEMOC_ENABLE_VPC], test x"$acjf_cv_systemoc_enable_vpc" = x"yes")
   AM_CONDITIONAL([SYSTEMOC_ENABLE_WSDF], test x"$acjf_cv_systemoc_wsdf_support" = x"yes")
   
   if test x"$SYSTEMOC_FOUND" = x"yes"; then
@@ -234,7 +234,7 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
     if test x"$acjf_cv_systemoc_sgx_support" = x"yes"; then
       SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $LIBSGX_INCLUDE"
     fi
-    if test x"$acjf_cv_systemoc_vpc_support" = x"yes"; then
+    if test x"$acjf_cv_systemoc_enable_vpc" = x"yes"; then
       SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $SYSTEMC_VPC_INCLUDE"
     fi
     if test x"$acjf_cv_systemoc_wsdf_support" = x"yes"; then
