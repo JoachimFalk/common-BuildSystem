@@ -21,7 +21,7 @@ dnl argument and also sets various flags needed for embedded Python if it is
 dnl requested.
 
 AC_DEFUN([ACJF_PROG_PYTHON],
-[AC_ARG_VAR([PYTHON], [Location of Python interpretor])
+[AC_ARG_VAR([PYTHON], [Location of python interpreter])
 
 acjf_old_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 
@@ -50,7 +50,7 @@ py_exec_prefix=`$PYTHON -c 'import sys; print sys.exec_prefix'`
 py_libdir="$py_prefix/lib/python$PYTHON_VERSION"
 py_exec_libdir="$py_exec_prefix/lib/python$PYTHON_VERSION"
 PYTHON_LDFLAGS="-L$py_exec_prefix/lib -L$py_exec_libdir/config"
-PYTHON_INCLUDES="-I$py_exec_prefix/include/python$PYTHON_VERSION -I$py_prefix/include/python$PYTHON_VERSION"
+PYTHON_INCLUDE="-I$py_exec_prefix/include/python$PYTHON_VERSION -I$py_prefix/include/python$PYTHON_VERSION"
 py_linkage=""
 for py_linkpart in LIBS LIBC LIBM LOCALMODLIBS BASEMODLIBS \
                    LINKFORSHARED LDFLAGS ; do
@@ -66,5 +66,8 @@ LD_LIBRARY_PATH=$acjf_old_LD_LIBRARY_PATH
 AC_MSG_RESULT([$py_libdir])
 AC_SUBST([PYTHON])
 AC_SUBST([PYTHON_LDFLAGS])
-AC_SUBST([PYTHON_INCLUDES])
+AC_SUBST([PYTHON_INCLUDE])
 AC_SUBST([PYTHON_LIBS])])
+dnl PYTHON_INCLUDES is backward compatibility cruft
+PYTHON_INCLUDES="$PYTHON_INCLUDE"
+AC_SUBST([PYTHON_INCLUDES])
