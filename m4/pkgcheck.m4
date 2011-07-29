@@ -20,6 +20,11 @@ dnl ACJF_ARG_WITHPKG(
 dnl   <pkgname>,
 dnl   <tags>)
 dnl
+dnl uses the following env vars as defaults:
+dnl   <PKGNAME>_BASE
+dnl   <PKGNAME>_INCLUDE
+dnl   <PKGNAME>_LIB
+dnl
 dnl tags (empty defaults to extern):
 dnl   intern: provide intern tag to --with-xxx option
 dnl   extern: provide extern tag to --with-xxx option
@@ -62,6 +67,9 @@ m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
           x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_include]" = x"" -a \
           x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]" = x""; then
     # No --with-xxx[-include|-lib] options. Fall back to environment variables!
+    AC_ARG_VAR(ACJF_M4_CANON_DN([$1])[_BASE], [List of prefixes; Seach in <prefix>/{lib,include} for $1.])
+    AC_ARG_VAR(ACJF_M4_CANON_DN([$1])[_LIB], [Explicit list of lib directories for $1])
+    AC_ARG_VAR(ACJF_M4_CANON_DN([$1])[_INCLUDE], [Explicit list of include directories for $1])
     [acjf_with_]ACJF_M4_CANON_DC([$1])="[$]ACJF_M4_CANON_DN([$1])[_BASE]";
     [acjf_with_]ACJF_M4_CANON_DC([$1])[_include]="[$]ACJF_M4_CANON_DN([$1])[_INCLUDE]";
     [acjf_with_]ACJF_M4_CANON_DC([$1])[_lib]="[$]ACJF_M4_CANON_DN([$1])[_LIB]";
