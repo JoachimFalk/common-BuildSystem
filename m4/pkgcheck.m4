@@ -16,6 +16,37 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
+dnl ACJF_PKG_ADDLOC_PREFIX(
+dnl   <pkgname>,
+dnl   <prefix>)
+dnl
+dnl Add <prefix> to the list of search locations for <pkgname>.
+AC_DEFUN([ACJF_PKG_ADDLOC_PREFIX], [AC_REQUIRE([ACJF_INIT])dnl
+  m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_include="$2/include"];
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_libpath="$2/lib"];
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="from install location $2"];
+  dnl Register vars on search list!
+  [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] ACJF_VAR_ANONYMOUS_SHELL_VAR";
+  m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
+])
+
+dnl ACJF_PKG_ADDLOC_INCLIB(
+dnl   <pkgname>,
+dnl   <include path>,
+dnl   <lib path>)
+dnl
+dnl Add <include path> and <lib path> to the list of search locations for <pkgname>.
+AC_DEFUN([ACJF_PKG_ADDLOC_INCLIB], [AC_REQUIRE([ACJF_INIT])dnl
+  m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_include="$2"];
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_libpath="$3"];
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="includes from $2, libs from $3"];
+  dnl Register vars on search list!
+  [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] ACJF_VAR_ANONYMOUS_SHELL_VAR";
+  m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
+])
+
 dnl ACJF_ARG_WITHPKG(
 dnl   <pkgname>,
 dnl   <tags>)
@@ -84,7 +115,6 @@ m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
   fi])
 
 if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" != x"no"; then
-  m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
   m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
    [if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_include]" != x"" -o \
             x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]" != x""; then
@@ -125,9 +155,7 @@ if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" != x"no"; then
         done
       fi
       [acjf_with_]ACJF_M4_CANON_DC([$1])=yes
-      [acjf_with_]ACJF_M4_CANON_DC([$1])[_desc]="includes from $[acjf_with_]ACJF_M4_CANON_DC([$1])[_include], libs from $[acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]"
-      dnl Register vars acjf_with_xxx_include and acjf_with_xxx_libpath on search list!
-      [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] [acjf_with_]ACJF_M4_CANON_DC([$1])";
+      ACJF_PKG_ADDLOC_INCLIB([$1], [acjf_with_]ACJF_M4_CANON_DC([$1])[_include], [acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath])
     else
   ])
     if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" != x"yes" -a \
@@ -145,12 +173,7 @@ if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" != x"no"; then
           dnl Register acjf_std (standard include/lib path) on search list!
           [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] acjf_std";
         else
-          eval ACJF_VAR_ANONYMOUS_SHELL_VAR[_${acjf_var_item2}_include]=\$acjf_var_item/include;
-          eval ACJF_VAR_ANONYMOUS_SHELL_VAR[_${acjf_var_item2}_libpath]=\$acjf_var_item/lib;
-          eval ACJF_VAR_ANONYMOUS_SHELL_VAR[_${acjf_var_item2}_desc]="\"from install location \$acjf_var_item\"";
-          dnl Register vars ACJF_VAR_ANONYMOUS_SHELL_VAR[_${acjf_var_item2}_include] and ACJF_VAR_ANONYMOUS_SHELL_VAR[_${acjf_var_item2}_libpath] on search list!
-          [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] ACJF_VAR_ANONYMOUS_SHELL_VAR[_${acjf_var_item2}]";
-          let acjf_var_item2=acjf_var_item2+1
+          ACJF_PKG_ADDLOC_PREFIX([$1], [$acjf_var_item])
         fi
       done
       [acjf_with_]ACJF_M4_CANON_DC([$1])=yes
@@ -164,7 +187,6 @@ if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" != x"no"; then
     fi
   m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
    [fi])
-  m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
 fi
 
 dnl Do not unset as [acjf_with_]ACJF_M4_CANON_DC([$1])[_include/_libpath] could be
@@ -304,6 +326,7 @@ m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE])dnl
 m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH])dnl
 m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS])dnl
 m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBPATH])dnl
+m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBS])dnl
 
 dnl dnl For debug
 dnl echo "CODE IF TRUE: _[]ACJF_M4_CANON_DC(ACJF_VAR_CODE_IF_TRUE)[]_"
@@ -380,7 +403,10 @@ if test x"${[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]+set}" != x"set";
        ACJF_VAR_PKGNAME,
        ACJF_VAR_ANON_SHELLVARPREFIX[search_desc],
        [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="$ACJF_VAR_ANON_SHELLVARPREFIX[search_include";
-        acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]="$ACJF_VAR_ANON_SHELLVARPREFIX[search_libpath"; break],
+        acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]="$ACJF_VAR_ANON_SHELLVARPREFIX[search_libpath";
+        acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_cppflags]="$ACJF_VAR_ANON_SHELLVARPREFIX[search_cppflags";
+        acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_ldflags]="$ACJF_VAR_ANON_SHELLVARPREFIX[search_ldflags";
+        acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]="$ACJF_VAR_ANON_SHELLVARPREFIX[search_libs"; break],
        [false])])
     fi
     ACJF_VAR_ANON_SHELLVARPREFIX[search_desc]="not found"
@@ -437,6 +463,7 @@ if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]" != x"not found" 
   for ACJF_VAR_ANON_SHELLVARPREFIX[item2] in $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]; do
     ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS]="$ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS] -L$ACJF_VAR_ANON_SHELLVARPREFIX[item2]";
   done
+  ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBS]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]"
   m4_if(ACJF_VAR_CODE_IF_TRUE, [], 
     [true;],
     ACJF_VAR_CODE_IF_TRUE)
