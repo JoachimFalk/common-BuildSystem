@@ -30,8 +30,8 @@ m4_define([ACJF_VAR_SUBPROJECT_DIR], [])dnl
 m4_define([ACJF_VAR_SUBSTVARFIXUP], [[AM_LDFLAGS,AM_CPPFLAGS]])dnl
 acjf_top_builddir=`pwd`
 acjf_top_srcdir=`cd "$srcdir" && pwd`
-acjf_std_include=""
-acjf_std_lib=""
+acjf_std_incpath=""
+acjf_std_libpath=""
 acjf_std_desc="standard compiler search paths"
 acjf_bundled_desc="source tree"
 m4_define([ACJF_VAR_ROOT_BUILDDIR], m4_esyscmd([
