@@ -21,53 +21,117 @@ dnl argument and also sets various flags needed for embedded Python if it is
 dnl requested.
 
 AC_DEFUN([ACJF_PROG_PYTHON],
-[AC_ARG_VAR([PYTHON], [Location of python interpreter])
+ [AC_ARG_VAR([PYTHON], [Location of python interpreter])
+  acjf_old_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 
-acjf_old_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+  AC_ARG_WITH([python],
+      [AC_HELP_STRING([--with-python], [Path to python interpreter])],
+      [case $withval in
+      *)   PYTHON=$withval
+           if test x"$LD_LIBRARY_PATH" = x; then
+             LD_LIBRARY_PATH=`dirname $PYTHON`/../lib
+           else
+             LD_LIBRARY_PATH=`dirname $PYTHON`/../lib:$LD_LIBRARY_PATH
+           fi
+           ;;
+      '')  ;;
+      esac],
+      [])
 
-AC_ARG_WITH([python],
-    [AC_HELP_STRING([--with-python], [Path to python interpreter])],
-    [case $withval in
-    *)   PYTHON=$withval
-         if test x"$LD_LIBRARY_PATH" = x; then
-           LD_LIBRARY_PATH=`dirname $PYTHON`/../lib
-         else
-           LD_LIBRARY_PATH=`dirname $PYTHON`/../lib:$LD_LIBRARY_PATH
-         fi
-         ;;
-    '')  ;;
-    esac],
-    [])
+  AM_PATH_PYTHON([$1])
 
-AM_PATH_PYTHON([$1])
+  dnl A better way of doing this rather than grepping through the Makefile would
+  dnl be to use distutils.sysconfig, but this module isn't available in older
+  dnl versions of Python.
+  AC_MSG_CHECKING([for Python linkage])
+  py_prefix=`$PYTHON -c 'import sys; print sys.prefix'`
+  py_exec_prefix=`$PYTHON -c 'import sys; print sys.exec_prefix'`
+  py_libdir="$py_prefix/lib/python$PYTHON_VERSION"
+  py_exec_libdir="$py_exec_prefix/lib/python$PYTHON_VERSION"
+  PYTHON_LDFLAGS="-L$py_exec_prefix/lib -L$py_exec_libdir/config"
+  PYTHON_INCLUDE="-I$py_exec_prefix/include/python$PYTHON_VERSION -I$py_prefix/include/python$PYTHON_VERSION"
+  py_linkage=""
+  for py_linkpart in LIBS LIBC LIBM LOCALMODLIBS BASEMODLIBS \
+                     LINKFORSHARED LDFLAGS ; do
+      py_linkage="$py_linkage "`grep "^${py_linkpart}=" \
+                                     $py_exec_libdir/config/Makefile \
+                                | sed -e 's/^.*=//'`
+  done
+  PYTHON_LIBS="-lpython$PYTHON_VERSION $py_linkage"
+  PYTHON_LIBS=`echo $PYTHON_LIBS | sed -e 's/[ \\t]*/ /g'`
 
-dnl A better way of doing this rather than grepping through the Makefile would
-dnl be to use distutils.sysconfig, but this module isn't available in older
-dnl versions of Python.
-AC_MSG_CHECKING([for Python linkage])
-py_prefix=`$PYTHON -c 'import sys; print sys.prefix'`
-py_exec_prefix=`$PYTHON -c 'import sys; print sys.exec_prefix'`
-py_libdir="$py_prefix/lib/python$PYTHON_VERSION"
-py_exec_libdir="$py_exec_prefix/lib/python$PYTHON_VERSION"
-PYTHON_LDFLAGS="-L$py_exec_prefix/lib -L$py_exec_libdir/config"
-PYTHON_INCLUDE="-I$py_exec_prefix/include/python$PYTHON_VERSION -I$py_prefix/include/python$PYTHON_VERSION"
-py_linkage=""
-for py_linkpart in LIBS LIBC LIBM LOCALMODLIBS BASEMODLIBS \
-                   LINKFORSHARED LDFLAGS ; do
-    py_linkage="$py_linkage "`grep "^${py_linkpart}=" \
-                                   $py_exec_libdir/config/Makefile \
-                              | sed -e 's/^.*=//'`
-done
-PYTHON_LIBS="-lpython$PYTHON_VERSION $py_linkage"
-PYTHON_LIBS=`echo $PYTHON_LIBS | sed -e 's/[ \\t]*/ /g'`
+  LD_LIBRARY_PATH=$acjf_old_LD_LIBRARY_PATH
 
-LD_LIBRARY_PATH=$acjf_old_LD_LIBRARY_PATH
+  AC_MSG_RESULT([$py_libdir])
+  AC_SUBST([PYTHON])
+  AC_SUBST([PYTHON_LDFLAGS])
+  AC_SUBST([PYTHON_INCLUDE])
+  AC_SUBST([PYTHON_LIBS])
+  dnl PYTHON_INCLUDES is backward compatibility cruft
+  PYTHON_INCLUDES="$PYTHON_INCLUDE"
+  AC_SUBST([PYTHON_INCLUDES])
+])
 
-AC_MSG_RESULT([$py_libdir])
-AC_SUBST([PYTHON])
-AC_SUBST([PYTHON_LDFLAGS])
-AC_SUBST([PYTHON_INCLUDE])
-AC_SUBST([PYTHON_LIBS])])
-dnl PYTHON_INCLUDES is backward compatibility cruft
-PYTHON_INCLUDES="$PYTHON_INCLUDE"
-AC_SUBST([PYTHON_INCLUDES])
+dnl ACJF_CHECK_PYTHON(
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+dnl
+dnl check for systemc library
+AC_DEFUN([ACJF_CHECK_PYTHON],
+ [ACJF_PKG_ADDLOC_CONFIGSCRIPT([python], [python2.6-config])
+  ACJF_CHECK_LIB_TESTER([python], [], ACJF_CHECK_LIB_TESTMACROGEN(
+    [
+#include <Python.h>
+
+static PyObject *FooError;
+
+static PyObject *
+foo_system(PyObject *self, PyObject *args) {
+  const char *command;
+  int sts;
+
+  if (!PyArg_ParseTuple(args, "s", &command)) {
+    PyErr_SetString(FooError, "Need a string argument");
+    return NULL;
+  }
+  sts = system(command);
+  if (sts < 0) {
+    PyErr_SetFromErrno(PyExc_OSError);
+    return NULL;
+  } else if (sts > 0) {
+    PyErr_SetString(FooError, "System command failed");
+    return NULL;
+  }
+  return Py_BuildValue("i", sts);
+}
+
+static PyMethodDef FooMethods[] = {
+  {"system",  foo_system, METH_VARARGS, "Execute a shell command."},
+  {NULL, NULL, 0, NULL} /* Sentinel */
+};
+
+PyMODINIT_FUNC
+initfoo(void) {
+  PyObject *m;
+
+  m = Py_InitModule("foo", FooMethods);
+  if (m == NULL)
+      return;
+
+  FooError = PyErr_NewException("foo.error", NULL, NULL);
+  Py_INCREF(FooError);
+  PyModule_AddObject(m, "error", FooError);
+}
+    ],
+    [
+Py_SetProgramName("flup");
+
+/* Initialize the Python interpreter.  Required. */
+Py_Initialize();
+
+/* Add a static module */
+initfoo();
+    ],
+    []),
+    [$1], [$2])dnl
+])
