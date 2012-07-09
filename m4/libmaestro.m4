@@ -20,6 +20,46 @@ dnl ACJF_CHECK_LIB_MM check for libmm
 dnl ACJF_CHECK_LIB_MM(
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>])
+AC_DEFUN([ACJF_CHECK_LIB_METAMAP],
+[dnl
+AC_LANG_PUSH([C++])
+ACJF_CHECK_LIB_COSUPPORT
+CPPFLAGS="$CPPFLAGS $COSUPPORT_INCLUDE"
+
+ACJF_CHECK_LIB(
+  [MetaMap],
+  [MetaMap],
+  [#include <iostream>],
+  [std::cout << "flup" << std::endl;],
+  [stdc++],
+  [$1], [$2])
+AC_LANG_POP
+])
+
+dnl ACJF_CHECK_LIB_MM check for libmm
+dnl ACJF_CHECK_LIB_MM(
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>])
+AC_DEFUN([ACJF_CHECK_LIB_MM],
+[dnl
+AC_LANG_PUSH([C++])
+ACJF_CHECK_LIB_COSUPPORT
+CPPFLAGS="$CPPFLAGS $COSUPPORT_INCLUDE"
+
+ACJF_CHECK_LIB(
+  [MM],
+  [MM],
+  [#include <iostream>],
+  [std::cout << "flup" << std::endl;],
+  [stdc++],
+  [$1], [$2])
+AC_LANG_POP
+])
+
+dnl ACJF_CHECK_LIB_MM check for libmm
+dnl ACJF_CHECK_LIB_MM(
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>])
 AC_DEFUN([ACJF_CHECK_LIB_INTERFACELIBRARYTESTMACRO], [
 CPPFLAGS="$CPPFLAGS $INTERFACELIBRARY_INCLUDE"
 LDFLAGS="$LDFLAGS $INTERFACELIBRARY_LDFLAGS"
@@ -40,6 +80,35 @@ AC_LANG_POP
 AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([InterfaceLibrary], [InterfaceLibrary],
     [ACJF_CHECK_LIB_INTERFACELIBRARYTESTMACRO],
+    [true], [false])
+AC_LANG_POP
+dnl fi
+])
+
+dnl ACJF_CHECK_LIB_MM check for libmm
+dnl ACJF_CHECK_LIB_MM(
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>])
+AC_DEFUN([ACJF_CHECK_LIB_MODELLIBRARYTESTMACRO], [
+CPPFLAGS="$CPPFLAGS $MODELLIBRARY_INCLUDE"
+LDFLAGS="$LDFLAGS $MODELLIBRARY_LDFLAGS"
+LIBS="$LIBS -lmodellibrary"
+])
+
+AC_DEFUN([ACJF_CHECK_LIB_MODELLIBRARY],
+[dnl
+AC_LANG_PUSH([C++])
+ACJF_CHECK_LIB(
+  [ModelLibrary],
+  [ModelLibrary],
+  [#include <iostream>],
+  [std::cout << "flup" << std::endl;],
+  [stdc++],
+  [$1], [$2])
+AC_LANG_POP
+AC_LANG_PUSH([C++])
+  ACJF_CHECK_LIB_TESTER([ModelLibrary], [ModelLibrary],
+    [ACJF_CHECK_LIB_MODELLIBRARYTESTMACRO],
     [true], [false])
 AC_LANG_POP
 dnl fi
