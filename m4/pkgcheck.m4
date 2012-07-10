@@ -196,9 +196,16 @@ dnl   <PKGNAME>_BASE
 dnl   <PKGNAME>_INCLUDE
 dnl   <PKGNAME>_LIB
 dnl
-dnl tags (empty defaults to extern):
-dnl   intern: provide intern tag to --with-xxx option
-dnl   extern: provide extern tag to --with-xxx option
+dnl tags (empty defaults to extern, precedence is in order of sequence):
+dnl   disabled:         if no --with-xxxx option is specified disable the package
+dnl   intern:           provide intern tag to --with-xxx option
+dnl   extern:           provide extern tag to --with-xxx option
+dnl Examples:
+dnl   extern inter            => Try external location first, if not found use internal version
+dnl   intern                  => Use internal version if not disabled
+dnl   disabled intern extern  => If no --with-xxx option is given the package is disabled,
+dnl                              otherwise try the internal version first, after that fall back
+dnl                              to external version
 dnl set shell vars
 dnl   acjf_<pkgname>_search_list
 AC_DEFUN([ACJF_ARG_WITHPKG], [AC_REQUIRE([ACJF_INIT])dnl
@@ -318,12 +325,34 @@ if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" != x"no"; then
       done
       [acjf_with_]ACJF_M4_CANON_DC([$1])=yes
     else
-      m4_if(m4_bregexp(ACJF_VAR_TAGS, [intern]), [-1], [], [
-        dnl Register internal location on search list!
-        [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] acjf_bundled";
-      ])
-      dnl Register standard include/lib path on search list!
-      ACJF_PKG_ADDLOC_STD([$1])
+      acjf_var_gottags=no
+      for acjf_var_tag in ACJF_VAR_TAGS; do
+        case $acjf_var_tag in
+          disabled)
+            if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" = x""; then
+              break;
+            fi
+            acjf_var_gottags=yes
+            ;;
+          intern|compile)
+            # Register internal location on search list!
+            [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] acjf_bundled";
+            acjf_var_gottags=yes
+            ;;
+          extern)
+            # Register standard include/lib path on search list!
+            ACJF_PKG_ADDLOC_STD([$1])
+            acjf_var_gottags=yes
+            ;;
+          *)
+            AC_MSG_ERROR([Internal error: dont recognized tag $acjf_var_tag given for $1!])
+            ;;
+        esac
+      done
+      if test x"$acjf_var_gottags" = x"no"; then
+        # Register standard include/lib path on search list!
+        ACJF_PKG_ADDLOC_STD([$1])
+      fi
     fi
   m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
    [fi])
@@ -851,7 +880,19 @@ ACJF_ARG_WITHPKG([$1], m4_if([$2], [], [], [[intern]])[ extern])dnl
 ACJF_CHECK_LIB_TESTER([$1], [$2], ACJF_CHECK_LIB_TESTMACROGEN([$3], [$4], [$5]), [$6], [$7])dnl
 ])
 
+dnl NEW ACJF_CONFIG_PKG USAGE:
+dnl
 dnl ACJF_CONFIG_PKG(
+dnl   <pkgname>,
+dnl   <tags>
+dnl   <srcdir subdirectory name>)
+dnl
+dnl tags (empty defaults to compile):
+dnl   disabled:         if no --with-xxxx option is specified disable the package
+dnl
+dnl OBSOLETE ACJF_CONFIG_PKG USAGE: 
+dnl
+dnl ACJF_CHECK_PKG(
 dnl   <pkgname>,
 dnl   <srcdir subdirectory name>)
 dnl
@@ -860,10 +901,21 @@ dnl compilation of the package.
 AC_DEFUN([ACJF_CONFIG_PKG], [dnl
   m4_if(m4_eval([$#<=1]), [1],
    [m4_pushdef([ACJF_VAR_PKGNAME], [[$1]])
-    m4_pushdef([ACJF_VAR_SUBDIR], [[$1]])],
+    m4_pushdef([ACJF_VAR_SUBDIR], [[$1]])
+    m4_pushdef([ACJF_VAR_TAGS], [[]])],
    [m4_pushdef([ACJF_VAR_PKGNAME], [[$1]])
-    m4_pushdef([ACJF_VAR_SUBDIR], [[$2]])])
-  ACJF_ARG_WITHPKG(ACJF_VAR_PKGNAME, [compile])
+    m4_if(m4_eval([$#<=2]), [1],
+     [m4_if(m4_bregexp([$2], [disabled\|compile]), [-1],
+       [m4_pushdef([ACJF_VAR_SUBDIR], [[$2]])
+        m4_pushdef([ACJF_VAR_TAGS], [[]])],
+       [m4_pushdef([ACJF_VAR_SUBDIR], [[$1]])
+        m4_pushdef([ACJF_VAR_TAGS], [[$2]])])],
+     [m4_pushdef([ACJF_VAR_TAGS], [[$2]])
+      m4_pushdef([ACJF_VAR_SUBDIR], [[$3]])])])
+  dnl echo "[FLUPS_VAR_PKGNAME]: ACJF_VAR_PKGNAME"
+  dnl echo "[FLUPS_VAR_SUBDIR]:  ACJF_VAR_SUBDIR"
+  dnl echo "[FLUPS_VAR_TAGS]:    ACJF_VAR_TAGS"
+  ACJF_ARG_WITHPKG(ACJF_VAR_PKGNAME, ACJF_VAR_TAGS[ compile])
   if echo ["$acjf_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_search_list " | grep "^[ 	]*acjf_bundled[ 	]"] >/dev/null; then
     if test -d "$srcdir/ACJF_VAR_SUBDIR"; then
       AC_CONFIG_SUBDIRS(ACJF_VAR_SUBDIR)
@@ -873,4 +925,5 @@ AC_DEFUN([ACJF_CONFIG_PKG], [dnl
   fi
   m4_popdef([ACJF_VAR_PKGNAME])
   m4_popdef([ACJF_VAR_SUBDIR])
+  m4_popdef([ACJF_VAR_TAGS])
 ])
