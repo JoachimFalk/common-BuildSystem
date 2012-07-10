@@ -16,6 +16,17 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
+dnl ACJF_PKG_COPY_OPTIONS(
+dnl   <src pkgname>, <dst pkgname>)
+dnl
+dnl Copy search option form <src pkgname>, usually derived by macro
+dnl ACJF_ARG_WITHPKG, to <dst pkgname>. This enables the usage of
+dnl a simple --with-<src pkgname> option to control the location of
+dnl multiple libraries <dst pkgname>s.
+AC_DEFUN([ACJF_PKG_COPY_OPTIONS], [AC_REQUIRE([ACJF_INIT])dnl
+  [acjf_]ACJF_M4_CANON_DC([$2])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list]"
+])
+
 dnl ACJF_PKG_ADDLOC_STD(
 dnl   <pkgname>)
 dnl
