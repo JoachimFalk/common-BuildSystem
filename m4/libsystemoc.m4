@@ -32,7 +32,7 @@ acjf_var_systemoc_found=""
 acjf_cv_systemoc_sgx_support=""
 acjf_cv_systemoc_enable_vpc=""
 acjf_cv_systemoc_wsdf_support=""
-acjf_cv_systemoc_metamap_support=""
+acjf_cv_systemoc_enable_maestromm=""
 acjf_cv_systemoc_mm_support=""
 if test x"$acjf_var_systemoc_found" != x"no"; then
   # Checks for header files.
@@ -84,35 +84,19 @@ if test x"$acjf_var_systemoc_found" != x"no"; then
 fi
 if test x"$acjf_var_systemoc_found" != x"no"; then
   # Checks for header files.
-  AC_MSG_CHECKING([for METAMAP support in $1 package])
+  AC_MSG_CHECKING([for MaestroMM support in $1 package])
   AC_COMPILE_IFELSE(
    [AC_LANG_PROGRAM(
     [[
 #include <systemoc/smoc_config.h>
     ]],
     [[
-#ifndef SYSTEMOC_ENABLE_METAMAP
-# error "NO METAMAP!"
+#ifndef SYSTEMOC_ENABLE_MAESTROMM
+# error "NO MAESTROMM!"
 #endif
     ]])],
-   [AC_MSG_RESULT([yes]); acjf_cv_systemoc_metamap_support="yes";],
-   [AC_MSG_RESULT([no]); acjf_cv_systemoc_metamap_support="no";])
-fi
-if test x"$acjf_var_systemoc_found" != x"no"; then
-  # Checks for header files.
-  AC_MSG_CHECKING([for MM support in $1 package])
-  AC_COMPILE_IFELSE(
-   [AC_LANG_PROGRAM(
-    [[
-#include <systemoc/smoc_config.h>
-    ]],
-    [[
-#ifndef SYSTEMOC_ENABLE_METAMAP
-# error "NO METAMAP!"
-#endif
-    ]])],
-   [AC_MSG_RESULT([yes]); acjf_cv_systemoc_mm_support="yes";],
-   [AC_MSG_RESULT([no]); acjf_cv_systemoc_mm_support="no";])
+   [AC_MSG_RESULT([yes]); acjf_cv_systemoc_enable_maestromm="yes";],
+   [AC_MSG_RESULT([no]); acjf_cv_systemoc_enable_maestromm="no";])
 fi
 if test x"$acjf_var_systemoc_found" != x"no"; then
   # Checks for header files.
@@ -151,11 +135,11 @@ if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_enable_vpc" 
     acjf_var_systemoc_error="SystemC VPC library missing"; acjf_var_systemoc_found="no";
   fi
 fi
-if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_metamap_support" = x"yes"; then
-  if test x"$METAMAP_FOUND" = x"yes"; then
-    CPPFLAGS="$CPPFLAGS $MM_INCLUDE $METAMAP_INCLUDE"; LDFLAGS="$LDFLAGS $MM_LDFLAGS $METAMAP_LDFLAGS"; LIBS="$LIBS -lmm -lmetamap"
+if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_enable_maestromm" = x"yes"; then
+  if test x"$MAESTROMM_FOUND" = x"yes"; then
+    CPPFLAGS="$CPPFLAGS $MM_INCLUDE $MAESTROMM_INCLUDE"; LDFLAGS="$LDFLAGS $MM_LDFLAGS $MAESTROMM_LDFLAGS"; LIBS="$LIBS -lmm -lmaestromm"
   else
-    acjf_var_systemoc_error="METAMAP library missing"; acjf_var_systemoc_found="no";
+    acjf_var_systemoc_error="MAESTROMM library missing"; acjf_var_systemoc_found="no";
   fi
 fi
 if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_wsdf_support" = x"yes"; then
@@ -243,13 +227,8 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
   if test x"$SYSTEMOC_FOUND" != x"no"; then
     ACJF_CHECK_LIB_SGX([], [false]) dnl may be needed but may also be optional
     ACJF_CHECK_LIB_SYSTEMC_VPC([], [false]) dnl may be needed but may also be optional
-    ACJF_CHECK_LIB_MM([], [false]) dnl may be needed but may also be optional
-    ACJF_CHECK_LIB_METAMAP([], [false]) dnl may be needed but may also be optional
+    ACJF_CHECK_LIB_MAESTROMM([], [false]) dnl may be needed but may also be optional
     ACJF_CHECK_LIB_WSDF([], [false]) dnl may be needed but may also be optional
-  fi
-  if test x"$SYSTEMOC_FOUND" != x"no"; then
-    ACJF_CHECK_LIB_BOOST([],
-      [SYSTEMOC_FOUND="no"; acjf_var_systemoc_missing="boost library"])
   fi
   if test x"$SYSTEMOC_FOUND" != x"no"; then
     AC_LANG_PUSH([C++])
@@ -271,6 +250,7 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
   
   AM_CONDITIONAL([SYSTEMOC_ENABLE_SGX], test x"$acjf_cv_systemoc_sgx_support" = x"yes")
   AM_CONDITIONAL([SYSTEMOC_ENABLE_VPC], test x"$acjf_cv_systemoc_enable_vpc" = x"yes")
+  AM_CONDITIONAL([SYSTEMOC_ENABLE_MAESTROMM], test x"$acjf_cv_systemoc_enable_maestromm" = x"yes")
   AM_CONDITIONAL([SYSTEMOC_ENABLE_WSDF], test x"$acjf_cv_systemoc_wsdf_support" = x"yes")
   
   if test x"$SYSTEMOC_FOUND" = x"yes"; then
@@ -278,8 +258,8 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
     if test x"$acjf_cv_systemoc_sgx_support" = x"yes"; then
       SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $LIBSGX_INCLUDE"
     fi
-    if test x"$acjf_cv_systemoc_metamap_support" = x"yes"; then
-      SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $MM_INCLUDE $METAMAP_INCLUDE"
+    if test x"$acjf_cv_systemoc_enable_maestromm" = x"yes"; then
+      SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $MAESTROMM_INCLUDE"
     fi
     if test x"$acjf_cv_systemoc_enable_vpc" = x"yes"; then
       SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $SYSTEMC_VPC_INCLUDE"
