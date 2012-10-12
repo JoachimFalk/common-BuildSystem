@@ -25,8 +25,8 @@ AC_DEFUN([ACJF_CHECK_LIB_BOOSTTESTMACRO], [
 acjf_var_boost_old_LIBS="$LIBS"
 acjf_var_found_pkg_st=""
 acjf_var_found_pkg_mt=""
-ACJF_M4_FOREACH([ACJF_VAR_BOOSTVERSION], [[],[-1_40],[-1_39],[-1_38],[-1_37],[-1_36],[-1_35]], [dnl
-  ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [[],[-gcc],[-gcc44],[-gcc43],[-gcc42],[-gcc41],[-gcc40],[-gcc34],[-gcc33],[-xlc]], [dnl
+ACJF_M4_FOREACH([ACJF_VAR_BOOSTVERSION], [[],[-1_51],[-1_50],[-1_49],[-1_48],[-1_47],[-1_46],[-1_45]], [dnl
+  ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [[],[-gcc],[-gcc45],[-gcc44],[-gcc43],[-xlc]], [dnl
     ACJF_M4_FOREACH([ACJF_VAR_BOOSTMTPOSTFIX], [[],[-mt]], [dnl
 dnl   echo "[-lboost]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX): $acjf_var_found_pkg"
       if test x"$acjf_var_found_pkg_st" != x"yes"; then
@@ -41,7 +41,7 @@ dnl   echo "[-lboost]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_
 #include <boost/config.hpp>
 #include <boost/regex.hpp>
           ]], [[
-#ifndef BOOST_CONFIG_HPP
+#ifndef BOOST_VERSION
 # error "not boost"
 #endif
 boost::regex_constants::match_flag_type x;
@@ -63,7 +63,7 @@ boost::regex_constants::match_flag_type x;
 #include <boost/thread.hpp>
 void dummy() { return; }
           ]], [[
-#ifndef BOOST_CONFIG_HPP
+#ifndef BOOST_VERSION
 # error "not boost"
 #endif
 boost::thread th(dummy);
@@ -113,17 +113,31 @@ AC_DEFUN([ACJF_CHECK_LIB_BOOST], [
     [ACJF_CHECK_LIB_BOOSTTESTMACRO],
     [acjf_var_found_pkg=yes],
     [acjf_var_found_pkg=no])
-  AC_LANG_POP
   if test x"$acjf_var_found_pkg" = x"yes"; then
     unset acjf_var_found_pkg
     BOOST_LIBPOSTFIX="$acjf_cv_boost_libpostfix"
     BOOST_LIBMTPOSTFIX="$acjf_cv_boost_libmtpostfix"
+    acjf_oldCPPFLAGS=$CPPFLAGS
+    CPPFLAGS="${CPPFLAGS} ${BOOST_INCLUDE}"
+    AC_PREPROC_IFELSE([AC_LANG_PROGRAM([
+    #include <boost/filesystem.hpp>
+    #if BOOST_FILESYSTEM_VERSION < 3
+    # error "old boost filesystem"
+    #endif
+     ], [
+     ])],
+     [BOOST_LIBBOOST_FILESYSTEM="-lboost_filesystem$acjf_cv_boost_libpostfix"
+      BOOST_LIBMTBOOST_FILESYSTEM="-lboost_filesystem$acjf_cv_boost_libmtpostfix"])
+    CPPFLAGS=${acjf_oldCPPFLAGS}
     m4_if([$1], [], [true;], [$1])
   else
     unset acjf_var_found_pkg
     m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find boost, bailing out!])],
       [m4_if([$2], [], [true;], [$2])])
   fi
+  AC_LANG_POP
   AC_SUBST([BOOST_LIBPOSTFIX])
   AC_SUBST([BOOST_LIBMTPOSTFIX])
+  AC_SUBST([BOOST_LIBBOOST_FILESYSTEM])
+  AC_SUBST([BOOST_LIBMTBOOST_FILESYSTEM])
 ])
