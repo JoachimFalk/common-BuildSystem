@@ -33,16 +33,16 @@ dnl   echo "[-lboost]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_
         acjf_cv_boost_libpostfix="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX[]ACJF_VAR_BOOSTMTPOSTFIX[]ACJF_VAR_BOOSTVERSION)"
         LIBS="-lboost_regex$acjf_cv_boost_libpostfix $acjf_var_boost_old_LIBS"
         if test x"$acjf_cv_boost_libpostfix" != x""; then
-          AC_MSG_CHECKING([for $1 package in $$2 with library postfix $acjf_cv_boost_libpostfix])
+          AC_MSG_CHECKING([for $1 (>= 1.45) package in $$2 with library postfix $acjf_cv_boost_libpostfix])
         else
-          AC_MSG_CHECKING([for $1 package in $$2])
+          AC_MSG_CHECKING([for $1 (>= 1.45) package in $$2])
         fi
         AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <boost/config.hpp>
 #include <boost/regex.hpp>
           ]], [[
-#ifndef BOOST_VERSION
-# error "not boost"
+#if !defined(BOOST_VERSION) || BOOST_VERSION < 104500
+# error "not boost or boost too old!"
 #endif
 boost::regex_constants::match_flag_type x;
           ]])],
@@ -63,8 +63,8 @@ boost::regex_constants::match_flag_type x;
 #include <boost/thread.hpp>
 void dummy() { return; }
           ]], [[
-#ifndef BOOST_VERSION
-# error "not boost"
+#if !defined(BOOST_VERSION) || BOOST_VERSION < 104500
+# error "not boost or boost too old!"
 #endif
 boost::thread th(dummy);
 th.join();
@@ -117,18 +117,18 @@ AC_DEFUN([ACJF_CHECK_LIB_BOOST], [
     unset acjf_var_found_pkg
     BOOST_LIBPOSTFIX="$acjf_cv_boost_libpostfix"
     BOOST_LIBMTPOSTFIX="$acjf_cv_boost_libmtpostfix"
-    acjf_oldCPPFLAGS=$CPPFLAGS
-    CPPFLAGS="${CPPFLAGS} ${BOOST_INCLUDE}"
-    AC_PREPROC_IFELSE([AC_LANG_PROGRAM([
-    #include <boost/filesystem.hpp>
-    #if BOOST_FILESYSTEM_VERSION < 3
-    # error "old boost filesystem"
-    #endif
-     ], [
-     ])],
-     [BOOST_LIBBOOST_FILESYSTEM="-lboost_filesystem$acjf_cv_boost_libpostfix"
-      BOOST_LIBMTBOOST_FILESYSTEM="-lboost_filesystem$acjf_cv_boost_libmtpostfix"])
-    CPPFLAGS=${acjf_oldCPPFLAGS}
+dnl acjf_oldCPPFLAGS=$CPPFLAGS
+dnl CPPFLAGS="${CPPFLAGS} ${BOOST_INCLUDE}"
+dnl AC_PREPROC_IFELSE([AC_LANG_PROGRAM([
+dnl #include <boost/filesystem.hpp>
+dnl #if BOOST_FILESYSTEM_VERSION < 3
+dnl # error "old boost filesystem"
+dnl #endif
+dnl  ], [
+dnl  ])],
+dnl  [BOOST_LIBBOOST_FILESYSTEM="-lboost_filesystem$acjf_cv_boost_libpostfix"
+dnl   BOOST_LIBMTBOOST_FILESYSTEM="-lboost_filesystem$acjf_cv_boost_libmtpostfix"])
+dnl CPPFLAGS=${acjf_oldCPPFLAGS}
     m4_if([$1], [], [true;], [$1])
   else
     unset acjf_var_found_pkg
@@ -138,6 +138,6 @@ AC_DEFUN([ACJF_CHECK_LIB_BOOST], [
   AC_LANG_POP
   AC_SUBST([BOOST_LIBPOSTFIX])
   AC_SUBST([BOOST_LIBMTPOSTFIX])
-  AC_SUBST([BOOST_LIBBOOST_FILESYSTEM])
-  AC_SUBST([BOOST_LIBMTBOOST_FILESYSTEM])
+dnl AC_SUBST([BOOST_LIBBOOST_FILESYSTEM])
+dnl AC_SUBST([BOOST_LIBMTBOOST_FILESYSTEM])
 ])
