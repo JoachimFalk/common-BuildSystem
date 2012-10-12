@@ -38,7 +38,7 @@ dnl   echo "[-lboost]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_
           AC_MSG_CHECKING([for $1 (>= 1.45) package in $$2])
         fi
         AC_LINK_IFELSE([AC_LANG_PROGRAM([[
-#include <boost/config.hpp>
+#include <boost/version.hpp>
 #include <boost/regex.hpp>
           ]], [[
 #if !defined(BOOST_VERSION) || BOOST_VERSION < 104500
@@ -59,7 +59,7 @@ boost::regex_constants::match_flag_type x;
           AC_MSG_CHECKING([for $1 multithreading support in $$2])
         fi
         AC_LINK_IFELSE([AC_LANG_PROGRAM([[
-#include <boost/config.hpp>
+#include <boost/version.hpp>
 #include <boost/thread.hpp>
 void dummy() { return; }
           ]], [[
