@@ -449,6 +449,13 @@ m4_define([_ACJF_SOURCE_TREE_LOCATION_SEARCHER], [
       $1="../../$acjf_var_subdir";
     fi
   done
+  # Last ditch effort try three uplevel directories
+  for acjf_var_subdir in ACJF_VAR_SUBDIR_LIST; do
+    if test x"$$1" = x"/invalid" -a \
+            -d "$srcdir/../../../$acjf_var_subdir"; then
+      $1="../../../$acjf_var_subdir";
+    fi
+  done
   # cleanup
   unset acjf_var_subdir
 ])
