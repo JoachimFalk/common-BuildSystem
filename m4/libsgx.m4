@@ -71,6 +71,7 @@ if test x"$acjf_found_libsgx" != x"no"; then
     acjf_found_libsgx="no"
   else
     LIBSGX_INCLUDE="$LIBSGX_INCLUDE $BOOST_INCLUDE $COSUPPORT_INCLUDE"
+    LIBSGX_INCPATH="$LIBSGX_INCPATH $BOOST_INCPATH $COSUPPORT_INCPATH"
     acjf_found_libsgx="yes"
   fi
 fi
