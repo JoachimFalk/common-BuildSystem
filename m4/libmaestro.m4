@@ -81,6 +81,7 @@ if test x"$acjf_found_maestromm" != x"no"; then
     acjf_found_maestromm="no"
   else
     MAESTROMM_INCLUDE="$MAESTROMM_INCLUDE $BOOST_INCLUDE $SYSTEMC_INCLUDE $XERCES_INCLUDE $COSUPPORT_INCLUDE"
+    MAESTROMM_INCPATH="$MAESTROMM_INCPATH $BOOST_INCPATH $SYSTEMC_INCPATH $XERCES_INCPATH $COSUPPORT_INCPATH"
     acjf_found_maestromm="yes"
   fi
 fi
@@ -150,6 +151,7 @@ if test x"$acjf_found_maestroil" != x"no"; then
     acjf_found_maestroil="no"
   else
     MAESTROIL_INCLUDE="$MAESTROIL_INCLUDE $MAESTROMM_INCLUDE $SYSTEMOC_INCLUDE"
+    MAESTROIL_INCPATH="$MAESTROIL_INCPATH $MAESTROMM_INCPATH $SYSTEMOC_INCPATH"
     acjf_found_maestroil="yes"
   fi
 fi
@@ -212,6 +214,7 @@ if test x"$acjf_found_maestroml" != x"no"; then
     acjf_found_maestroml="no"
   else
     MAESTROML_INCLUDE="$MAESTROML_INCLUDE $MAESTROIL_INCLUDE"
+    MAESTROML_INCPATH="$MAESTROML_INCPATH $MAESTROIL_INCPATH"
     acjf_found_maestroml="yes"
   fi
 fi
