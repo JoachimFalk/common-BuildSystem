@@ -204,7 +204,7 @@ if test x"$acjf_found_maestroml" != x"no"; then
     ACJF_CHECK_LIB_TESTMACROGEN(
       [#include <iostream>],
       [std::cout << "flup" << std::endl;],
-      [stdc++])
+      [stdc++]),
     [acjf_found_maestroml="yes";],
     [acjf_found_maestroml="no";])
   CPPFLAGS="$acjf_maestroml_CPPFLAGS"
