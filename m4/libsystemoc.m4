@@ -98,22 +98,6 @@ if test x"$acjf_var_systemoc_found" != x"no"; then
    [AC_MSG_RESULT([yes]); acjf_cv_systemoc_enable_maestromm="yes";],
    [AC_MSG_RESULT([no]); acjf_cv_systemoc_enable_maestromm="no";])
 fi
-if test x"$acjf_var_systemoc_found" != x"no"; then
-  # Checks for header files.
-  AC_MSG_CHECKING([for WSDF support in $1 package])
-  AC_COMPILE_IFELSE(
-   [AC_LANG_PROGRAM(
-    [[
-#include <systemoc/smoc_config.h>
-    ]],
-    [[
-#ifndef SYSTEMOC_ENABLE_WSDF
-# error "NO WSDF!"
-#endif
-    ]])],
-   [AC_MSG_RESULT([yes]); acjf_cv_systemoc_wsdf_support="yes";],
-   [AC_MSG_RESULT([no]); acjf_cv_systemoc_wsdf_support="no";])
-fi
 
 if test x"$acjf_var_systemoc_found" != x"no"; then
   CPPFLAGS="$CPPFLAGS $SYSTEMC_INCLUDE"; LDFLAGS="$LDFLAGS $SYSTEMC_LDFLAGS"; LIBS="$LIBS -lsystemc"
@@ -140,13 +124,6 @@ if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_enable_maest
     CPPFLAGS="$CPPFLAGS $MM_INCLUDE $MAESTROMM_INCLUDE"; LDFLAGS="$LDFLAGS $MM_LDFLAGS $MAESTROMM_LDFLAGS"; LIBS="$LIBS -lmm -lmaestromm"
   else
     acjf_var_systemoc_error="MAESTROMM library missing"; acjf_var_systemoc_found="no";
-  fi
-fi
-if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_wsdf_support" = x"yes"; then
-  if test x"$LIBWSDF_FOUND" = x"yes"; then
-    CPPFLAGS="$CPPFLAGS $LIBWSDF_INCLUDE"; LDFLAGS="$LDFLAGS $LIBWSDF_LDFLAGS"; LIBS="$LIBS -lwsdf"
-  else
-    acjf_var_systemoc_error="LibWSDF library missing"; acjf_var_systemoc_found="no";
   fi
 fi
 if test x"$acjf_var_systemoc_found" != x"no" -o x"$acjf_var_systemoc_error" != x""; then
@@ -228,7 +205,6 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
     ACJF_CHECK_LIB_SGX([], [false]) dnl may be needed but may also be optional
     ACJF_CHECK_LIB_SYSTEMC_VPC([], [false]) dnl may be needed but may also be optional
     ACJF_CHECK_LIB_MAESTROMM([], [false]) dnl may be needed but may also be optional
-    ACJF_CHECK_LIB_WSDF([], [false]) dnl may be needed but may also be optional
   fi
   if test x"$SYSTEMOC_FOUND" != x"no"; then
     AC_LANG_PUSH([C++])
@@ -251,7 +227,6 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
   AM_CONDITIONAL([SYSTEMOC_ENABLE_SGX], test x"$acjf_cv_systemoc_sgx_support" = x"yes")
   AM_CONDITIONAL([SYSTEMOC_ENABLE_VPC], test x"$acjf_cv_systemoc_enable_vpc" = x"yes")
   AM_CONDITIONAL([SYSTEMOC_ENABLE_MAESTROMM], test x"$acjf_cv_systemoc_enable_maestromm" = x"yes")
-  AM_CONDITIONAL([SYSTEMOC_ENABLE_WSDF], test x"$acjf_cv_systemoc_wsdf_support" = x"yes")
   
   if test x"$SYSTEMOC_FOUND" = x"yes"; then
     SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $BOOST_INCLUDE $SYSTEMC_INCLUDE $TLM1_INCLUDE $COSUPPORT_INCLUDE"
@@ -267,10 +242,6 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
     if test x"$acjf_cv_systemoc_enable_vpc" = x"yes"; then
       SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $SYSTEMC_VPC_INCLUDE"
       SYSTEMOC_INCPATH="$SYSTEMOC_INCPATH $SYSTEMC_VPC_INCPATH"
-    fi
-    if test x"$acjf_cv_systemoc_wsdf_support" = x"yes"; then
-      SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $LIBWSDF_INCLUDE"
-      SYSTEMOC_INCPATH="$SYSTEMOC_INCPATH $LIBWSDF_INCPATH"
     fi
     m4_if([$1], [], [true;], [$1])
   else
