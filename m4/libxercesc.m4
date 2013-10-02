@@ -25,10 +25,9 @@ AC_DEFUN([ACJF_CHECK_LIB_XERCESTESTMACRO], [
 acjf_var_xerces_old_LIBS="$LIBS"
 acjf_var_found_pkg=""
 
-ACJF_M4_FOREACH([ACJF_VAR_PTHREADAUX], [[],[-lpthread]], [dnl
-dnl echo "ACJF_M4_UNQUOTE(ACJF_VAR_PTHREADAUX): $acjf_var_found_pkg"
+for acjf_var_pthreadaux in "" "-lpthread"; do
   if test x"$acjf_var_found_pkg" = x""; then
-    acjf_cv_xerces_auxlibs="ACJF_M4_UNQUOTE(ACJF_VAR_PTHREADAUX)"
+    acjf_cv_xerces_auxlibs="${acjf_var_pthreadaux}"
     LIBS="-lxerces-c $acjf_cv_xerces_auxlibs $acjf_var_xerces_old_LIBS"
     if test x"$acjf_cv_xerces_auxlibs" != x""; then
       AC_MSG_CHECKING([for $1 libraray in $$2 with auxiliary library $acjf_cv_xerces_auxlibs])
@@ -43,7 +42,7 @@ xercesc::XMLPlatformUtils::Initialize();
       [AC_MSG_RESULT([yes]); acjf_var_found_pkg="yes"],
       [AC_MSG_RESULT([no])])
   fi
-])
+done
 LIBS="$acjf_var_xerces_old_LIBS"
 unset acjf_var_xerces_old_LIBS
 if test x"$acjf_var_found_pkg" = x"yes"; then
