@@ -1,5 +1,5 @@
 dnl vim: set sw=2 ts=8 syn=config:
-dnl Copyright (C) 2001 - 2006 Joachim Falk <joachim.falk@gmx.de>
+dnl Copyright (C) 2001 - 2013 Joachim Falk <joachim.falk@gmx.de>
 dnl 
 dnl This file is part of the BuildSystem distribution of Joachim Falk;
 dnl you can redistribute it and/or modify it under the terms of the
@@ -25,12 +25,12 @@ AC_DEFUN([ACJF_CHECK_LIB_BOOSTTESTMACRO], [
 acjf_var_boost_old_LIBS="$LIBS"
 acjf_var_found_pkg_st=""
 acjf_var_found_pkg_mt=""
-ACJF_M4_FOREACH([ACJF_VAR_BOOSTVERSION], [[],[-1_51],[-1_50],[-1_49],[-1_48],[-1_47],[-1_46],[-1_45]], [dnl
-  ACJF_M4_FOREACH([ACJF_VAR_BOOSTPOSTFIX], [[],[-gcc],[-gcc45],[-gcc44],[-gcc43],[-xlc]], [dnl
-    ACJF_M4_FOREACH([ACJF_VAR_BOOSTMTPOSTFIX], [[],[-mt]], [dnl
-dnl   echo "[-lboost]ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX)ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTMTPOSTFIX): $acjf_var_found_pkg"
+for acjf_var_boostversion in "" "-1_54" "-1_53" "-1_52" "-1_51" "-1_50" "-1_49" "-1_48" "-1_47" "-1_46" "-1_45"; do
+  for acjf_var_boostpostfix in "" "-gcc" "-gcc45" "-gcc44" "-gcc43" "-xlc"; do
+    for acjf_var_boostmtpostfix in "" "-mt"; do
+dnl   echo "-lboost${acjf_var_boostpostfix}${acjf_var_boostmtpostfix}${acjf_var_boostversion}: $acjf_var_found_pkg"
       if test x"$acjf_var_found_pkg_st" != x"yes"; then
-        acjf_cv_boost_libpostfix="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX[]ACJF_VAR_BOOSTMTPOSTFIX[]ACJF_VAR_BOOSTVERSION)"
+        acjf_cv_boost_libpostfix="${acjf_var_boostpostfix}${acjf_var_boostmtpostfix}${acjf_var_boostversion}"
         LIBS="-lboost_regex$acjf_cv_boost_libpostfix $acjf_var_boost_old_LIBS"
         if test x"$acjf_cv_boost_libpostfix" != x""; then
           AC_MSG_CHECKING([for $1 (>= 1.45) package in $$2 with library postfix $acjf_cv_boost_libpostfix])
@@ -51,7 +51,7 @@ boost::regex_constants::match_flag_type x;
       fi
       if test x"$acjf_var_found_pkg_st" = x"yes" -a \
               x"$acjf_var_found_pkg_mt" != x"yes"; then
-        acjf_cv_boost_libmtpostfix="ACJF_M4_UNQUOTE(ACJF_VAR_BOOSTPOSTFIX[]ACJF_VAR_BOOSTMTPOSTFIX[]ACJF_VAR_BOOSTVERSION)"
+        acjf_cv_boost_libmtpostfix="${acjf_var_boostpostfix}${acjf_var_boostmtpostfix}${acjf_var_boostversion}"
         LIBS="-lboost_thread$acjf_cv_boost_libmtpostfix $acjf_var_boost_old_LIBS"
         if test x"$acjf_cv_boost_libmtpostfix" != x""; then
           AC_MSG_CHECKING([for $1 multithreading support in $$2 with library postfix $acjf_cv_boost_libmtpostfix])
@@ -72,14 +72,14 @@ th.join();
           [AC_MSG_RESULT([yes]); acjf_var_found_pkg_mt="yes"],
           [AC_MSG_RESULT([no])])
       fi
-    ])
+    done
     if test x"$acjf_var_found_pkg_st" != x"yes" -o \
             x"$acjf_var_found_pkg_mt" != x"yes"; then
       acjf_var_found_pkg_st=""
       acjf_var_found_pkg_mt=""
     fi
-  ])
-])
+  done
+done
 LIBS="$acjf_var_boost_old_LIBS"
 unset acjf_var_boost_old_LIBS
 if test x"$acjf_var_found_pkg_st" = x"yes"; then
