@@ -16,6 +16,14 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
+dnl ACJF_PKG_CLEARLOC
+dnl   <pkgname>)
+dnl
+dnl Clear search list for <pkgname>.
+AC_DEFUN([ACJF_PKG_CLEARLOC], [AC_REQUIRE([ACJF_INIT])dnl
+  unset [acjf_]ACJF_M4_CANON_DC([$1])[_search_list];
+])
+
 dnl ACJF_PKG_COPY_OPTIONS(
 dnl   <src pkgname>, <dst pkgname>)
 dnl
@@ -200,20 +208,26 @@ dnl   <pkgname>,
 dnl   <tags>)
 dnl
 dnl uses the following env vars as defaults:
-dnl   <PKGNAME>_BASE
-dnl   <PKGNAME>_INCLUDE if tag does not contain pkgconfig:xxx or configscript:xxx
-dnl   <PKGNAME>_LIB if tag does not contain pkgconfig:xxx or configscript:xxx
+dnl   <PKGNAME>_BASE            if <tags> contains extern
+dnl   <PKGNAME>_INCLUDE         if <tags> contains extern and does not contain pkgconfig:xxx or configscript:xxx
+dnl   <PKGNAME>_LIB             if <tags> contains extern and does not contain pkgconfig:xxx or configscript:xxx
+dnl
+dnl generates the following configure options
+dnl   --with-<pkgname>
+dnl   --with-<pkgname>-include  if <tags> contains extern and does not contain pkgconfig:xxx or configscript:xxx
+dnl   --with-<pkgname>-lib      if <tags> contains extern and does not contain pkgconfig:xxx or configscript:xxx
 dnl
 dnl tags (empty defaults to extern, precedence is in order of sequence):
-dnl   disabled         if no --with-xxxx option is specified disable the package
+dnl   disabled         if no --with-<pkgname> option is specified disable the package
 dnl   pkgconfig:xxx    use pkgconfig module xxx to find the package
 dnl   configscript:xxx use config script xxx to find the package
-dnl   intern           provide intern tag to --with-xxx option
-dnl   extern           provide extern tag to --with-xxx option
+dnl   intern           provide intern tag to --with-<pkgname> option
+dnl   extern           provide extern tag to --with-<pkgname> option
+dnl
 dnl Examples:
 dnl   extern inter            => Try external location first, if not found use internal version
 dnl   intern                  => Use internal version if not disabled
-dnl   disabled intern extern  => If no --with-xxx option is given the package is disabled,
+dnl   disabled intern extern  => If no --with-<pkgname> option is given the package is disabled,
 dnl                              otherwise try the internal version first, after that fall back
 dnl                              to external version
 dnl set shell vars
@@ -221,18 +235,20 @@ dnl   acjf_<pkgname>_search_list
 AC_DEFUN([ACJF_ARG_WITHPKG], [AC_REQUIRE([ACJF_INIT])dnl
 m4_divert_push([INIT_PREPARE])
 ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
+  dnl Setup ACJF_VAR_PKGNAME and ACJF_VAR_TAGS macros
   m4_pushdef([ACJF_VAR_PKGNAME], [[$1]])dnl
+  dnl if no tags are specified add extern tag
   m4_pushdef([ACJF_VAR_TAGS], m4_if([$2], [], [[extern]], [[$2]]))dnl
   dnl add intern to tags if we find a compile tag
-  m4_define([ACJF_VAR_TAGS], m4_if(m4_bregexp(ACJF_VAR_TAGS, [compile]), [-1],
+  m4_define([ACJF_VAR_TAGS], m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<compile\>]), [-1],
    [ACJF_VAR_TAGS],
    [ACJF_VAR_TAGS [intern]]))
-  [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]=""
-  m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
-   [[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]=""
-    [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]=""
-    [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)=""])
-
+  
+  dnl Clear search list for <pkgname>. The search list will later be populated
+  dnl via ACJF_PKG_ADDLOC_XXX macros.
+  ACJF_PKG_CLEARLOC(ACJF_VAR_PKGNAME)
+  
+  unset [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)
   AC_ARG_WITH(ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME), AS_HELP_STRING(
     [--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME), m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], 
       [m4_if(m4_bregexp(ACJF_VAR_TAGS, [intern]), [-1],
@@ -243,34 +259,134 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
         [[prefix path for $1, no to disable, extern to force installed library usage, or intern to force bundled package]])])), dnl extern intern
     [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[="$withval"])
 
-  m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
-   [AC_ARG_WITH(ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-include], AS_HELP_STRING(
-      [--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-include], [include path for $1]),
-      [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath="$withval"])
+  m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<extern\>]), [-1], [],
+   [m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<pkgconfig:]), [-1],
+     [m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<configscript:]), [-1], 
+       [dnl extern but no pkgconfig:xxx and no configscript:xxx in tags
+        unset [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]
+        AC_ARG_WITH(ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-include], AS_HELP_STRING(
+          [--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-include], [include path for $1]),
+          [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath="$withval"])
+        unset [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]
+        AC_ARG_WITH(ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-lib], AS_HELP_STRING(
+          [--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-lib], [library path for $1]),
+          [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath="$withval"])
+        if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" = x"" -a \
+                x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" = x"" -a \
+                x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" = x""; then
+          # No --with-<pkgname>[-include|-lib] options. Fall back to environment variables!
+          AC_ARG_VAR(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_BASE], [List of prefixes; Seach in <prefix>/{lib,include} for $1.])
+          AC_ARG_VAR(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIB], [Explicit list of lib directories for $1])
+          AC_ARG_VAR(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE], [Explicit list of include directories for $1])
+          [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)="[$]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_BASE]";
+          [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="[$]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE]";
+          [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]="[$]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIB]";
+        fi
+        if x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" != x"" -o \
+           x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" != x""; then
+          case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
+            ""|yes|extern)
+              [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)="extern"
+              ;;
+            "/"*)
+              ;;
+            *)
+              AC_MSG_ERROR([Options --with-]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)=$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[ and --with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[[-include|-lib] clash!])
+              ;;
+          esac
+        fi
+       ],
+       [])dnl not m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<configscript:]), ...)
+     ],
+     [])dnl not m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<pkgconfig:]), ...)
+   ])dnl m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<extern\>]), ...)
 
-    AC_ARG_WITH(ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-lib], AS_HELP_STRING(
-      [--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-lib], [library path for $1]),
-      [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath="$withval"])
+  acjf_var_gottags=no
+  for acjf_var_tag in ACJF_VAR_TAGS; do
+    case $acjf_var_tag in
+      disabled)
+        case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
+          ""|no)
+            [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)="no"
+            acjf_var_gottags=yes
+            break
+            ;;
+        esac
+        ;;
+      intern|compile)
+        case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
+          extern)
+            # no match
+            ;;
+          no)
+            [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)="no"
+            acjf_var_gottags=yes
+            break
+            ;;
+          ""|yes|intern)
+            [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)="intern"
+            m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<pkgconfig:]), [-1],
+             [m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<configscript:]), [-1],
+               [dnl neither configscript nor pkgconfig mode
+                ACJF_PKG_ADDLOC_INTERN(ACJF_VAR_PKGNAME)],
+               [dnl configscript mode
 
-    if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" = x"" -a \
-            x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" = x"" -a \
-            x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" = x""; then
-      # No --with-xxx[-include|-lib] options. Fall back to environment variables!
-      AC_ARG_VAR(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_BASE], [List of prefixes; Seach in <prefix>/{lib,include} for $1.])
-      AC_ARG_VAR(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIB], [Explicit list of lib directories for $1])
-      AC_ARG_VAR(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE], [Explicit list of include directories for $1])
-      [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)="[$]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_BASE]";
-      [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="[$]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE]";
-      [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]="[$]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIB]";
-    fi
 
-    if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" = x"no" -o \
-            x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" = x"no" -o \
-            x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" = x"no"; then
-      [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)=no
-      unset [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]
-      unset [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]
-    fi])
+               ])
+             ],
+             [dnl pkgconfig mode
+
+
+             ])
+            acjf_var_gottags=yes
+            break
+            ;;
+        esac
+        ;;
+      extern)
+        case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
+          intern)
+            # no match
+            ;;
+          no)
+            [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)="no"
+            acjf_var_gottags=yes
+            break
+            ;;
+          ""|yes|extern)
+            [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)="extern"
+            m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<pkgconfig:]), [-1],
+             [m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<configscript:]), [-1],
+               [dnl neither configscript nor pkgconfig mode
+                ACJF_PKG_ADDLOC_STD(ACJF_VAR_PKGNAME)],
+               [dnl configscript mode
+
+               ])
+             ],
+             [dnl pkgconfig mode
+
+
+             ])
+            acjf_var_gottags=yes
+            break
+            ;;
+        esac
+        ;;
+      pkgconfig:*)
+        # Ignore
+        ;;
+      configscript:*)
+        # Ignore
+        ;;
+      *)
+        AC_MSG_ERROR([Internal error: dont recognized tag $acjf_var_tag given for ]ACJF_VAR_PKGNAME[!])
+        ;;
+    esac
+  done
+  if test x"$acjf_var_gottags" = x"no"; then
+    AC_MSG_ERROR([Option --with-]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)=$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[ is not supported!])
+  fi
+
 
   if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" != x"no"; then
     m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
@@ -845,25 +961,6 @@ AC_DEFUN([ACJF_CHECK_PKG], [AC_REQUIRE([ACJF_INIT])dnl
   m4_popdef([ACJF_VAR_SUBDIR_LIST])
   m4_popdef([ACJF_VAR_CODE_IF_TRUE])
   m4_popdef([ACJF_VAR_CODE_IF_FALSE])
-])
-
-dnl ACJF_NEED_PKG(
-dnl   <pkgname>,
-dnl   <possible location in source tree>)
-dnl
-dnl Take the same actions as ACJF_CHECK_PKG but also adds
-dnl PKGNAME_CPPFLAGS to AM_CPPFLAGS and
-dnl PGKNAME_LDFLAGS  to AM_LDFLAGS
-AC_DEFUN([ACJF_NEED_PKG],
- [m4_if([$2$3], [], [], [m4_errprint(
-[Action if yes and action if no arguments for ACJF_NEED_PKG are obsolete,
-please use ACJF_CHECK_PKG!
-])m4_exit([-1])])dnl
-  ACJF_CHECK_PKG([$1],
-  [AM_CPPFLAGS="$AM_CPPFLAGS $[]ACJF_M4_CANON_DN([$1])[_CPPFLAGS]"
-   AM_LDFLAGS="$AM_LDFLAGS $[]ACJF_M4_CANON_DN([$1])[_LDFLAGS]"
-   AC_SUBST([AM_CPPFLAGS])
-   AC_SUBST([AM_LDFLAGS])])dnl
 ])
 
 dnl ACJF_CHECK_LIB(
