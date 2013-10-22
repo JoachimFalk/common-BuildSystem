@@ -27,6 +27,14 @@ AC_DEFUN([ACJF_PKG_COPY_OPTIONS], [AC_REQUIRE([ACJF_INIT])dnl
   [acjf_]ACJF_M4_CANON_DC([$2])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list]"
 ])
 
+dnl ACJF_PKG_ADDLOC_INTERN(
+dnl   <pkgname>)
+dnl
+dnl Add source tree version to the list of search locations for <pkgname>.
+AC_DEFUN([ACJF_PKG_ADDLOC_INTERN], [AC_REQUIRE([ACJF_INIT])dnl
+  [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] acjf_bundled";
+])
+
 dnl ACJF_PKG_ADDLOC_STD(
 dnl   <pkgname>)
 dnl
@@ -193,13 +201,15 @@ dnl   <tags>)
 dnl
 dnl uses the following env vars as defaults:
 dnl   <PKGNAME>_BASE
-dnl   <PKGNAME>_INCLUDE
-dnl   <PKGNAME>_LIB
+dnl   <PKGNAME>_INCLUDE if tag does not contain pkgconfig:xxx or configscript:xxx
+dnl   <PKGNAME>_LIB if tag does not contain pkgconfig:xxx or configscript:xxx
 dnl
 dnl tags (empty defaults to extern, precedence is in order of sequence):
-dnl   disabled:         if no --with-xxxx option is specified disable the package
-dnl   intern:           provide intern tag to --with-xxx option
-dnl   extern:           provide extern tag to --with-xxx option
+dnl   disabled         if no --with-xxxx option is specified disable the package
+dnl   pkgconfig:xxx    use pkgconfig module xxx to find the package
+dnl   configscript:xxx use config script xxx to find the package
+dnl   intern           provide intern tag to --with-xxx option
+dnl   extern           provide extern tag to --with-xxx option
 dnl Examples:
 dnl   extern inter            => Try external location first, if not found use internal version
 dnl   intern                  => Use internal version if not disabled
@@ -211,163 +221,165 @@ dnl   acjf_<pkgname>_search_list
 AC_DEFUN([ACJF_ARG_WITHPKG], [AC_REQUIRE([ACJF_INIT])dnl
 m4_divert_push([INIT_PREPARE])
 ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
-m4_pushdef([ACJF_VAR_TAGS], m4_if([$2], [], [[extern]], [[$2]]))
-dnl add intern to tags if we find a compile tag
-m4_define([ACJF_VAR_TAGS], m4_if(m4_bregexp(ACJF_VAR_TAGS, [compile]), [-1],
- [ACJF_VAR_TAGS],
- [ACJF_VAR_TAGS [intern]]))
-[acjf_]ACJF_M4_CANON_DC([$1])[_search_list]=""
-m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
- [[acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]=""
-  [acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]=""
-  [acjf_with_]ACJF_M4_CANON_DC([$1])=""])
+  m4_pushdef([ACJF_VAR_PKGNAME], [[$1]])dnl
+  m4_pushdef([ACJF_VAR_TAGS], m4_if([$2], [], [[extern]], [[$2]]))dnl
+  dnl add intern to tags if we find a compile tag
+  m4_define([ACJF_VAR_TAGS], m4_if(m4_bregexp(ACJF_VAR_TAGS, [compile]), [-1],
+   [ACJF_VAR_TAGS],
+   [ACJF_VAR_TAGS [intern]]))
+  [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]=""
+  m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
+   [[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]=""
+    [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]=""
+    [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)=""])
 
-AC_ARG_WITH(ACJF_M4_DOWNCASE([$1]), AS_HELP_STRING(
-  [--with-]ACJF_M4_DOWNCASE([$1]), m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], 
-    [m4_if(m4_bregexp(ACJF_VAR_TAGS, [intern]), [-1],
-      [[WTF?!]], dnl no extern and no intern
-      [[use bundled package for $1 or no to disable]])], dnl intern
-    [m4_if(m4_bregexp(ACJF_VAR_TAGS, [intern]), [-1],
-      [[prefix path for $1 or no to disable]], dnl extern
-      [[prefix path for $1, no to disable, extern to force installed library usage, or intern to force bundled package]])])), dnl extern intern
-  [acjf_with_]ACJF_M4_CANON_DC([$1])[="$withval"])
+  AC_ARG_WITH(ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME), AS_HELP_STRING(
+    [--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME), m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], 
+      [m4_if(m4_bregexp(ACJF_VAR_TAGS, [intern]), [-1],
+        [[WTF?!]], dnl no extern and no intern
+        [[use bundled package for $1 or no to disable]])], dnl intern
+      [m4_if(m4_bregexp(ACJF_VAR_TAGS, [intern]), [-1],
+        [[prefix path for $1 or no to disable]], dnl extern
+        [[prefix path for $1, no to disable, extern to force installed library usage, or intern to force bundled package]])])), dnl extern intern
+    [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[="$withval"])
 
-m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
- [AC_ARG_WITH(ACJF_M4_DOWNCASE([$1])[-include], AS_HELP_STRING(
-    [--with-]ACJF_M4_DOWNCASE([$1])[-include], [include path for $1]),
-    [acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath="$withval"])
+  m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
+   [AC_ARG_WITH(ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-include], AS_HELP_STRING(
+      [--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-include], [include path for $1]),
+      [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath="$withval"])
 
-  AC_ARG_WITH(ACJF_M4_DOWNCASE([$1])[-lib], AS_HELP_STRING(
-    [--with-]ACJF_M4_DOWNCASE([$1])[-lib], [library path for $1]),
-    [acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath="$withval"])
+    AC_ARG_WITH(ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-lib], AS_HELP_STRING(
+      [--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-lib], [library path for $1]),
+      [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath="$withval"])
 
-  if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" = x"" -a \
-          x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]" = x"" -a \
-          x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]" = x""; then
-    # No --with-xxx[-include|-lib] options. Fall back to environment variables!
-    AC_ARG_VAR(ACJF_M4_CANON_DN([$1])[_BASE], [List of prefixes; Seach in <prefix>/{lib,include} for $1.])
-    AC_ARG_VAR(ACJF_M4_CANON_DN([$1])[_LIB], [Explicit list of lib directories for $1])
-    AC_ARG_VAR(ACJF_M4_CANON_DN([$1])[_INCLUDE], [Explicit list of include directories for $1])
-    [acjf_with_]ACJF_M4_CANON_DC([$1])="[$]ACJF_M4_CANON_DN([$1])[_BASE]";
-    [acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]="[$]ACJF_M4_CANON_DN([$1])[_INCLUDE]";
-    [acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]="[$]ACJF_M4_CANON_DN([$1])[_LIB]";
+    if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" = x"" -a \
+            x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" = x"" -a \
+            x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" = x""; then
+      # No --with-xxx[-include|-lib] options. Fall back to environment variables!
+      AC_ARG_VAR(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_BASE], [List of prefixes; Seach in <prefix>/{lib,include} for $1.])
+      AC_ARG_VAR(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIB], [Explicit list of lib directories for $1])
+      AC_ARG_VAR(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE], [Explicit list of include directories for $1])
+      [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)="[$]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_BASE]";
+      [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="[$]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE]";
+      [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]="[$]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIB]";
+    fi
+
+    if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" = x"no" -o \
+            x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" = x"no" -o \
+            x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" = x"no"; then
+      [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)=no
+      unset [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]
+      unset [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]
+    fi])
+
+  if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" != x"no"; then
+    m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
+     [if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" != x"" -o \
+              x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" != x""; then
+        if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" = x""; then
+          for acjf_var_item in $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]; do
+            if echo "$acjf_var_item" | grep "[[/\\]]lib[[/\\]]*$" 1>/dev/null; then
+              if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" != x""; then
+                [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath] `dirname $acjf_var_item`/include";
+              else
+                [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="`dirname $acjf_var_item`/include";
+              fi
+            fi
+          done
+          for acjf_var_item in $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME); do
+            if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" != x""; then
+              [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath] $acjf_var_item/include";
+            else
+              [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="$acjf_var_item/include";
+            fi
+          done
+        fi
+        if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" = x""; then
+          for acjf_var_item in $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]; do
+            if echo "$acjf_var_item" | grep "[[/\\]]include[[/\\]]*$" 1>/dev/null; then
+              if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" != x""; then
+                [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]="$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath] `dirname $acjf_var_item`/lib";
+              else
+                [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]="`dirname $acjf_var_item`/lib";
+              fi
+            fi
+          done
+          for acjf_var_item in $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME); do
+            if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" != x""; then
+              [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]="$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath] $acjf_var_item/lib";
+            else
+              [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]="$acjf_var_item/lib";
+            fi
+          done
+        fi
+        [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)=yes
+        ACJF_PKG_ADDLOC_INCLIB(ACJF_VAR_PKGNAME, [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath], [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath])
+      else
+    ])
+      if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" != x"yes" -a \
+              x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" != x""; then
+        acjf_var_item2=0
+        for acjf_var_item in $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME); do
+          if test x"$acjf_var_item" = x"intern"; then
+            m4_if(m4_bregexp(ACJF_VAR_TAGS, [intern]), [-1], [
+              AC_MSG_ERROR([internal location for $1 is not supported!])
+            ], [
+              dnl Register internal location on search list!
+              ACJF_PKG_ADDLOC_INTERN(ACJF_VAR_PKGNAME)
+            ])
+          elif test x"$acjf_var_item" = x"extern"; then
+            dnl Register standard include/lib path on search list!
+            ACJF_PKG_ADDLOC_STD(ACJF_VAR_PKGNAME)
+          else
+            ACJF_PKG_ADDLOC_PREFIX(ACJF_VAR_PKGNAME, [$acjf_var_item])
+          fi
+        done
+        [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)=yes
+      else
+        acjf_var_gottags=no
+        for acjf_var_tag in ACJF_VAR_TAGS; do
+          case $acjf_var_tag in
+            disabled)
+              if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" = x""; then
+                break;
+              fi
+              acjf_var_gottags=yes
+              ;;
+            intern|compile)
+              # Register internal location on search list!
+              ACJF_PKG_ADDLOC_INTERN(ACJF_VAR_PKGNAME)
+              acjf_var_gottags=yes
+              ;;
+            extern)
+              # Register standard include/lib path on search list!
+              ACJF_PKG_ADDLOC_STD(ACJF_VAR_PKGNAME)
+              acjf_var_gottags=yes
+              ;;
+            *)
+              AC_MSG_ERROR([Internal error: dont recognized tag $acjf_var_tag given for $1!])
+              ;;
+          esac
+        done
+        if test x"$acjf_var_gottags" = x"no"; then
+          # Register standard include/lib path on search list!
+          ACJF_PKG_ADDLOC_STD(ACJF_VAR_PKGNAME)
+        fi
+      fi
+    m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
+     [fi])
   fi
 
-  if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" = x"no" -o \
-          x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]" = x"no" -o \
-          x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]" = x"no"; then
-    [acjf_with_]ACJF_M4_CANON_DC([$1])=no
-    unset [acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]
-    unset [acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]
-  fi])
+  dnl Do not unset as [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath/_libpath] could be
+  dnl registered on the [acjf_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_search_list]!
+  dnl
+  dnl m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
+  dnl  [unset [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]
+  dnl   unset [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]])
+  dnl unset [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)
 
-if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" != x"no"; then
-  m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
-   [if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]" != x"" -o \
-            x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]" != x""; then
-      if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]" = x""; then
-        for acjf_var_item in $[acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]; do
-          if echo "$acjf_var_item" | grep "[[/\\]]lib[[/\\]]*$" 1>/dev/null; then
-            if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]" != x""; then
-              [acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]="$[acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath] `dirname $acjf_var_item`/include";
-            else
-              [acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]="`dirname $acjf_var_item`/include";
-            fi
-          fi
-        done
-        for acjf_var_item in $[acjf_with_]ACJF_M4_CANON_DC([$1]); do
-          if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]" != x""; then
-            [acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]="$[acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath] $acjf_var_item/include";
-          else
-            [acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]="$acjf_var_item/include";
-          fi
-        done
-      fi
-      if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]" = x""; then
-        for acjf_var_item in $[acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]; do
-          if echo "$acjf_var_item" | grep "[[/\\]]include[[/\\]]*$" 1>/dev/null; then
-            if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]" != x""; then
-              [acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]="$[acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath] `dirname $acjf_var_item`/lib";
-            else
-              [acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]="`dirname $acjf_var_item`/lib";
-            fi
-          fi
-        done
-        for acjf_var_item in $[acjf_with_]ACJF_M4_CANON_DC([$1]); do
-          if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]" != x""; then
-            [acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]="$[acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath] $acjf_var_item/lib";
-          else
-            [acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]="$acjf_var_item/lib";
-          fi
-        done
-      fi
-      [acjf_with_]ACJF_M4_CANON_DC([$1])=yes
-      ACJF_PKG_ADDLOC_INCLIB([$1], [acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath], [acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath])
-    else
-  ])
-    if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" != x"yes" -a \
-            x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" != x""; then
-      acjf_var_item2=0
-      for acjf_var_item in $[acjf_with_]ACJF_M4_CANON_DC([$1]); do
-        if test x"$acjf_var_item" = x"intern"; then
-          m4_if(m4_bregexp(ACJF_VAR_TAGS, [intern]), [-1], [
-            AC_MSG_ERROR([internal location for $1 is not supported!])
-          ], [
-            dnl Register internal location on search list!
-            [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] acjf_bundled";
-          ])
-        elif test x"$acjf_var_item" = x"extern"; then
-          dnl Register standard include/lib path on search list!
-          ACJF_PKG_ADDLOC_STD([$1])
-        else
-          ACJF_PKG_ADDLOC_PREFIX([$1], [$acjf_var_item])
-        fi
-      done
-      [acjf_with_]ACJF_M4_CANON_DC([$1])=yes
-    else
-      acjf_var_gottags=no
-      for acjf_var_tag in ACJF_VAR_TAGS; do
-        case $acjf_var_tag in
-          disabled)
-            if test x"$[acjf_with_]ACJF_M4_CANON_DC([$1])" = x""; then
-              break;
-            fi
-            acjf_var_gottags=yes
-            ;;
-          intern|compile)
-            # Register internal location on search list!
-            [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] acjf_bundled";
-            acjf_var_gottags=yes
-            ;;
-          extern)
-            # Register standard include/lib path on search list!
-            ACJF_PKG_ADDLOC_STD([$1])
-            acjf_var_gottags=yes
-            ;;
-          *)
-            AC_MSG_ERROR([Internal error: dont recognized tag $acjf_var_tag given for $1!])
-            ;;
-        esac
-      done
-      if test x"$acjf_var_gottags" = x"no"; then
-        # Register standard include/lib path on search list!
-        ACJF_PKG_ADDLOC_STD([$1])
-      fi
-    fi
-  m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
-   [fi])
-fi
-
-dnl Do not unset as [acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath/_libpath] could be
-dnl registered on the [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]!
-dnl
-dnl m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], [],
-dnl  [unset [acjf_with_]ACJF_M4_CANON_DC([$1])[_incpath]
-dnl   unset [acjf_with_]ACJF_M4_CANON_DC([$1])[_libpath]])
-dnl unset [acjf_with_]ACJF_M4_CANON_DC([$1])
-
-m4_popdef([ACJF_VAR_TAGS])
-])
+  m4_popdef([ACJF_VAR_TAGS])dnl
+  m4_popdef([ACJF_VAR_PKGNAME])dnl
+])dnl ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), ...)
 m4_divert_pop([INIT_PREPARE])
 ])
 
