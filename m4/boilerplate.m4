@@ -33,7 +33,11 @@ acjf_top_srcdir=`cd "$srcdir" && pwd`
 acjf_std_incpath=""
 acjf_std_libpath=""
 acjf_std_desc="standard compiler search paths"
+acjf_std_type="std"
 acjf_bundled_desc="source tree"
+acjf_bundled_type="bundled"
+acjf_disabled_desc="disabled"
+acjf_disabled_type="disabled"
 m4_define([ACJF_VAR_ROOT_BUILDDIR], m4_esyscmd([
   dir="."
   while test ! -d "$dir/BuildSystem" -o -L "$dir/BuildSystem"; do
@@ -42,7 +46,7 @@ m4_define([ACJF_VAR_ROOT_BUILDDIR], m4_esyscmd([
     fi
     dir="../$dir"
   done
-  # echo -n now newline
+  # echo -n no newline
   echo -n "$dir"
 ]))dnl
 m4_if(ACJF_VAR_ROOT_BUILDDIR, [], [AC_MSG_ERROR([Cannot find BuildSystem, bailing out!])])
