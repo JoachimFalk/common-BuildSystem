@@ -114,6 +114,23 @@ AC_DEFUN([ACJF_M4_LISTTOARGS],
     [[$1]],
     [,],
     _ACJF_M4_CLOSESQUAREBRACKET[,]_ACJF_M4_OPENSQUAREBRACKET))])dnl
+dnl ACJF_M4_ARGSTOLIST([<item1>],[<item2>],...)
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_ARGSTOLIST([foo],[bar],[a],[b]))
+dnl Result:
+dnl   [foo,bar,a,b]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_ARGSTOLIST([foo],[bar],[foo,bar]))
+dnl Result:
+dnl   [foo,bar,foo,bar]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_ARGSTOLIST(ACJF_M4_QUOTE([foo],[bar],[foo,bar])))
+dnl Result:
+dnl   [[foo],[bar],[foo,bar]]
+dnl
 AC_DEFUN([ACJF_M4_ARGSTOLIST], [[$*]])dnl
 dnl ACJF_M4_LIST_SIZE([<item1>,<item2>,...])
 dnl Example:
