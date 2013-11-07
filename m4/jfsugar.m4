@@ -15,7 +15,7 @@ dnl You should have received a copy of the GNU General Public
 dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
-m4_dnl
+dnl
 dnl
 dnl Miscellaneous helper macros
 dnl
@@ -31,6 +31,7 @@ dnl Result:
 dnl   <>
 AC_DEFUN([ACJF_M4_NULL], [])dnl
 dnl ACJF_M4_QUOTE(<arg>)
+dnl
 dnl Example:
 dnl   ACJF_M4_QUOTE([foo],[bar])
 dnl Result:
@@ -42,6 +43,11 @@ dnl Example:
 dnl   ACJF_M4_UNQUOTE([foo],[bar])
 dnl Result:
 dnl   unquoted_foo,unquoted_bar
+dnl
+dnl Example:
+dnl   ACJF_M4_UNQUOTE([[foo]],[[bar]])
+dnl Result:
+dnl   foo,bar
 AC_DEFUN([ACJF_M4_UNQUOTE], [$*])dnl
 AC_DEFUN([ACJF_M4_FLATEN],
 [m4_if($#, 0, [],
@@ -50,6 +56,7 @@ AC_DEFUN([ACJF_M4_FLATEN],
     [ACJF_M4_FLATEN($1)])m4_if($#, 1, [],
     [,ACJF_M4_FLATEN(m4_shift($@))])])])dnl
 dnl ACJF_M4_QUOTEDARGS([code with § instead of $])
+dnl
 dnl Example:
 dnl   ACJF_M4_QUOTEDARGS([§1 == "bar"])
 dnl Result:
@@ -60,6 +67,7 @@ AC_DEFUN([ACJF_M4_QUOTEDARGS],
       [\([^§]\)§\([0123456789#@*]\)], [\1$\2]),
   [§\(§§*\)], [\1])])dnl
 dnl ACJF_M4_CODECALL( [<arg1>,<arg2>,...], <code to call>)
+dnl
 dnl Example:
 dnl   ACJF_M4_CODECALL( [a,b,c], [[$1] && [$2] || [$3]])
 dnl Result:
@@ -85,7 +93,7 @@ dnl
 dnl Macros for operations on lists
 dnl
 dnl Helper function for ACJF_M4_LISTTOARGS don't call directly
-AC_DEFUN([_ACJF_M4_LISTTOARGS],
+m4_define([_ACJF_M4_LISTTOARGS],
 [m4_if($#, 0, [],
   [m4_bpatsubst(
     [[$1]],
@@ -133,6 +141,7 @@ dnl   [[foo],[bar],[foo,bar]]
 dnl
 AC_DEFUN([ACJF_M4_ARGSTOLIST], [[$*]])dnl
 dnl ACJF_M4_LIST_SIZE([<item1>,<item2>,...])
+dnl
 dnl Example:
 dnl   ACJF_M4_LIST_SIZE([a,b,c,d,ef,g,h])
 dnl Result:
@@ -145,6 +154,7 @@ dnl   6
 AC_DEFUN([ACJF_M4_LIST_SIZE],
 [ACJF_M4_ARG_SIZE(ACJF_M4_LISTTOARGS([$1]))])dnl
 dnl ACJF_M4_LIST_HEAD([<item1>,<item2>,...])
+dnl
 dnl Example:
 dnl   ACJF_M4_LIST_HEAD([a,b,c,d,ef,g,h])
 dnl Result:
@@ -162,6 +172,7 @@ dnl   [b,[c,d]]
 AC_DEFUN([ACJF_M4_LIST_HEAD],
 [ACJF_M4_ARG_HEAD(ACJF_M4_LISTTOARGS([$1]))])dnl
 dnl ACJF_M4_LIST_TAIL([<item1>,<item2>,...])
+dnl
 dnl Example:
 dnl   ACJF_M4_LIST_TAIL([a,b,c,d,ef,g,h])
 dnl Result:
@@ -171,6 +182,11 @@ dnl Example:
 dnl   ACJF_M4_LIST_TAIL([a,[b,[c,d]],[e],[f],g,h])
 dnl Result:
 dnl   [b,[c,d]],[e],[f],g,h
+dnl
+dnl Example:
+dnl   ACJF_M4_LIST_TAIL([[a,[b,[c,d]]],[e],[f],g,h])
+dnl Result:
+dnl   [e],[f],g,h
 AC_DEFUN([ACJF_M4_LIST_TAIL],
 [ACJF_M4_ARGSTOLIST(m4_shift(ACJF_M4_LISTTOARGS([$1])))])dnl
 dnl ACJF_M4_LIST_REVERSE([<item1>,<item2>,...])
@@ -565,13 +581,13 @@ dnl   Loop is now "b:f".
 dnl   Loop is now "c:d".
 dnl   Loop is now "c:e".
 dnl   Loop is now "c:f".
-AC_DEFUN([_ACJF_M4_FOREACH_OBSOLETE],
+m4_define([_ACJF_M4_FOREACH_OBSOLETE],
 [m4_if([$1], [],
   [],
   [ACJF_M4_CODECALL(ACJF_M4_LIST_HEAD([$1]), [$2])[]dnl
 _ACJF_M4_FOREACH_OBSOLETE(ACJF_M4_LIST_TAIL([$1]), [$2])])[]dnl
 ])dnl
-AC_DEFUN([_ACJF_M4_FOREACH_HELPER],
+m4_define([_ACJF_M4_FOREACH_HELPER],
 [m4_if([$2], [],
   [],
   [m4_define([$1], ACJF_M4_QUOTE(ACJF_M4_LIST_HEAD([$2])))[]$3[]dnl
@@ -612,10 +628,16 @@ dnl String manipulation Macros
 dnl
 dnl ACJF_M4_ADDPOSTFIX([list], [postfix])
 dnl   Add postfix to all the elements in the list
+dnl
 dnl Example:
 dnl   ACJF_M4_ADDPOSTFIX([a,b,c],[foo])
 dnl Result:
 dnl   afoo,bfoo,cfoo
+dnl
+dnl Example:
+dnl   ACJF_M4_ADDPOSTFIX([yes,yes],[ no])
+dnl Result:
+dnl   yes no,yes no
 AC_DEFUN([ACJF_M4_ADDPOSTFIX], [ACJF_M4_MAP([$1],
   [[§1$2]])])dnl
 dnl ACJF_M4_UNDERLINECONCAT(<arg1>,<arg2>,...)
@@ -626,94 +648,118 @@ dnl Result:
 dnl   a  ,  b__c
 AC_DEFUN([ACJF_M4_UNDERLINECONCAT],
   [ACJF_M4_JOIN([$@], [§1], [__])])dnl
-dnl ACJF_M4_UPCASE(<arg1>,<arg2>,<arg3>,...) Upcase its args
+dnl ACJF_M4_UPCASE(<arg>) Upcase its arg
 dnl 
 dnl Example:
-dnl   ACJF_M4_UPCASE([foo],[bar])
+dnl   ACJF_M4_UPCASE([foo])
 dnl Result:
-dnl   FOO,BAR
+dnl   FOO
 dnl 
 dnl Example:
-dnl   ACJF_M4_QUOTE(ACJF_M4_UPCASE([foo],[bar]))
+dnl   ACJF_M4_QUOTE(ACJF_M4_UPCASE([bar]))
 dnl Result:
-dnl   [FOO],[BAR]
-AC_DEFUN([ACJF_M4_UPCASE], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
-  [m4_translit([[§1]], [a-z], [A-Z])]))])dnl
-dnl ACJF_M4_DOWNCASE(<arg1>,<arg2>,<arg3>,...) Downcase its args
+dnl   [BAR]
+AC_DEFUN([ACJF_M4_UPCASE],
+  [m4_translit([[$1]], [a-z], [A-Z])])dnl
+dnl ACJF_M4_DOWNCASE(<arg>) Downcase its arg
 dnl
 dnl Example:
-dnl   ACJF_M4_DOWNCASE([FOO],[BAR])
+dnl   ACJF_M4_DOWNCASE([FOO])
 dnl Result:
-dnl   foo,bar
+dnl   foo
 dnl 
 dnl Example:
-dnl   ACJF_M4_QUOTE(ACJF_M4_DOWNCASE([FOO],[BAR]))
+dnl   ACJF_M4_QUOTE(ACJF_M4_DOWNCASE([Bar]))
 dnl Result:
-dnl   [foo],[bar]
-AC_DEFUN([ACJF_M4_DOWNCASE], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
-  [m4_translit([[§1]], [A-Z], [a-z])]))])dnl
+dnl   [bar]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_DOWNCASE([BAR]))
+dnl Result:
+dnl   [bar]
+AC_DEFUN([ACJF_M4_DOWNCASE],
+  [m4_translit([[$1]], [A-Z], [a-z])])dnl
 dnl Helper function for ACJF_M4_CAPITALIZE don't call directly
-AC_DEFUN([_ACJF_M4_CAPITALIZE],
+m4_define([_ACJF_M4_CAPITALIZE],
   [m4_bregexp([$1], [^\(\w\)\(\w*\)], [ACJF_M4_UPCASE([\1])[]ACJF_M4_DOWNCASE([\2])])])dnl
-dnl ACJF_M4_CAPITALIZE(<arg1>,<arg2>,<arg3>,...) Capitalize its args
+dnl ACJF_M4_CAPITALIZE(<arg>) Capitalize its arg
 dnl
 dnl Example:
-dnl   ACJF_M4_QUOTE(ACJF_M4_CAPITALIZE([foo],[bar]))
+dnl   ACJF_M4_QUOTE(ACJF_M4_CAPITALIZE([foo]))
 dnl Result:
-dnl   [Foo],[Bar]
+dnl   [Foo]
 dnl
 dnl Example:
-dnl   ACJF_M4_QUOTE(ACJF_M4_CAPITALIZE([foo,bar]))
+dnl   ACJF_M4_QUOTE(ACJF_M4_CAPITALIZE([bar]))
 dnl Result:
-dnl   [Foo,Bar]
-AC_DEFUN([ACJF_M4_CAPITALIZE], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
-  [m4_bpatsubst([[§1]], [\w+], _ACJF_M4_CLOSESQUAREBRACKET[_ACJF_M4_CAPITALIZE([\&])]_ACJF_M4_OPENSQUAREBRACKET)]))])dnl
+dnl   [Bar]
+AC_DEFUN([ACJF_M4_CAPITALIZE],
+  [m4_bpatsubst([[$1]], [\w+], _ACJF_M4_CLOSESQUAREBRACKET[_ACJF_M4_CAPITALIZE([\&])]_ACJF_M4_OPENSQUAREBRACKET)])dnl
 dnl ACJF_M4_STRIPSPACE(<arg1>,<arg2>,...) Erase leading and trailing spaces from args
+dnl
 dnl Example:
-dnl   ACJF_M4_QUOTE(ACJF_M4_STRIPSPACE([    foo    ],[  bar   ]))
+dnl   ACJF_M4_QUOTE(ACJF_M4_STRIPSPACE([    foo    ]))
 dnl Result:
-dnl   [foo],[bar]
-AC_DEFUN([ACJF_M4_STRIPSPACE], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
-  [m4_bpatsubst(§1,[^[ 	]*\(.*[^ 	]\)[ 	]*$],[[[\1]]])]))])dnl
-dnl ACJF_M4_CANON(<arg1>,<arg2>,...)
+dnl   [foo]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_STRIPSPACE([  bar   ]))
+dnl Result:
+dnl   [bar]
+AC_DEFUN([ACJF_M4_STRIPSPACE],
+  [m4_bpatsubst([$1],[^[ 	]*\(.*[^ 	]\)[ 	]*$],[[\1]])])dnl
+dnl ACJF_M4_CANON(<arg>)
 dnl   replace non alnum chars with '_'
 dnl   replace spaces between the words with a single '_'.
+dnl
 dnl Example:
-dnl   ACJF_M4_CANON([   foo  ,  bar   ], [a])
+dnl   ACJF_M4_CANON([   foo  ,  bar   ])
 dnl Result:
-dnl   _foo___bar_,a
-AC_DEFUN([ACJF_M4_CANON], [ACJF_M4_UNQUOTE(ACJF_M4_MAP([$@],
-  [m4_bpatsubst([[§1]],[\([^][a-zA-Z0-9]\|[ 	]+\)],[_])]))])dnl
-dnl ACJF_M4_CANON_CV(<arg1>,<arg2>,...)
-dnl   erase leading and trailing spaces from args.
+dnl   _foo___bar_
+dnl
+dnl Example:
+dnl   ACJF_M4_CANON([foo])
+dnl Result:
+dnl   foo
+dnl
+dnl Example:
+dnl   ACJF_M4_CANON([[foo]])
+dnl Result:
+dnl   [foo]
+AC_DEFUN([ACJF_M4_CANON], [m4_bpatsubst([[$1]], [\([^][a-zA-Z0-9]\|[ 	]+\)],[_])])dnl
+dnl ACJF_M4_CANON_CV(<arg>)
+dnl   erase leading and trailing spaces from arg.
 dnl   replace non alnum chars with '_'.
 dnl   replace spaces between the words with a single '_'.
+dnl
 dnl Example:
-dnl   ACJF_M4_CANON_CV([   foo  ,  bar   ], [a])
+dnl   ACJF_M4_CANON_CV([   foo  ,  bar   ])
 dnl Result:
-dnl   foo___bar,a
+dnl   foo___bar
 AC_DEFUN([ACJF_M4_CANON_CV],
   [ACJF_M4_CANON(ACJF_M4_STRIPSPACE($@))])dnl
 dnl ACJF_M4_CANON_DN(<arg1>,<arg2>,...)
-dnl   erase leading and trailing spaces from args,
+dnl   erase leading and trailing spaces from arg,
 dnl   replace non alnum chars with '_',
 dnl   replace spaces between the words with a single '_'
-dnl   than upcase the stuff
+dnl   then upcase the stuff
+dnl
 dnl Example:
-dnl   ACJF_M4_CANON_DN([   foo  ,  bar   ], [a])
+dnl   ACJF_M4_CANON_DN([   foo  ,  bar   ])
 dnl Result:
-dnl   FOO___BAR,A
+dnl   FOO___BAR
 AC_DEFUN([ACJF_M4_CANON_DN],
   [ACJF_M4_CANON_CV(ACJF_M4_UPCASE($@))])dnl
-dnl ACJF_M4_CANON_DC(<arg1>,<arg2>,...)
-dnl   erase leading and trailing spaces from args,
+dnl ACJF_M4_CANON_DC(<arg>)
+dnl   erase leading and trailing spaces from arg,
 dnl   replace non alnum chars with '_',
 dnl   replace spaces between the words with a single '_'
-dnl   than downcase the stuff
+dnl   then downcase the stuff
+dnl
 dnl Example:
-dnl   ACJF_M4_CANON_DC([   FOO  ,  BAR   ], [a])
+dnl   ACJF_M4_CANON_DC([   FOO  ,  BAR   ])
 dnl Result:
-dnl   foo___bar,a
+dnl   foo___bar
 AC_DEFUN([ACJF_M4_CANON_DC],
   [ACJF_M4_CANON_CV(ACJF_M4_DOWNCASE($@))])dnl
 dnl
@@ -737,7 +783,7 @@ AC_DEFUN([ACJF_M4_PATH_STRIP_TRAILING_SLASHES],
     [\1]_ACJF_M4_CLOSESQUAREBRACKET)[]dnl
 ])dnl
 dnl Helper function for ACJF_M4_PATH_BASENAME don't call directly
-AC_DEFUN([_ACJF_M4_PATH_BASENAME],
+m4_define([_ACJF_M4_PATH_BASENAME],
   [m4_bpatsubst(
     [[$1]],
     [^\[.*[/\\]\([^/\\]+\)\]$],
@@ -764,7 +810,7 @@ AC_DEFUN([ACJF_M4_PATH_BASENAME],
   ACJF_M4_PATH_STRIP_TRAILING_SLASHES([$1]))[]dnl
 ])dnl
 dnl Helper function for ACJF_M4_PATH_DIRNAME don't call directly
-AC_DEFUN([_ACJF_M4_PATH_DIRNAME],
+m4_define([_ACJF_M4_PATH_DIRNAME],
   [m4_if(m4_bregexp([$1], [[/\\]]), [-1],
     [[.]],
     [m4_bpatsubst(
