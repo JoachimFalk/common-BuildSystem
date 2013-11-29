@@ -98,7 +98,7 @@ dnl   <prefix>,
 dnl   <pkgconfig>)
 dnl
 dnl Add <pkgconfig> under <prefix>/lib/pkgconfig to the list of search locations for <pkgname>.
-AC_DEFUN([ACJF_PKG_ADDLOC_INCLIB], [AC_REQUIRE([ACJF_INIT])dnl
+AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="via pkg-config for $3 from $2"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="pkg-config"];
@@ -325,11 +325,11 @@ dnl   intern           provide intern tag to --with-<pkgname> option
 dnl   extern           provide extern tag to --with-<pkgname> option
 dnl
 dnl Examples:
-dnl   extern inter            => Try external location first, if not found use internal version
-dnl   intern                  => Use internal version if not disabled
-dnl   disabled intern extern  => If no --with-<pkgname> option is given the package is disabled,
-dnl                              otherwise try the internal version first, after that fall back
-dnl                              to external version
+dnl   [[extern],[inter]]              => Try external location first, if not found use internal version
+dnl   [[intern]]                      => Use internal version if not disabled
+dnl   [[disabled],[intern],[extern]]  => If no --with-<pkgname> option is given the package is disabled,
+dnl                                      otherwise try the internal version first, after that fall back
+dnl                                      to external version
 dnl set shell vars
 dnl   acjf_<pkgname>_search_list
 AC_DEFUN([ACJF_ARG_WITHPKG], [AC_REQUIRE([ACJF_INIT])dnl
@@ -338,28 +338,37 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
   dnl Setup ACJF_VAR_PKGNAME and ACJF_VAR_TAGS macros
   m4_pushdef([ACJF_VAR_PKGNAME], [[$1]])dnl
   dnl if no tags are specified add extern tag
-  m4_pushdef([ACJF_VAR_TAGS],
-    m4_if([$2], [],
-     [ACJF_M4_QUOTE([extern])],
-     [ACJF_M4_QUOTE([$2])]))dnl
+  m4_if([$2], [],
+   [m4_pushdef([ACJF_VAR_TAGS], [[[extern]]])],
+   [m4_pushdef([ACJF_VAR_TAGS], [[$2]])])dnl
   dnl append disabled tag to tags if not found
-  m4_define([ACJF_VAR_TAGS],
-    m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<disabled\>]), [-1],
-     [ACJF_M4_QUOTE(ACJF_VAR_TAGS [disabled])],
-     [ACJF_M4_QUOTE(ACJF_VAR_TAGS)]))dnl
-  dnl Clear search list for <pkgname>. The search list will later be populated
-  dnl via ACJF_PKG_ADDLOC_XXX macros.
-  ACJF_PKG_CLEARLOC(ACJF_VAR_PKGNAME)dnl
+  m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<disabled\>]), [-1],
+   [ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_TAGS], [[disabled]])])dnl
+  m4_pushdef([ACJF_VAR_CONFIGSCRIPT], [])dnl
+  m4_pushdef([ACJF_VAR_PKGCONFIGMOD], [])dnl
+  ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS, [
+    m4_ifdef([ACJF_VAR_DEFAULTMSG], [],
+     [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [intern], [m4_pushdef([ACJF_VAR_DEFAULTMSG], [(default is intern)])],
+       [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [extern], [m4_pushdef([ACJF_VAR_DEFAULTMSG], [(default is extern)])],
+         [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [disabled], [m4_pushdef([ACJF_VAR_DEFAULTMSG], [(default is no)])])])
+       ])
+     ])
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<configscript:]), [-1], [],
+     [m4_define([ACJF_VAR_CONFIGSCRIPT], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<configscript:\(.*\)], [[\1]]))])dnl
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<pkgconfig:]), [-1], [],
+     [m4_define([ACJF_VAR_PKGCONFIGMOD], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<pkgconfig:\(.*\)], [[\1]]))])dnl
+  ])dnl
   [unset acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)
   AC_ARG_WITH([ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)], [AS_HELP_STRING(
     [[--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)], m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], 
       [m4_if(m4_bregexp(ACJF_VAR_TAGS, [intern]), [-1],
         [[WTF?!]], dnl no extern and no intern
-        [[use bundled package for $1 or no to disable]])], dnl intern
+        [[use bundled package for $1 or no to disable] ACJF_VAR_DEFAULTMSG])], dnl intern
       [m4_if(m4_bregexp(ACJF_VAR_TAGS, [intern]), [-1],
-        [[prefix path for $1 or no to disable]], dnl extern
-        [[prefix path for $1, no to disable, extern to force installed library usage, or intern to force bundled package]])]))], dnl extern intern
+        [[prefix path for $1 or no to disable] ACJF_VAR_DEFAULTMSG], dnl extern
+        [[prefix path for $1, no to disable, extern to force installed library usage, or intern to force bundled package] ACJF_VAR_DEFAULTMSG])]))], dnl extern intern
     [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[="$withval"])
+  m4_popdef([ACJF_VAR_DEFAULTMSG])dnl
 
   m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<extern\>]), [-1], [],
    [m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<pkgconfig:]), [-1],
@@ -421,8 +430,11 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
      [])dnl not m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<pkgconfig:]), ...)
    ])dnl m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<extern\>]), ...)
   
+  dnl Clear search list for <pkgname>. The search list will later be populated
+  dnl via ACJF_PKG_ADDLOC_XXX macros.
+  ACJF_PKG_CLEARLOC(ACJF_VAR_PKGNAME)dnl
   [acjf_var_matchtag=no
-  for acjf_var_tag in ]ACJF_VAR_TAGS[; do
+  for acjf_var_tag in ]ACJF_M4_JOIN(ACJF_VAR_TAGS,["§1"],[ ])[; do
     case $acjf_var_tag in
       disabled)
         case "$acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[" in
@@ -438,8 +450,8 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
             # no match
             ;;
           ""|yes|intern)
-            ]m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<pkgconfig:]), [-1],
-             [m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<configscript:]), [-1],
+            ]m4_if(ACJF_VAR_PKGCONFIGMOD, [],
+             [m4_if(ACJF_VAR_CONFIGSCRIPT, [],
                [dnl neither configscript nor pkgconfig mode
                 ACJF_PKG_ADDLOC_INTERN(ACJF_VAR_PKGNAME)
                ],
@@ -449,8 +461,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
                ])
              ],
              [dnl pkgconfig mode
-
-
+              ACJF_PKG_ADDLOC_PKGCONFIG(ACJF_VAR_PKGNAME, [], ACJF_VAR_PKGCONFIGMOD)dnl
              ])[
             acjf_var_matchtag=yes
             ;;
@@ -462,8 +473,8 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
             # no match
             ;;
           ""|yes|extern)
-            ]m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<pkgconfig:]), [-1],
-             [m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<configscript:]), [-1],
+            ]m4_if(ACJF_VAR_PKGCONFIGMOD, [],
+             [m4_if(ACJF_VAR_CONFIGSCRIPT, [],
                [dnl neither configscript nor pkgconfig mode
                 if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" != x"" -o \
                         x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" != x""; then
@@ -479,14 +490,13 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
                ])
              ],
              [dnl pkgconfig mode
-
-
+              ACJF_PKG_ADDLOC_PKGCONFIG(ACJF_VAR_PKGNAME, [], ACJF_VAR_PKGCONFIGMOD)dnl
              ])[
             acjf_var_matchtag=yes
             ;;
           "/"*)
-            ]m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<pkgconfig:]), [-1],
-             [m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<configscript:]), [-1],
+            ]m4_if(ACJF_VAR_PKGCONFIGMOD, [],
+             [m4_if(ACJF_VAR_CONFIGSCRIPT, [],
                [dnl neither configscript nor pkgconfig mode
                 ACJF_PKG_ADDLOC_PREFIX(ACJF_VAR_PKGNAME, $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME))
                ],
@@ -495,8 +505,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
                ])
              ],
              [dnl pkgconfig mode
-
-
+              ACJF_PKG_ADDLOC_PKGCONFIG(ACJF_VAR_PKGNAME, [], ACJF_VAR_PKGCONFIGMOD)dnl
              ])[
             acjf_var_matchtag=yes
             ;;
@@ -520,6 +529,8 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
   unset acjf_var_matchtag]
   m4_popdef([ACJF_VAR_TAGS])dnl
   m4_popdef([ACJF_VAR_PKGNAME])dnl
+  m4_popdef([ACJF_VAR_CONFIGSCRIPT])dnl
+  m4_popdef([ACJF_VAR_PKGCONFIGMOD])dnl
 ])dnl ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), ...)
 m4_divert_pop([INIT_PREPARE])
 ])
@@ -905,6 +916,15 @@ dnl  [<possible location in source tree>,]
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 dnl
+dnl tags (empty defaults to intern, precedence is in order of sequence):
+dnl   disabled         if no --with-<pkgname> option is specified disable the package
+dnl   pkgconfig:xxx    use pkgconfig module xxx to find the package
+dnl   intern           provide intern tag to --with-<pkgname> option
+dnl
+dnl Examples:
+dnl   [[intern]]             => Use internal version if not disabled
+dnl   [[disabled],[intern]]  => If no --with-<pkgname> option is given the package is disabled
+dnl
 dnl After execution of the macro
 dnl
 dnl IF pkg found define:
@@ -929,10 +949,9 @@ AC_DEFUN([ACJF_CHECK_PKG], [AC_REQUIRE([ACJF_INIT])dnl
   dnl echo "[ACJF_VAR_PKGNAME]: ACJF_VAR_PKGNAME"
   dnl echo "ACJF_VAR_ARGSLIST"
   dnl m4_pattern_allow([ACJF_VAR_TAGS])dnl
-  m4_pushdef([ACJF_VAR_TAGS],
-    m4_if(m4_bregexp(ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST), [\<disabled\>\|\<intern\>\|\<extern\>\|\<pkgconfig:\|\<configscript:]), [-1],
-     [ACJF_M4_QUOTE([intern])],
-     [ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST)ACJF_M4_LISTVAR_POP_FRONT([ACJF_VAR_ARGSLIST])]))dnl
+  m4_if(m4_bregexp(ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST), [\<disabled\>\|\<intern\>\|\<extern\>\|\<pkgconfig:\|\<configscript:]), [-1],
+   [m4_pushdef([ACJF_VAR_TAGS], [[]])],
+   [m4_pushdef([ACJF_VAR_TAGS], ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST))ACJF_M4_LISTVAR_POP_FRONT([ACJF_VAR_ARGSLIST])])dnl
   dnl echo "[ACJF_VAR_TAGS]: ACJF_VAR_TAGS"
   dnl echo "ACJF_VAR_ARGSLIST"
   dnl check that no extern tag is given
@@ -940,16 +959,13 @@ AC_DEFUN([ACJF_CHECK_PKG], [AC_REQUIRE([ACJF_INIT])dnl
    [],
    [m4_fatal([No extern tag supported in ACJF_CHECK_PKG(]ACJF_M4_QUOTE(ACJF_VAR_PKGNAME)[,]ACJF_M4_QUOTE(ACJF_VAR_TAGS)[,...)!])])dnl
   dnl append intern tag to tags if not found
-  m4_define([ACJF_VAR_TAGS],
-    m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<intern\>]), [-1],
-     [ACJF_M4_QUOTE(ACJF_VAR_TAGS [intern])],
-     [ACJF_M4_QUOTE(ACJF_VAR_TAGS)]))dnl
+  m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<intern\>]), [-1],
+   [ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_TAGS], [[intern]])])
   dnl echo "[ACJF_VAR_TAGS]: ACJF_VAR_TAGS"
   dnl m4_pattern_allow([ACJF_VAR_SUBDIR_LIST])dnl
-  m4_pushdef([ACJF_VAR_SUBDIR_LIST],
-    m4_if(m4_bregexp(ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST), [[=;]\|^$]), [-1],
-     [ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST)ACJF_M4_LISTVAR_POP_FRONT([ACJF_VAR_ARGSLIST])],
-     [ACJF_M4_QUOTE(ACJF_VAR_PKGNAME)]))dnl
+  m4_if(m4_bregexp(ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST), [[=;]\|^$]), [-1],
+   [m4_pushdef([ACJF_VAR_SUBDIR_LIST], ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST)ACJF_M4_LISTVAR_POP_FRONT([ACJF_VAR_ARGSLIST]))],
+   [m4_pushdef([ACJF_VAR_SUBDIR_LIST], ACJF_M4_QUOTE(ACJF_VAR_PKGNAME))])dnl
   dnl echo "[ACJF_VAR_SUBDIR_LIST]: ACJF_VAR_SUBDIR_LIST"
   dnl echo "ACJF_VAR_ARGSLIST"
   dnl m4_pattern_allow([ACJF_VAR_CODE_IF_TRUE])dnl
@@ -1001,7 +1017,7 @@ dnl   PKGNAME_INCPATH if possible whitespace seperated list of include directori
 dnl   PKGNAME_LIBPATH if possible whitespace seperated list of library directories
 dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := false
 AC_DEFUN([ACJF_CHECK_LIB], [dnl
-ACJF_ARG_WITHPKG([$1], m4_if([$2], [], [], [[intern]])[ extern])dnl
+ACJF_ARG_WITHPKG([$1], m4_if([$2], [], [[[extern]]], [[[intern],[extern]]]))dnl
 ACJF_CHECK_LIB_TESTER([$1], [$2], ACJF_CHECK_LIB_TESTMACROGEN([$3], [$4], [$5]), [$6], [$7])dnl
 ])
 
@@ -1040,7 +1056,7 @@ AC_DEFUN([ACJF_CONFIG_PKG], [dnl
   dnl echo "[FLUPS_VAR_PKGNAME]: ACJF_VAR_PKGNAME"
   dnl echo "[FLUPS_VAR_SUBDIR]:  ACJF_VAR_SUBDIR"
   dnl echo "[FLUPS_VAR_TAGS]:    ACJF_VAR_TAGS"
-  ACJF_ARG_WITHPKG(ACJF_VAR_PKGNAME, ACJF_VAR_TAGS[ compile])
+  ACJF_ARG_WITHPKG(ACJF_VAR_PKGNAME, ACJF_M4_LIST_PUSH_BACK(ACJF_VAR_TAGS,[[compile]]))
   if echo ["$acjf_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_search_list " | grep "^[ 	]*acjf_bundled[ 	]"] >/dev/null; then
     if test -d "$srcdir/ACJF_VAR_SUBDIR"; then
       AC_CONFIG_SUBDIRS(ACJF_VAR_SUBDIR)
