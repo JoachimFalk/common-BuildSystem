@@ -182,7 +182,7 @@ dnl ACJF_CHECK_LIB_SYSTEMOC(
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
-  ACJF_ARG_WITHPKG([SysteMoC], [intern extern])
+  ACJF_ARG_WITHPKG([SysteMoC], [[intern],[extern]])
   
   SYSTEMOC_FOUND=""; acjf_var_systemoc_missing=""
   if test x"$SYSTEMOC_FOUND" != x"no"; then

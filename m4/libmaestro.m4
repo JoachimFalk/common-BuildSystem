@@ -65,7 +65,7 @@ if test x"$acjf_found_maestromm" != x"no"; then
   acjf_maestromm_LDFLAGS="$LDFLAGS";
   CPPFLAGS="$CPPFLAGS $BOOST_INCLUDE $SYSTEMC_INCLUDE $XERCES_INCLUDE $COSUPPORT_INCLUDE"
   LDFLAGS="$LDFLAGS $BOOST_LDFLAGS $SYSTEMC_LDFLAGS $XERCES_LDFLAGS $COSUPPORT_LDFLAGS"
-  ACJF_ARG_WITHPKG([Maestro], [disabled intern extern])dnl
+  ACJF_ARG_WITHPKG([Maestro], [[disabled],[intern],[extern]])dnl
   ACJF_PKG_COPY_OPTIONS([Maestro], [MaestroMM])
   ACJF_CHECK_LIB_TESTER([MaestroMM], [Maestro/MetaMap],
     ACJF_CHECK_LIB_TESTMACROGEN(
@@ -135,7 +135,7 @@ if test x"$acjf_found_maestroil" != x"no"; then
   acjf_maestroil_LDFLAGS="$LDFLAGS";
   CPPFLAGS="$CPPFLAGS $SYSTEMOC_INCLUDE $MAESTROMM_INCLUDE"
   LDFLAGS="$LDFLAGS   $SYSTEMOC_LDFLAGS $MAESTROMM_LDFLAGS"
-  ACJF_ARG_WITHPKG([Maestro], [disabled intern extern])dnl
+  ACJF_ARG_WITHPKG([Maestro], [[disabled],[intern],[extern]])dnl
   ACJF_PKG_COPY_OPTIONS([Maestro], [MaestroIL])
   ACJF_CHECK_LIB_TESTER([MaestroIL], [Maestro/InterfaceLibrary],
     ACJF_CHECK_LIB_TESTMACROGEN(
@@ -198,7 +198,7 @@ if test x"$acjf_found_maestroml" != x"no"; then
   acjf_maestroml_LDFLAGS="$LDFLAGS";
   CPPFLAGS="$CPPFLAGS $SYSTEMOC_INCLUDE $MAESTROIL_INCLUDE"
   LDFLAGS="$LDFLAGS   $SYSTEMOC_LDFLAGS $MAESTROIL_LDFLAGS"
-  ACJF_ARG_WITHPKG([Maestro], [disabled intern extern])dnl
+  ACJF_ARG_WITHPKG([Maestro], [[disabled],[intern],[extern]])dnl
   ACJF_PKG_COPY_OPTIONS([Maestro], [MaestroML])
   ACJF_CHECK_LIB_TESTER([MaestroML], [Maestro/ModelLibrary],
     ACJF_CHECK_LIB_TESTMACROGEN(
