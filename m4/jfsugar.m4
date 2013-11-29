@@ -409,10 +409,10 @@ dnl   m4_popdef([listvar])dnl
 dnl Result:
 dnl   a
 AC_DEFUN([ACJF_M4_LISTVAR_POP_FRONT], [m4_define([$1], ACJF_M4_QUOTE(ACJF_M4_LIST_POP_FRONT($1)))])dnl
-dnl ACJF_M4_LISTVAR_PUSH_FRONT([<new_item>], [<listvar>])
+dnl ACJF_M4_LISTVAR_PUSH_FRONT([<listvar>], [<new_item>])
 dnl Example:
 dnl   m4_pushdef([listvar], [[b,c,d,e,f]])dnl
-dnl   ACJF_M4_LISTVAR_PUSH_FRONT([a],[listvar])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_FRONT([listvar], [a])dnl
 dnl   listvar
 dnl   m4_popdef([listvar])dnl
 dnl Result:
@@ -420,7 +420,7 @@ dnl   a,b,c,d,e,f
 dnl
 dnl Example:
 dnl   m4_pushdef([listvar], [[]])dnl
-dnl   ACJF_M4_LISTVAR_PUSH_FRONT([],[listvar])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_FRONT([listvar], [])dnl
 dnl   ACJF_M4_QUOTE(listvar)
 dnl   m4_popdef([listvar])dnl
 dnl Result:
@@ -428,7 +428,7 @@ dnl   []
 dnl
 dnl Example:
 dnl   m4_pushdef([listvar], [[]])dnl
-dnl   ACJF_M4_LISTVAR_PUSH_FRONT([a],[listvar])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_FRONT([listvar], [a])dnl
 dnl   ACJF_M4_QUOTE(listvar)
 dnl   m4_popdef([listvar])dnl
 dnl Result:
@@ -436,7 +436,7 @@ dnl   [a]
 dnl
 dnl Example:
 dnl   m4_pushdef([listvar], [[a]])dnl
-dnl   ACJF_M4_LISTVAR_PUSH_FRONT([],[listvar])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_FRONT([listvar], [])dnl
 dnl   ACJF_M4_QUOTE(listvar)
 dnl   m4_popdef([listvar])dnl
 dnl Result:
@@ -444,12 +444,12 @@ dnl   [a]
 dnl
 dnl Example:
 dnl   m4_pushdef([listvar], [[a,[b,[c,d]],[e],[f],g,h]])dnl
-dnl   ACJF_M4_LISTVAR_PUSH_FRONT([x,[y,z]],[listvar])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_FRONT([listvar], [x,[y,z]])dnl
 dnl   ACJF_M4_QUOTE(listvar)
 dnl   m4_popdef([listvar])dnl
 dnl Result:
 dnl   [x,[y,z],a,[b,[c,d]],[e],[f],g,h]
-AC_DEFUN([ACJF_M4_LISTVAR_PUSH_FRONT], [m4_define([$2], ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_FRONT([$1],$2)))])dnl
+AC_DEFUN([ACJF_M4_LISTVAR_PUSH_FRONT], [m4_define([$1], ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_FRONT([$2],$1)))])dnl
 dnl ACJF_M4_LISTVAR_POP_BACK([<item1>,<item2>,...])
 dnl Example:
 dnl   m4_pushdef([listvar], [[a,b,c,d,ef,g,h]])dnl
@@ -467,10 +467,10 @@ dnl   m4_popdef([listvar])dnl
 dnl Result:
 dnl   a,[b,[c,d]],[e],[f],g
 AC_DEFUN([ACJF_M4_LISTVAR_POP_BACK], [m4_define([$1], ACJF_M4_QUOTE(ACJF_M4_LIST_POP_BACK($1)))])dnl
-dnl ACJF_M4_LISTVAR_PUSH_BACK([<new_item>], [<listvar>])
+dnl ACJF_M4_LISTVAR_PUSH_BACK([<listvar>], [<new_item>])
 dnl Example:
 dnl   m4_pushdef([listvar], [[b,c,d,e,f]])dnl
-dnl   ACJF_M4_LISTVAR_PUSH_BACK([a],[listvar])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_BACK([listvar], [a])dnl
 dnl   ACJF_M4_QUOTE(listvar)
 dnl   m4_popdef([listvar])dnl
 dnl Result:
@@ -478,7 +478,7 @@ dnl   [b,c,d,e,f,a]
 dnl
 dnl Example:
 dnl   m4_pushdef([listvar], [[]])dnl
-dnl   ACJF_M4_LISTVAR_PUSH_BACK([],[listvar])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_BACK([listvar], [])dnl
 dnl   ACJF_M4_QUOTE(listvar)
 dnl   m4_popdef([listvar])dnl
 dnl Result:
@@ -486,7 +486,7 @@ dnl   []
 dnl
 dnl Example:
 dnl   m4_pushdef([listvar], [[]])dnl
-dnl   ACJF_M4_LISTVAR_PUSH_BACK([a],[listvar])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_BACK([listvar], [a])dnl
 dnl   ACJF_M4_QUOTE(listvar)
 dnl   m4_popdef([listvar])dnl
 dnl Result:
@@ -494,7 +494,7 @@ dnl   [a]
 dnl
 dnl Example:
 dnl   m4_pushdef([listvar], [[a]])dnl
-dnl   ACJF_M4_LISTVAR_PUSH_BACK([],[listvar])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_BACK([listvar], [])dnl
 dnl   ACJF_M4_QUOTE(listvar)
 dnl   m4_popdef([listvar])dnl
 dnl Result:
@@ -502,12 +502,12 @@ dnl   [a]
 dnl
 dnl Example:
 dnl   m4_pushdef([listvar], [[a,[b,[c,d]],[e],[f],g,h]])dnl
-dnl   ACJF_M4_LISTVAR_PUSH_BACK([x,[y,z]],[listvar])dnl
+dnl   ACJF_M4_LISTVAR_PUSH_BACK([listvar], [x,[y,z]])dnl
 dnl   ACJF_M4_QUOTE(listvar)
 dnl   m4_popdef([listvar])dnl
 dnl Result:
 dnl   [a,[b,[c,d]],[e],[f],g,h,x,[y,z]]
-AC_DEFUN([ACJF_M4_LISTVAR_PUSH_BACK], [m4_define([$2], ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_BACK([$1],$2)))])dnl
+AC_DEFUN([ACJF_M4_LISTVAR_PUSH_BACK], [m4_define([$1], ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_BACK([$2],$1)))])dnl
 dnl
 dnl Macros for looping constructs
 dnl
