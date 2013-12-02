@@ -92,15 +92,47 @@ AC_DEFUN([ACJF_PKG_ADDLOC_INCLIB], [AC_REQUIRE([ACJF_INIT])dnl
   m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
 ])
 
-dnl ACJF_PKG_ADDLOC_PKGCONFIG(
+dnl ACJF_PKG_ADDLOC_PKGCONFIG_INTERN(
+dnl   <pkgname>,
+dnl   <pkgconfig>)
+dnl
+dnl Add <pkgconfig> from source tree
+AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG_INTERN], [AC_REQUIRE([ACJF_INIT])dnl
+  m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="source tree via pkg-config for $2"];
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="pkg-config-bundled"];
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_modules="$2"];
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_pkg_config_dir=""];
+  dnl Register vars on search list!
+  [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] ACJF_VAR_ANONYMOUS_SHELL_VAR";
+  m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
+])
+
+dnl ACJF_PKG_ADDLOC_PKGCONFIG_STD(
+dnl   <pkgname>,
+dnl   <pkgconfig>)
+dnl
+dnl Add <pkgconfig> from standard pkg-config search path
+AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG_STD], [AC_REQUIRE([ACJF_INIT])dnl
+  m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="standard search paths via pkg-config for $2"];
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="pkg-config"];
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_modules="$2"];
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_pkg_config_dir=""];
+  dnl Register vars on search list!
+  [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] ACJF_VAR_ANONYMOUS_SHELL_VAR";
+  m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
+])
+
+dnl ACJF_PKG_ADDLOC_PKGCONFIG_PREFIX(
 dnl   <pkgname>,
 dnl   <prefix>,
 dnl   <pkgconfig>)
 dnl
 dnl Add <pkgconfig> under <prefix>/lib/pkgconfig to the list of search locations for <pkgname>.
-AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG], [AC_REQUIRE([ACJF_INIT])dnl
+AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG_PREFIX], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
-  ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="via pkg-config for $3 from $2"];
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="$2 via pkg-config for $3"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="pkg-config"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_modules="$3"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_pkg_config_dir="$2/lib/pkgconfig"];
@@ -279,7 +311,7 @@ AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CO
 
     PKG_CHECK_MODULES(
       [acjf_var_pkg_],
-      [$1_modules],
+      ["$$1_modules"],
       [$1_invalid="no";],
       [$1_invalid="yes";])
 
@@ -346,42 +378,42 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
    [ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_TAGS], [[disabled]])])dnl
   m4_pushdef([ACJF_VAR_CONFIGSCRIPT], [])dnl
   m4_pushdef([ACJF_VAR_PKGCONFIGMOD], [])dnl
+  m4_pushdef([ACJF_VAR_WITHMSG], [])dnl
   ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS, [
     m4_ifdef([ACJF_VAR_DEFAULTMSG], [],
      [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [intern], [m4_pushdef([ACJF_VAR_DEFAULTMSG], [(default is intern)])],
        [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [extern], [m4_pushdef([ACJF_VAR_DEFAULTMSG], [(default is extern)])],
          [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [disabled], [m4_pushdef([ACJF_VAR_DEFAULTMSG], [(default is no)])])])
        ])
-     ])
+     ])dnl
     m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<configscript:]), [-1], [],
      [m4_define([ACJF_VAR_CONFIGSCRIPT], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<configscript:\(.*\)], [[\1]]))])dnl
     m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<pkgconfig:]), [-1], [],
      [m4_define([ACJF_VAR_PKGCONFIGMOD], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<pkgconfig:\(.*\)], [[\1]]))])dnl
+    m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [intern], [ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHMSG], [[intern for bundled package]])],
+     [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [extern], [ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHMSG], [[prefix or extern to use an installed library]])],
+       [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [disabled], [ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHMSG], [[no to disable]])])])
+     ])
   ])dnl
+  m4_define([ACJF_VAR_WITHMSG], ACJF_M4_JOIN(ACJF_VAR_WITHMSG, [[§1]], [[, ]]) ACJF_VAR_DEFAULTMSG)dnl
   [unset acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)
-  AC_ARG_WITH([ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)], [AS_HELP_STRING(
-    [[--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)], m4_if(m4_bregexp(ACJF_VAR_TAGS, [extern]), [-1], 
-      [m4_if(m4_bregexp(ACJF_VAR_TAGS, [intern]), [-1],
-        [[WTF?!]], dnl no extern and no intern
-        [[use bundled package for $1 or no to disable] ACJF_VAR_DEFAULTMSG])], dnl intern
-      [m4_if(m4_bregexp(ACJF_VAR_TAGS, [intern]), [-1],
-        [[prefix path for $1 or no to disable] ACJF_VAR_DEFAULTMSG], dnl extern
-        [[prefix path for $1, no to disable, extern to force installed library usage, or intern to force bundled package] ACJF_VAR_DEFAULTMSG])]))], dnl extern intern
-    [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[="$withval"])
+  AC_ARG_WITH([ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)],
+    AS_HELP_STRING([[--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)], ACJF_VAR_WITHMSG),
+    [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[="$withval"])dnl
   m4_popdef([ACJF_VAR_DEFAULTMSG])dnl
-
+  m4_popdef([ACJF_VAR_WITHMSG])dnl
   m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<extern\>]), [-1], [],
    [m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<pkgconfig:]), [-1],
      [m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<configscript:]), [-1], 
        [dnl extern but no pkgconfig:xxx and no configscript:xxx in tags
         unset [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]
-        AC_ARG_WITH(ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-include], AS_HELP_STRING(
-          [--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-include], [include path for $1]),
-          [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath="$withval"])
+        AC_ARG_WITH(ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-include],
+          AS_HELP_STRING([--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-include], [include path for $1]),
+          [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath="$withval"])dnl
         unset [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]
-        AC_ARG_WITH(ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-lib], AS_HELP_STRING(
-          [--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-lib], [library path for $1]),
-          [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath="$withval"])
+        AC_ARG_WITH(ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-lib],
+          AS_HELP_STRING([--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)[-lib], [library path for $1]),
+          [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath="$withval"])dnl
         if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" = x"" -a \
                 x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" = x"" -a \
                 x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" = x""; then
@@ -461,7 +493,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
                ])
              ],
              [dnl pkgconfig mode
-              ACJF_PKG_ADDLOC_PKGCONFIG(ACJF_VAR_PKGNAME, [], ACJF_VAR_PKGCONFIGMOD)dnl
+              ACJF_PKG_ADDLOC_PKGCONFIG_INTERN(ACJF_VAR_PKGNAME, ACJF_VAR_PKGCONFIGMOD)dnl
              ])[
             acjf_var_matchtag=yes
             ;;
@@ -490,7 +522,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
                ])
              ],
              [dnl pkgconfig mode
-              ACJF_PKG_ADDLOC_PKGCONFIG(ACJF_VAR_PKGNAME, [], ACJF_VAR_PKGCONFIGMOD)dnl
+              ACJF_PKG_ADDLOC_PKGCONFIG_STD(ACJF_VAR_PKGNAME, ACJF_VAR_PKGCONFIGMOD)dnl
              ])[
             acjf_var_matchtag=yes
             ;;
@@ -505,7 +537,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
                ])
              ],
              [dnl pkgconfig mode
-              ACJF_PKG_ADDLOC_PKGCONFIG(ACJF_VAR_PKGNAME, [], ACJF_VAR_PKGCONFIGMOD)dnl
+              ACJF_PKG_ADDLOC_PKGCONFIG_PREFIX(ACJF_VAR_PKGNAME, $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME), ACJF_VAR_PKGCONFIGMOD)dnl
              ])[
             acjf_var_matchtag=yes
             ;;
