@@ -288,14 +288,14 @@ AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CO
     m4_if(ACJF_VAR_SUBDIR_LIST, [], 
      [AC_MSG_ERROR([Internal error: internal location specified for ACJF_VAR_PKGNAME but source tree location not given in configure.in!])],
      [_ACJF_SOURCE_TREE_LOCATION_SEARCHER(acjf_var_pkgname_srcdir)
-      if test x"$acjf_var_pkgname_srcdir" != x"/invalid" -a -f "$acjf_top_builddir/$acjf_var_pkgname_srcdir/Makefile"; then
+      if test x"$acjf_var_pkgname_srcdir" != x"/invalid" -a -f "$acjf_abs_top_builddir/$acjf_var_pkgname_srcdir/Makefile"; then
         $1_invalid="no";
         if test -d "$srcdir/$acjf_var_pkgname_srcdir/pkginclude"; then
-          $1_incpath="$acjf_top_builddir/$acjf_var_pkgname_srcdir/pkginclude $srcdir/$acjf_var_pkgname_srcdir/pkginclude"
+          $1_incpath="$acjf_abs_top_builddir/$acjf_var_pkgname_srcdir/pkginclude $srcdir/$acjf_var_pkgname_srcdir/pkginclude"
         else
-          $1_incpath="$acjf_top_builddir/$acjf_var_pkgname_srcdir $srcdir/$acjf_var_pkgname_srcdir/include $srcdir/$acjf_var_pkgname_srcdir"
+          $1_incpath="$acjf_abs_top_builddir/$acjf_var_pkgname_srcdir $srcdir/$acjf_var_pkgname_srcdir/include $srcdir/$acjf_var_pkgname_srcdir"
         fi
-        $1_libpath="$acjf_top_builddir/$acjf_var_pkgname_srcdir"
+        $1_libpath="$acjf_abs_top_builddir/$acjf_var_pkgname_srcdir"
         $1_cppflags_other=""
         $1_ldflags_other=""
         $1_libs=""
@@ -321,11 +321,11 @@ AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CO
     m4_if(ACJF_VAR_SUBDIR_LIST, [], 
      [AC_MSG_ERROR([Internal error: internal location specified for ACJF_VAR_PKGNAME but source tree location not given in configure.in!])],
      [_ACJF_SOURCE_TREE_LOCATION_SEARCHER(acjf_var_pkgname_srcdir)
-      if test x"$acjf_var_pkgname_srcdir" != x"/invalid" -a -f "$acjf_top_builddir/$acjf_var_pkgname_srcdir/Makefile"; then
+      if test x"$acjf_var_pkgname_srcdir" != x"/invalid" -a -f "$acjf_abs_top_builddir/$acjf_var_pkgname_srcdir/Makefile"; then
         eval [$1_modules=\$${$2}_modules;]
         eval [$1_pkg_config_dir=\$${$2}_pkg_config_dir;]
         acjf_var_old_PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
-        PKG_CONFIG_PATH="$acjf_top_builddir/$acjf_var_pkgname_srcdir/pkgconfig"
+        PKG_CONFIG_PATH="$acjf_abs_top_builddir/$acjf_var_pkgname_srcdir/pkgconfig"
         export PKG_CONFIG_PATH
         echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
 
@@ -822,19 +822,19 @@ dnl       echo "LIBS: $LIBS"
     if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"$acjf_bundled_type"; then
       _ACJF_SOURCE_TREE_LOCATION_SEARCHER(ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir])
       if test x"$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]" != x"/invalid"; then
-        dnl we need abs pathes ($acjf_top_srcdir) here to enable a correct fixup also for relative configure calls.
-        [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]="$acjf_top_srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]" 
-        dnl we need abs pathes ($acjf_top_builddir) here to enable a correct fixup also for relative configure calls.
-        [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]="$acjf_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]"
+        dnl we need abs pathes ($acjf_abs_top_srcdir) here to enable a correct fixup also for relative configure calls.
+        [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]="$acjf_abs_top_srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]" 
+        dnl we need abs pathes ($acjf_abs_top_builddir) here to enable a correct fixup also for relative configure calls.
+        [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]="$acjf_abs_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]"
         if test -d "$srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/pkginclude"; then
-          dnl we need abs pathes ($acjf_top_srcdir/$acjf_top_builddir) here to enable a correct fixup also for relative configure calls.
-          [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="$acjf_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/pkginclude $acjf_top_srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/pkginclude"
+          dnl we need abs pathes ($acjf_abs_top_srcdir/$acjf_abs_top_builddir) here to enable a correct fixup also for relative configure calls.
+          [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="$acjf_abs_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/pkginclude $acjf_abs_top_srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/pkginclude"
         else
-          dnl we need abs pathes ($acjf_top_srcdir/$acjf_top_builddir) here to enable a correct fixup also for relative configure calls.
-          [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="$acjf_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir] $acjf_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/include $acjf_top_srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]"
+          dnl we need abs pathes ($acjf_abs_top_srcdir/$acjf_abs_top_builddir) here to enable a correct fixup also for relative configure calls.
+          [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="$acjf_abs_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir] $acjf_abs_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/include $acjf_abs_top_srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]"
         fi
-        dnl we need abs pathes ($acjf_top_builddir) here to enable a correct fixup also for relative configure calls.
-        [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]="$acjf_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]"
+        dnl we need abs pathes ($acjf_abs_top_builddir) here to enable a correct fixup also for relative configure calls.
+        [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]="$acjf_abs_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]"
       else
         AC_MSG_ERROR([Internal error: internal location specified for ACJF_VAR_PKGNAME but source tree location given in configure.in is nonexistent!])
       fi

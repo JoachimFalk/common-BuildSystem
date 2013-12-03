@@ -1,5 +1,5 @@
 dnl vim: set sw=2 ts=8 syn=config:
-dnl Copyright (C) 2001 - 2006 Joachim Falk <joachim.falk@gmx.de>
+dnl Copyright (C) 2001 - 2013 Joachim Falk <joachim.falk@gmx.de>
 dnl 
 dnl This file is part of the BuildSystem distribution of Joachim Falk;
 dnl you can redistribute it and/or modify it under the terms of the
@@ -28,8 +28,34 @@ AH_TOP(
 ])dnl
 m4_define([ACJF_VAR_SUBPROJECT_DIR], [])dnl
 m4_define([ACJF_VAR_SUBSTVARFIXUP], [[AM_LDFLAGS,AM_CPPFLAGS]])dnl
-acjf_top_builddir=`pwd`
-acjf_top_srcdir=`cd "$srcdir" && pwd`
+m4_define([ACJF_VAR_SHELL_ANONVAR_COUNTER], 0)
+m4_define([ACJF_VAR_M4_ANONMACRO_COUNTER], 0)
+acjf_abs_top_builddir=`pwd`
+acjf_abs_top_srcdir=`cd "$srcdir" && pwd`
+m4_define([ACJF_VAR_ROOT_BUILDDIR], m4_esyscmd([
+  dir="."
+  while test ! -d "$dir/BuildSystem" -o -L "$dir/BuildSystem"; do
+    if test x`cd "$dir" && pwd` = x"/"; then
+      exit 0;
+    fi
+    if test x"$dir" = x"."; then
+      dir=".."
+    else
+      dir="../$dir"
+    fi
+  done
+  # echo -n no newline
+  echo -n "$dir"
+]))dnl
+m4_if(ACJF_VAR_ROOT_BUILDDIR, [], [AC_MSG_ERROR([Cannot find BuildSystem, bailing out!])])
+AC_CONFIG_AUX_DIR(ACJF_VAR_ROOT_BUILDDIR/BuildSystem)
+m4_if(ACJF_VAR_ROOT_BUILDDIR, [.],
+ [acjf_root_srcdir="$srcdir"],
+ [acjf_root_srcdir="$srcdir/ACJF_VAR_ROOT_BUILDDIR"])
+acjf_root_builddir="ACJF_VAR_ROOT_BUILDDIR"
+acjf_abs_root_srcdir=`cd "$acjf_root_srcdir" && pwd`
+acjf_abs_root_builddir=`cd "$acjf_root_builddir" && pwd`
+dnl Predefined search options for <pkgname>_search_list
 acjf_std_incpath=""
 acjf_std_libpath=""
 acjf_std_desc="standard compiler search paths"
@@ -38,23 +64,6 @@ acjf_bundled_desc="source tree"
 acjf_bundled_type="bundled"
 acjf_disabled_desc="disabled"
 acjf_disabled_type="disabled"
-m4_define([ACJF_VAR_ROOT_BUILDDIR], m4_esyscmd([
-  dir="."
-  while test ! -d "$dir/BuildSystem" -o -L "$dir/BuildSystem"; do
-    if test x`cd "$dir" && pwd` = x"/"; then
-      exit 0;
-    fi
-    dir="../$dir"
-  done
-  # echo -n no newline
-  echo -n "$dir"
-]))dnl
-m4_if(ACJF_VAR_ROOT_BUILDDIR, [], [AC_MSG_ERROR([Cannot find BuildSystem, bailing out!])])
-AC_CONFIG_AUX_DIR(ACJF_VAR_ROOT_BUILDDIR/BuildSystem)
-acjf_root_srcdir="$srcdir/ACJF_VAR_ROOT_BUILDDIR"
-acjf_root_builddir="ACJF_VAR_ROOT_BUILDDIR"
-m4_define([ACJF_VAR_SHELL_ANONVAR_COUNTER], 0)
-m4_define([ACJF_VAR_M4_ANONMACRO_COUNTER], 0)
 ])
 
 dnl ACJF_GEN_ANONYMOUS_SHELL_VAR
@@ -73,11 +82,6 @@ AC_REQUIRE([ACJF_INIT])dnl
 AH_BOTTOM(
 [#endif /* _INCLUDED_CONFIG_H */
 ])
-ACJF_M4_FOREACH([ACJF_VAR_SUBSTVAR], ACJF_VAR_SUBSTVARFIXUP,
- [ACJF_VAR_SUBSTVAR=`echo "$ACJF_VAR_SUBSTVAR" | sed dnl Note that [ 	] contains a TAB character!!!
-    -e ["s@\(-I\|-L\|^\|[ 	]\)$acjf_top_srcdir\(/\|$\|[ 	]\)@\1\\$(top_srcdir)\2@g"] dnl
-    -e ["s@\(-I\|-L\|^\|[ 	]\)$acjf_top_builddir\(/\|$\|[ 	]\)@\1\\$(top_builddir)\2@g"]`
-  AC_SUBST(ACJF_VAR_SUBSTVAR)])dnl
 case $ac_aux_dir in
   $srcdir/*)
     auxdir='$(top_srcdir)/'`echo $ac_aux_dir | sed -e "s|^$srcdir/||"`
@@ -98,6 +102,14 @@ esac
 AC_SUBST([root_srcdir])dnl
 root_builddir='$(top_builddir)/'"$acjf_root_builddir";
 AC_SUBST([root_builddir])dnl
+ACJF_M4_FOREACH([ACJF_VAR_SUBSTVAR], ACJF_VAR_SUBSTVARFIXUP,
+ [ACJF_VAR_SUBSTVAR=`echo "$ACJF_VAR_SUBSTVAR" | sed dnl Note that [ 	] contains a TAB character!!!
+    -e ['s@/\.libs$][@@'] -e ['s@/\.libs\([ 	]\)@\1@g'] dnl
+    -e ["s@\(-I\|-L\|^\|[ 	]\)$acjf_abs_top_builddir\(/\|$\|[ 	]\)@\1\\$(top_builddir)\2@g"] dnl
+    -e ["s@\(-I\|-L\|^\|[ 	]\)$acjf_abs_top_srcdir\(/\|$\|[ 	]\)@\1\\$(top_srcdir)\2@g"] dnl
+    -e ["s@\(-I\|-L\|^\|[ 	]\)$acjf_abs_root_builddir\(/\|$\|[ 	]\)@\1\\$(root_builddir)\2@g"] dnl
+    -e ["s@\(-I\|-L\|^\|[ 	]\)$acjf_abs_root_srcdir\(/\|$\|[ 	]\)@\1\\$(root_srcdir)\2@g"]`
+  AC_SUBST(ACJF_VAR_SUBSTVAR)])dnl
 ])
 
 # m4_si nclude([subproject subdir/configure.in.frag])
