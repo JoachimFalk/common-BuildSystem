@@ -322,17 +322,33 @@ AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CO
      [AC_MSG_ERROR([Internal error: internal location specified for ACJF_VAR_PKGNAME but source tree location not given in configure.in!])],
      [_ACJF_SOURCE_TREE_LOCATION_SEARCHER(acjf_var_pkgname_srcdir)
       if test x"$acjf_var_pkgname_srcdir" != x"/invalid" -a -f "$acjf_top_builddir/$acjf_var_pkgname_srcdir/Makefile"; then
-        $1_invalid="no";
         eval [$1_modules=\$${$2}_modules;]
         eval [$1_pkg_config_dir=\$${$2}_pkg_config_dir;]
         acjf_var_old_PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
         PKG_CONFIG_PATH="$acjf_top_builddir/$acjf_var_pkgname_srcdir/pkgconfig"
+        export PKG_CONFIG_PATH
         echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
-        PKG_CHECK_MODULES(
-          [acjf_var_pkg_],
-          [$$1_modules],
-          [$1_invalid="no";],
-          [$1_invalid="yes";])
+
+        if test -n "$PKG_CONFIG" && AC_RUN_LOG([$PKG_CONFIG --exists --print-errors "${$1_modules}"]); then
+          echo "yep"
+          [$1_invalid="no";]
+          [$1_incpath=`$PKG_CONFIG --cflags-only-I "${$1_modules}" 2>/dev/null | sed -e 's/^-I[ 	]*//;s/[ 	][ 	]*-I[ 	]*/ /g'`;]
+          [$1_libpath=`$PKG_CONFIG --libs-only-L   "${$1_modules}" 2>/dev/null | sed -e 's/^-L[ 	]*//;s/[ 	][ 	]*-L[ 	]*/ /g'`;]
+          [$1_cppflags_other=`$PKG_CONFIG --cflags-only-other "${$1_modules}" 2>/dev/null`;]
+          [$1_ldflags_other=`$PKG_CONFIG --libs-only-other "${$1_modules}" 2>/dev/null`;]
+          [$1_libs=`$PKG_CONFIG --libs-only-l "${$1_modules}" 2>/dev/null`;]
+        else
+          echo "nope"
+          [$1_invalid="yes";]
+          _PKG_SHORT_ERRORS_SUPPORTED
+          if test $_pkg_short_errors_supported = yes; then
+            acjf_var_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "$2"`
+          else 
+            acjf_var_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "$2"`
+          fi
+          # Put the nasty error message in config.log where it belongs
+          echo "$acjf_var_PKG_ERRORS" >&AS_MESSAGE_LOG_FD
+        fi
         PKG_CONFIG_PATH=${acjf_var_old_PKG_CONFIG_PATH}
       else
         $1_invalid="yes";
@@ -937,7 +953,8 @@ dnl If not source tree location => execute code if not found
 dnl If source tree location => execute code if found
 AC_DEFUN([ACJF_CHECK_PKG_TESTMACRO], [
   AC_MSG_CHECKING([for $1 package in $$2])
-  if test x"$$2" = x"$acjf_bundled_desc"; then
+  if test x"$[acjf_cv_]ACJF_M4_CANON_DC([$1])[_type]" = x"bundled" -o \
+          x"$[acjf_cv_]ACJF_M4_CANON_DC([$1])[_type]" = x"pkg-config-bundled"; then
     AC_MSG_RESULT([yes]);
     m4_if([$3], [], [true], [$3])
   else
