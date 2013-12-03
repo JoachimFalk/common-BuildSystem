@@ -428,10 +428,14 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
     ], [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [disabled], [
       ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHLIST], [no to disable]ACJF_VAR_DEFAULTMSG)dnl
     ])])])])dnl
-    m4_define([ACJF_VAR_DEFAULTMSG], [[]])dnl only first is marked as default
-    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<configscript:]), [-1], [],
+    dnl only first is marked as default
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [intern\|compile\|extern\|disabled]), [0],
+     [m4_define([ACJF_VAR_DEFAULTMSG], [[]])])
+    dnl set ACJF_VAR_CONFIGSCRIPT from configscript:xxx tag
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [configscript:]), [0],
      [m4_define([ACJF_VAR_CONFIGSCRIPT], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<configscript:\(.*\)], [[\1]]))])dnl
-    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<pkgconfig:]), [-1], [],
+    dnl set ACJF_VAR_PKGCONFIGMOD from pkgconfig:xxx tag
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [pkgconfig:]), [0],
      [m4_define([ACJF_VAR_PKGCONFIGMOD], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<pkgconfig:\(.*\)], [[\1]]))])dnl
   ])dnl
   m4_popdef([ACJF_VAR_DEFAULTMSG])dnl
