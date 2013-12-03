@@ -327,10 +327,9 @@ AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CO
         acjf_var_old_PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
         PKG_CONFIG_PATH="$acjf_abs_top_builddir/$acjf_var_pkgname_srcdir/pkgconfig"
         export PKG_CONFIG_PATH
-        echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
-
+dnl     echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
         if test -n "$PKG_CONFIG" && AC_RUN_LOG([$PKG_CONFIG --exists --print-errors "${$1_modules}"]); then
-          echo "yep"
+dnl       echo "yep"
           [$1_invalid="no";]
           [$1_incpath=`$PKG_CONFIG --cflags-only-I "${$1_modules}" 2>/dev/null | sed -e 's/^-I[ 	]*//;s/[ 	][ 	]*-I[ 	]*/ /g'`;]
           [$1_libpath=`$PKG_CONFIG --libs-only-L   "${$1_modules}" 2>/dev/null | sed -e 's/^-L[ 	]*//;s/[ 	][ 	]*-L[ 	]*/ /g'`;]
@@ -338,7 +337,7 @@ AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CO
           [$1_ldflags_other=`$PKG_CONFIG --libs-only-other "${$1_modules}" 2>/dev/null`;]
           [$1_libs=`$PKG_CONFIG --libs-only-l "${$1_modules}" 2>/dev/null`;]
         else
-          echo "nope"
+dnl       echo "nope"
           [$1_invalid="yes";]
           _PKG_SHORT_ERRORS_SUPPORTED
           if test $_pkg_short_errors_supported = yes; then
@@ -416,6 +415,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
    [ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_TAGS], [[disabled]])])dnl
   m4_pushdef([ACJF_VAR_CONFIGSCRIPT], [])dnl
   m4_pushdef([ACJF_VAR_PKGCONFIGMOD], [])dnl
+  m4_pushdef([ACJF_VAR_WITHOPT], ACJF_M4_DOWNCASE(m4_bpatsubst(ACJF_M4_QUOTE(ACJF_VAR_PKGNAME), [\([^][a-zA-Z0-9]\|[ 	]+\)],[-])))dnl
   m4_pushdef([ACJF_VAR_WITHLIST], [])dnl
   m4_pushdef([ACJF_VAR_DEFAULTMSG], [[ (default)]])dnl
   ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS, [
@@ -436,10 +436,11 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
   ])dnl
   m4_popdef([ACJF_VAR_DEFAULTMSG])dnl
   [unset acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)
-  AC_ARG_WITH(ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME),
-    AS_HELP_STRING([[--with-]ACJF_M4_DOWNCASE(ACJF_VAR_PKGNAME)], ACJF_M4_JOIN(ACJF_VAR_WITHLIST, [[§1]], [, ])),
+  AC_ARG_WITH(ACJF_VAR_WITHOPT,
+    AS_HELP_STRING([[--with-]ACJF_VAR_WITHOPT], ACJF_M4_JOIN(ACJF_VAR_WITHLIST, [[§1]], [, ])),
     [acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[="$withval"])dnl
   m4_popdef([ACJF_VAR_WITHLIST])dnl
+  m4_popdef([ACJF_VAR_WITHOPT])dnl
   m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<extern\>]), [-1], [],
    [m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<pkgconfig:]), [-1],
      [m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<configscript:]), [-1], 
@@ -954,7 +955,8 @@ dnl If source tree location => execute code if found
 AC_DEFUN([ACJF_CHECK_PKG_TESTMACRO], [
   AC_MSG_CHECKING([for $1 package in $$2])
   if test x"$[acjf_cv_]ACJF_M4_CANON_DC([$1])[_type]" = x"bundled" -o \
-          x"$[acjf_cv_]ACJF_M4_CANON_DC([$1])[_type]" = x"pkg-config-bundled"; then
+          x"$[acjf_cv_]ACJF_M4_CANON_DC([$1])[_type]" = x"pkg-config-bundled" -o \
+          x"$[acjf_cv_]ACJF_M4_CANON_DC([$1])[_type]" = x"pkg-config"; then
     AC_MSG_RESULT([yes]);
     m4_if([$3], [], [true], [$3])
   else
@@ -1009,9 +1011,10 @@ AC_DEFUN([ACJF_CHECK_PKG], [AC_REQUIRE([ACJF_INIT])dnl
   dnl echo "[ACJF_VAR_TAGS]: ACJF_VAR_TAGS"
   dnl echo "ACJF_VAR_ARGSLIST"
   dnl check that no extern tag is given
-  m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<extern\>]), [-1],
-   [],
-   [m4_fatal([No extern tag supported in ACJF_CHECK_PKG(]ACJF_M4_QUOTE(ACJF_VAR_PKGNAME)[,]ACJF_M4_QUOTE(ACJF_VAR_TAGS)[,...)!])])dnl
+  m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<extern\>]), [-1], [],
+   [m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<pkgconfig:]), [-1],
+     [m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<configscript:]), [-1],
+       [m4_fatal([No extern tag supported in ACJF_CHECK_PKG(]ACJF_M4_QUOTE(ACJF_VAR_PKGNAME)[,]ACJF_M4_QUOTE(ACJF_VAR_TAGS)[,...) without pkgconfig:xxx or configscript:xxx tags!])])])])dnl
   dnl append intern tag to tags if not found
   m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<intern\>]), [-1],
    [ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_TAGS], [[intern]])])
