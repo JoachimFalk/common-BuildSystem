@@ -489,8 +489,8 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
   ACJF_PKG_CLEARLOC(ACJF_VAR_PKGNAME)dnl
   acjf_var_matchtag=no
   ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS, [
-    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [intern\|compile]), [0], [
-      case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [intern\|compile]), [0],
+     [case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
         ""|yes|intern)
           m4_if(ACJF_VAR_PKGCONFIGMOD, [],
            [m4_if(ACJF_VAR_CONFIGSCRIPT, [],
@@ -508,8 +508,9 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
           acjf_var_matchtag=yes
           ;;
       esac
-     ], [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [extern], [
-      case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
+     ])dnl
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [extern\|compile]), [0],
+     [case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
         ""|yes|extern)
           m4_if(ACJF_VAR_PKGCONFIGMOD, [],
            [m4_if(ACJF_VAR_CONFIGSCRIPT, [],
@@ -548,14 +549,15 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
           acjf_var_matchtag=yes
           ;;
       esac
-     ], [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [disabled], [
-      case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
+     ])dnl
+    m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [disabled],
+     [case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
         ""|no)
           ACJF_PKG_ADDLOC_DISABLED(ACJF_VAR_PKGNAME)
           acjf_var_matchtag=yes
           ;;
       esac
-     ])])])dnl
+     ])dnl
   ])dnl
   if test x"$acjf_var_matchtag" = x"no"; then
     AC_MSG_ERROR([Option --with-]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)=$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[ is not supported!])
@@ -1092,13 +1094,30 @@ AC_DEFUN([ACJF_CONFIG_PKG], [dnl
   dnl echo "[FLUPS_VAR_SUBDIR]:  ACJF_VAR_SUBDIR"
   dnl echo "[FLUPS_VAR_TAGS]:    ACJF_VAR_TAGS"
   ACJF_ARG_WITHPKG(ACJF_VAR_PKGNAME, ACJF_M4_LIST_PUSH_BACK(ACJF_VAR_TAGS,[[compile]]))
-  if echo ["$acjf_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_search_list " | grep "^[ 	]*acjf_bundled[ 	]"] >/dev/null; then
-    if test -d "$srcdir/ACJF_VAR_SUBDIR"; then
+  acjf_var_bundled=no
+  acjf_var_alt=no
+  for acjf_var_item in $[acjf_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_search_list]; do
+    eval acjf_var_item_type=\$${acjf_var_item}_type;
+    if test x"$acjf_var_item_type" = x"bundled" -o \
+            x"$acjf_var_item_type" = x"pkg-config-bundled"; then
+      acjf_var_bundled=yes
+    else
+      acjf_var_alt=yes
+    fi
+  done
+  if test -d "$srcdir/ACJF_VAR_SUBDIR"; then
+    if test x"$acjf_var_bundled" = x"yes"; then
       AC_CONFIG_SUBDIRS(ACJF_VAR_SUBDIR)
-    elif test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" = x"yes"; then
+    fi
+  else
+    if test x"$acjf_var_bundled" = x"yes" -a x"$acjf_var_alt" = x"no"; then
       AC_MSG_ERROR([source tree version for ]ACJF_VAR_PKGNAME[ is missing!])
     fi
   fi
+  unset acjf_var_bundled
+  unset acjf_var_alt
+  unset acjf_var_item
+  unset acjf_var_item_type
   m4_popdef([ACJF_VAR_PKGNAME])
   m4_popdef([ACJF_VAR_SUBDIR])
   m4_popdef([ACJF_VAR_TAGS])
