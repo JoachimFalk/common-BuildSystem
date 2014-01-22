@@ -22,15 +22,65 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>])
 AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT],
 [dnl
-AC_LANG_PUSH([C++])
-ACJF_CHECK_LIB(
-  [CoSupport],
-  [Support],
-  [
-#include <iostream>
-#include <CoSupport/Streams/DebugOStream.hpp>],
-  [CoSupport::Streams::dout << "Hello World !" << std::endl;],
-  [cosupport-streams],
-  [$1], [$2])
-AC_LANG_POP
+  ACJF_ARG_WITHPKG([CoSupport], [[intern],[extern],[pkgconfig:libcosupport]])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-allocators])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-initializer])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-math])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-path])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-random])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-smartptr])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-streams])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-string])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-systemc])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-tracing])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-xerces])dnl
+  AC_LANG_PUSH([C++])
+  ACJF_CHECK_LIB_TESTER([libcosupport-allocators], [Support],
+    [ACJF_CHECK_PKG_TESTMACRO],
+    [$1], [$2])
+  ACJF_CHECK_LIB_TESTER([libcosupport-initializer], [Support],
+    [ACJF_CHECK_PKG_TESTMACRO],
+    [$1], [$2])
+  ACJF_CHECK_LIB_TESTER([libcosupport-math], [Support],
+    [ACJF_CHECK_PKG_TESTMACRO],
+    [$1], [$2])
+  ACJF_CHECK_LIB_TESTER([libcosupport-path], [Support],
+    [ACJF_CHECK_PKG_TESTMACRO],
+    [$1], [$2])
+  ACJF_CHECK_LIB_TESTER([libcosupport-random], [Support],
+    [ACJF_CHECK_PKG_TESTMACRO],
+    [$1], [$2])
+  ACJF_CHECK_LIB_TESTER([libcosupport-smartptr], [Support],
+    [ACJF_CHECK_PKG_TESTMACRO],
+    [$1], [$2])
+  ACJF_CHECK_LIB_TESTER([libcosupport-streams], [Support],
+    [ACJF_CHECK_PKG_TESTMACRO],
+    [$1], [$2])
+  ACJF_CHECK_LIB_TESTER([libcosupport-string], [Support],
+    [ACJF_CHECK_PKG_TESTMACRO],
+    [$1], [$2])
+  ACJF_CHECK_LIB_TESTER([libcosupport-systemc], [Support],
+    [ACJF_CHECK_PKG_TESTMACRO],
+    [$1], [$2])
+  ACJF_CHECK_LIB_TESTER([libcosupport-tracing], [Support],
+    [ACJF_CHECK_PKG_TESTMACRO],
+    [$1], [$2])
+  ACJF_CHECK_LIB_TESTER([libcosupport-xerces], [Support],
+    [ACJF_CHECK_PKG_TESTMACRO],
+    [$1], [$2])
+  ACJF_CHECK_LIB_TESTER([CoSupport], [Support],
+    [ACJF_CHECK_PKG_TESTMACRO],
+    [$1], [$2])
+  AC_LANG_POP
+dnl  AC_LANG_PUSH([C++])
+dnl  ACJF_CHECK_LIB(
+dnl    [CoSupport],
+dnl    [Support],
+dnl    [
+dnl  #include <iostream>
+dnl  #include <CoSupport/Streams/DebugOStream.hpp>],
+dnl    [CoSupport::Streams::dout << "Hello World !" << std::endl;],
+dnl    [cosupport-streams],
+dnl    [$1], [$2])
+dnl  AC_LANG_POP
 ])
