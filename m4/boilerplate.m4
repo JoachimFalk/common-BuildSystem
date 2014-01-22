@@ -64,6 +64,9 @@ acjf_bundled_desc="source tree"
 acjf_bundled_type="bundled"
 acjf_disabled_desc="disabled"
 acjf_disabled_type="disabled"
+if test -f pkgconfig/.pkg_config_path; then
+  rm -f pkgconfig/.pkg_config_path
+fi
 ])
 
 dnl ACJF_GEN_ANONYMOUS_SHELL_VAR

@@ -102,7 +102,6 @@ AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG_INTERN], [AC_REQUIRE([ACJF_INIT])dnl
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="source tree via pkg-config for $2"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="pkg-config-bundled"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_modules="$2"];
-  ACJF_VAR_ANONYMOUS_SHELL_VAR[_pkg_config_dir=""];
   dnl Register vars on search list!
   [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] ACJF_VAR_ANONYMOUS_SHELL_VAR";
   m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
@@ -284,92 +283,102 @@ AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CO
   m4_ifdef([ACJF_VAR_PKGNAME],     [], [m4_fatal([Missing definition of ACJF_VAR_PKGNAME macro!])])dnl
   eval [$1_desc=\$${$2}_desc;]
   eval [$1_type=\$${$2}_type;]
-  if test [x"$$1_type" = x"bundled";] then
-    m4_if(ACJF_VAR_SUBDIR_LIST, [], 
-     [AC_MSG_ERROR([Internal error: internal location specified for ACJF_VAR_PKGNAME but source tree location not given in configure.in!])],
-     [_ACJF_SOURCE_TREE_LOCATION_SEARCHER(acjf_var_pkgname_srcdir)
-      if test x"$acjf_var_pkgname_srcdir" != x"/invalid" -a -f "$acjf_abs_top_builddir/$acjf_var_pkgname_srcdir/Makefile"; then
-        $1_invalid="no";
-        if test -d "$srcdir/$acjf_var_pkgname_srcdir/pkginclude"; then
-          $1_incpath="$acjf_abs_top_builddir/$acjf_var_pkgname_srcdir/pkginclude $srcdir/$acjf_var_pkgname_srcdir/pkginclude"
-        else
-          $1_incpath="$acjf_abs_top_builddir/$acjf_var_pkgname_srcdir $srcdir/$acjf_var_pkgname_srcdir/include $srcdir/$acjf_var_pkgname_srcdir"
-        fi
-        $1_libpath="$acjf_abs_top_builddir/$acjf_var_pkgname_srcdir"
-        $1_cppflags_other=""
-        $1_ldflags_other=""
-        $1_libs=""
-      else
-        $1_invalid="yes";
-      fi
-      unset acjf_var_pkgname_srcdir
-     ])
-  elif test [x"$$1_type" = x"pkg-config";] then
-    eval [$1_modules=\$${$2}_modules;]
-    eval [$1_pkg_config_dir=\$${$2}_pkg_config_dir;]
-    acjf_var_old_PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
-
-    PKG_CHECK_MODULES(
-      [acjf_var_pkg_],
-      [$$1_modules],
-      [$1_invalid="no";],
-      [$1_invalid="yes";])
-
-
-    PKG_CONFIG_PATH=${acjf_var_old_PKG_CONFIG_PATH}
-  elif test [x"$$1_type" = x"pkg-config-bundled";] then
-    m4_if(ACJF_VAR_SUBDIR_LIST, [], 
-     [AC_MSG_ERROR([Internal error: internal location specified for ACJF_VAR_PKGNAME but source tree location not given in configure.in!])],
-     [_ACJF_SOURCE_TREE_LOCATION_SEARCHER(acjf_var_pkgname_srcdir)
-      if test x"$acjf_var_pkgname_srcdir" != x"/invalid" -a -f "$acjf_abs_top_builddir/$acjf_var_pkgname_srcdir/Makefile"; then
-        eval [$1_modules=\$${$2}_modules;]
-        eval [$1_pkg_config_dir=\$${$2}_pkg_config_dir;]
-        acjf_var_old_PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
-        PKG_CONFIG_PATH="$acjf_abs_top_builddir/$acjf_var_pkgname_srcdir/pkgconfig"
-        export PKG_CONFIG_PATH
-dnl     echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
-        if test -n "$PKG_CONFIG" && AC_RUN_LOG([$PKG_CONFIG --exists --print-errors "${$1_modules}"]); then
-dnl       echo "yep"
-          [$1_invalid="no";]
-          [$1_incpath=`$PKG_CONFIG --cflags-only-I "${$1_modules}" 2>/dev/null | sed -e 's/^-I[ 	]*//;s/[ 	][ 	]*-I[ 	]*/ /g'`;]
-          [$1_libpath=`$PKG_CONFIG --libs-only-L   "${$1_modules}" 2>/dev/null | sed -e 's/^-L[ 	]*//;s/[ 	][ 	]*-L[ 	]*/ /g'`;]
-          [$1_cppflags_other=`$PKG_CONFIG --cflags-only-other "${$1_modules}" 2>/dev/null`;]
-          [$1_ldflags_other=`$PKG_CONFIG --libs-only-other "${$1_modules}" 2>/dev/null`;]
-          [$1_libs=`$PKG_CONFIG --libs-only-l "${$1_modules}" 2>/dev/null`;]
-        else
-dnl       echo "nope"
-          [$1_invalid="yes";]
-          _PKG_SHORT_ERRORS_SUPPORTED
-          if test $_pkg_short_errors_supported = yes; then
-            acjf_var_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "$2"`
-          else 
-            acjf_var_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "$2"`
-          fi
-          # Put the nasty error message in config.log where it belongs
-          echo "$acjf_var_PKG_ERRORS" >&AS_MESSAGE_LOG_FD
-        fi
-        PKG_CONFIG_PATH=${acjf_var_old_PKG_CONFIG_PATH}
-      else
-        $1_invalid="yes";
-      fi
-      unset acjf_var_pkgname_srcdir
-     ])
-  else
-    eval [$1_invalid=\$${$2}_invalid;]
-    eval [$1_incpath=\$${$2}_incpath;]
-    eval [$1_libpath=\$${$2}_libpath;]
-    eval [$1_cppflags_other=\$${$2}_cppflags_other;]
-    eval [$1_ldflags_other=\$${$2}_ldflags_other;]
-    eval [$1_libs=\$${$2}_libs;]
+  if test [x"${$1_type}" = x"bundled" -o x"${$1_type}" = x"pkg-config-bundled";] then
+    m4_if(ACJF_VAR_SUBDIR_LIST, [],
+     [AC_MSG_ERROR([Internal error: internal location specified for ACJF_VAR_PKGNAME but source tree location not given in configure.in!])])dnl
+    _ACJF_SOURCE_TREE_LOCATION_SEARCHER(acjf_var_pkgname_srcdir)dnl
+    if test x"${acjf_var_pkgname_srcdir}" != x"/invalid" -a -f "${acjf_abs_top_builddir}/${acjf_var_pkgname_srcdir}/Makefile"; then
+      dnl we need abs pathes (${acjf_abs_top_srcdir}) here to enable a correct fixup also for relative configure calls.
+      [$1_srcdir="${acjf_abs_top_srcdir}/${acjf_var_pkgname_srcdir}"]
+      dnl we need abs pathes (${acjf_abs_top_builddir}) here to enable a correct fixup also for relative configure calls.
+      [$1_builddir="${acjf_abs_top_builddir}/${acjf_var_pkgname_srcdir}"]
+    else
+      [$1_invalid="yes"]
+    fi
   fi
-dnl echo ["$1_desc=$$1_desc";]
-dnl echo ["$1_type=$$1_type";]
-dnl echo ["$1_invalid=$$1_invalid";]
-dnl echo ["$1_incpath=$$1_incpath";]
-dnl echo ["$1_libpath=$$1_libpath";]
-dnl echo ["$1_cppflags_other=$$1_cppflags_other";]
-dnl echo ["$1_ldflags_other=$$1_ldflags_other";]
-dnl echo ["$1_libs=$$1_libs";]
+  if test [x"${$1_invalid}" != x"yes"]; then
+    if test [x"${$1_type}" = x"bundled";] then
+      if test [-d "${$1_srcdir}/pkginclude"]; then
+        [$1_incpath="${$1_builddir}/pkginclude ${$1_srcdir}/pkginclude"]
+      else
+        [$1_incpath="${$1_builddir} ${$1_srcdir}/include ${$1_srcdir}"]
+      fi
+      dnl we need abs pathes ($acjf_abs_top_builddir) here to enable a correct fixup also for relative configure calls.
+      [$1_libpath="${$1_builddir}"]
+      [$1_cppflags_other=""]
+      [$1_ldflags_other=""]
+      [$1_libs=""]
+      [$1_invalid="no"]
+    elif test [x"${$1_type}" = x"pkg-config" -o x"${$1_type}" = x"pkg-config-bundled";] then
+      eval [$1_modules=\$${$2}_modules;]
+      if test [x"${$1_type}" = x"pkg-config-bundled";] then
+        [$1_pkg_config_dir="${$1_builddir}/pkgconfig"];
+        [$1_pkg_config_path="${$1_pkg_config_dir}"]
+        if test -f "${$1_pkg_config_dir}/.pkg_config_path"; then
+          while read line; do
+            case "$line" in
+              "") # ignore
+                ;;
+              /*) # abs path
+                [$1_pkg_config_path="${$1_pkg_config_path}:${line}"]
+                ;;
+              *) # rel path
+                [$1_pkg_config_path="${$1_pkg_config_path}:${$1_pkg_config_dir}/${line}"]
+                ;;
+            esac
+          done < "${$1_pkg_config_dir}/.pkg_config_path"
+        fi
+      else # x"${$1_type}" = x"pkg-config"
+        eval [$1_pkg_config_dir=\$${$2}_pkg_config_dir;]
+        [$1_pkg_config_path="${$1_pkg_config_dir}"]
+      fi
+      acjf_var_old_PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
+      if test x"$PKG_CONFIG_PATH" = x""; then
+        [PKG_CONFIG_PATH="${$1_pkg_config_path}"]
+      else
+        [PKG_CONFIG_PATH="${$1_pkg_config_path}:${PKG_CONFIG_PATH}"]
+      fi
+      export PKG_CONFIG_PATH
+      dnl echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
+      if test -n "$PKG_CONFIG" && AC_RUN_LOG([$PKG_CONFIG --exists --print-errors "${$1_modules}"]); then
+        dnl echo "yep"
+        [$1_invalid="no";]
+        [$1_incpath=`$PKG_CONFIG --cflags-only-I "${$1_modules}" 2>/dev/null | sed -e 's/^-I[ 	]*//;s/[ 	][ 	]*-I[ 	]*/ /g;s/^[ 	]*//;s/[ 	]*$//'`;]
+        [$1_libpath=`$PKG_CONFIG --libs-only-L   "${$1_modules}" 2>/dev/null | sed -e 's/^-L[ 	]*//;s/[ 	][ 	]*-L[ 	]*/ /g;s/^[ 	]*//;s/[ 	]*$//'`;]
+        [$1_cppflags_other=`$PKG_CONFIG --cflags-only-other "${$1_modules}" 2>/dev/null`;]
+        [$1_ldflags_other=`$PKG_CONFIG --libs-only-other "${$1_modules}" 2>/dev/null`;]
+        [$1_libs=`$PKG_CONFIG --libs-only-l "${$1_modules}" 2>/dev/null`;]
+      else
+        dnl echo "nope"
+        [$1_invalid="yes";]
+        _PKG_SHORT_ERRORS_SUPPORTED
+        if test $_pkg_short_errors_supported = yes; then
+          acjf_var_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "$2"`
+        else 
+          acjf_var_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "$2"`
+        fi
+        # Put the nasty error message in config.log where it belongs
+        echo "$acjf_var_PKG_ERRORS" >&AS_MESSAGE_LOG_FD
+      fi
+      PKG_CONFIG_PATH=${acjf_var_old_PKG_CONFIG_PATH}
+    else
+      eval [$1_invalid=\$${$2}_invalid;]
+      eval [$1_incpath=\$${$2}_incpath;]
+      eval [$1_libpath=\$${$2}_libpath;]
+      eval [$1_cppflags_other=\$${$2}_cppflags_other;]
+      eval [$1_ldflags_other=\$${$2}_ldflags_other;]
+      eval [$1_libs=\$${$2}_libs;]
+    fi
+  fi
+  unset acjf_var_pkgname_srcdir
+  dnl echo ["$1_desc=$$1_desc";]
+  dnl echo ["$1_type=$$1_type";]
+  dnl echo ["$1_invalid=$$1_invalid";]
+  dnl echo ["$1_incpath=$$1_incpath";]
+  dnl echo ["$1_libpath=$$1_libpath";]
+  dnl echo ["$1_cppflags_other=$$1_cppflags_other";]
+  dnl echo ["$1_ldflags_other=$$1_ldflags_other";]
+  dnl echo ["$1_libs=$$1_libs";]
 ])
 
 dnl ACJF_ARG_WITHPKG(
@@ -415,30 +424,47 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
    [ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_TAGS], [[disabled]])])dnl
   m4_pushdef([ACJF_VAR_CONFIGSCRIPT], [])dnl
   m4_pushdef([ACJF_VAR_PKGCONFIGMOD], [])dnl
+  m4_pushdef([ACJF_VAR_INTERNMSG], [[intern to use the source tree version]])dnl
+  m4_pushdef([ACJF_VAR_COMPILEMSG], [[intern to compile the source tree version]])dnl
+  m4_pushdef([ACJF_VAR_EXTERNMSG], [[prefix or extern to use an installed library]])dnl
+  dnl Iterate over tags to set ACJF_VAR_CONFIGSCRIPT or ACJF_VAR_PKGCONFIGMOD as well as update the messages for
+  dnl intern, compile, extern according to the modus used to locate the package.
+  ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS, [
+    dnl set ACJF_VAR_CONFIGSCRIPT from configscript:xxx tag
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [configscript:]), [0],
+     [m4_define([ACJF_VAR_CONFIGSCRIPT], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<configscript:\(.*\)], [[\1]]))dnl
+      m4_define([ACJF_VAR_INTERNMSG],  [m4_fatal([Internal error: source tree location possible for ]ACJF_VAR_PKGNAME[ but configscript: modus used to locate the package not supported for source tree location!])])dnl
+      m4_define([ACJF_VAR_COMPILEMSG], [m4_fatal([Internal error: compiling package possible for ]ACJF_VAR_PKGNAME[ but configscript: modus used to locate the package not supported for source tree location!])])dnl
+      m4_define([ACJF_VAR_EXTERNMSG], [[extern or location of configscript ]ACJF_VAR_CONFIGSCRIPT[ to use an installed library]])])dnl
+    dnl set ACJF_VAR_PKGCONFIGMOD from pkgconfig:xxx tag
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [pkgconfig:]), [0],
+     [m4_define([ACJF_VAR_PKGCONFIGMOD], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<pkgconfig:\(.*\)], [[\1]]))dnl
+      m4_define([ACJF_VAR_INTERNMSG],  [[intern to use the source tree version for pkg-config module ]ACJF_VAR_PKGCONFIGMOD])dnl
+      m4_define([ACJF_VAR_COMPILEMSG], [[intern to compile the source tree version for pkg-config module ]ACJF_VAR_PKGCONFIGMOD])dnl
+      m4_define([ACJF_VAR_EXTERNMSG], [[extern or location of pkg-config module ]ACJF_VAR_PKGCONFIGMOD[ to use an installed library]])])dnl
+  ])dnl
+  dnl Iterate over tags to assemble the help message for the --with-<pkgname> option.
   m4_pushdef([ACJF_VAR_WITHOPT], ACJF_M4_DOWNCASE(m4_bpatsubst(ACJF_M4_QUOTE(ACJF_VAR_PKGNAME), [\([^][a-zA-Z0-9]\|[ 	]+\)],[-])))dnl
   m4_pushdef([ACJF_VAR_WITHLIST], [])dnl
   m4_pushdef([ACJF_VAR_DEFAULTMSG], [[ (default)]])dnl
   ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS, [
     m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [intern], [
-      ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHLIST], [intern to use the source tree version]ACJF_VAR_DEFAULTMSG)dnl
+      ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHLIST], ACJF_VAR_INTERNMSG[]ACJF_VAR_DEFAULTMSG)dnl
     ], [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [compile], [
-      ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHLIST], [intern to compile the source tree version]ACJF_VAR_DEFAULTMSG)dnl
+      ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHLIST], ACJF_VAR_COMPILEMSG[]ACJF_VAR_DEFAULTMSG)dnl
     ], [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [extern], [
-      ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHLIST], [prefix or extern to use an installed library]ACJF_VAR_DEFAULTMSG)dnl
+      ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHLIST], ACJF_VAR_EXTERNMSG[]ACJF_VAR_DEFAULTMSG)dnl
     ], [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [disabled], [
       ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHLIST], [no to disable]ACJF_VAR_DEFAULTMSG)dnl
     ])])])])dnl
     dnl only first is marked as default
     m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [intern\|compile\|extern\|disabled]), [0],
      [m4_define([ACJF_VAR_DEFAULTMSG], [[]])])
-    dnl set ACJF_VAR_CONFIGSCRIPT from configscript:xxx tag
-    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [configscript:]), [0],
-     [m4_define([ACJF_VAR_CONFIGSCRIPT], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<configscript:\(.*\)], [[\1]]))])dnl
-    dnl set ACJF_VAR_PKGCONFIGMOD from pkgconfig:xxx tag
-    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [pkgconfig:]), [0],
-     [m4_define([ACJF_VAR_PKGCONFIGMOD], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<pkgconfig:\(.*\)], [[\1]]))])dnl
   ])dnl
   m4_popdef([ACJF_VAR_DEFAULTMSG])dnl
+  m4_popdef([ACJF_VAR_EXTERNMSG])dnl
+  m4_popdef([ACJF_VAR_COMPILEMSG])dnl
+  m4_popdef([ACJF_VAR_INTERNMSG])dnl
   [unset acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)
   AC_ARG_WITH(ACJF_VAR_WITHOPT,
     AS_HELP_STRING([[--with-]ACJF_VAR_WITHOPT], ACJF_M4_JOIN(ACJF_VAR_WITHLIST, [[§1]], [, ])),
@@ -799,6 +825,11 @@ dnl       echo "LIBS: $LIBS"
         fi
         unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]
       done
+    elif test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"bundled" -o \
+            x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled"; then
+      # Reevaluate as we do not cache all stuff for bundled software
+      ACJF_VAR_ANON_SHELLVARPREFIX[item]="[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)"
+      ACJF_PKG_EVALLOC([acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME), ACJF_VAR_ANON_SHELLVARPREFIX[item])
     fi
 
     CPPFLAGS="$ACJF_VAR_ANON_SHELLVARPREFIX[CPPFLAGS]";
@@ -807,6 +838,7 @@ dnl       echo "LIBS: $LIBS"
     unset ACJF_VAR_ANON_SHELLVARPREFIX[CPPFLAGS];
     unset ACJF_VAR_ANON_SHELLVARPREFIX[LDFLAGS];
     unset ACJF_VAR_ANON_SHELLVARPREFIX[LIBS];
+
   dnl echo "Are here: ACJF_M4_CANON_DC([ACJF_CHECK_LIB_TESTER::A::$1::subdir::$2]) [[END]]"
   ])dnl end of once code
 
@@ -824,33 +856,30 @@ dnl       echo "LIBS: $LIBS"
   ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_CHECK_LIB_TESTER::B::$1::subdir::$2]), [
     dnl echo "Are here: ACJF_M4_CANON_DC([ACJF_CHECK_LIB_TESTER::B::$1::subdir::$2]) [[BEGIN]]"
 
-    if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"$acjf_bundled_type"; then
-      _ACJF_SOURCE_TREE_LOCATION_SEARCHER(ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir])
-      if test x"$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]" != x"/invalid"; then
-        dnl we need abs pathes ($acjf_abs_top_srcdir) here to enable a correct fixup also for relative configure calls.
-        [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]="$acjf_abs_top_srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]" 
-        dnl we need abs pathes ($acjf_abs_top_builddir) here to enable a correct fixup also for relative configure calls.
-        [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]="$acjf_abs_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]"
-        if test -d "$srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/pkginclude"; then
-          dnl we need abs pathes ($acjf_abs_top_srcdir/$acjf_abs_top_builddir) here to enable a correct fixup also for relative configure calls.
-          [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="$acjf_abs_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/pkginclude $acjf_abs_top_srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/pkginclude"
-        else
-          dnl we need abs pathes ($acjf_abs_top_srcdir/$acjf_abs_top_builddir) here to enable a correct fixup also for relative configure calls.
-          [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]="$acjf_abs_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir] $acjf_abs_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]/include $acjf_abs_top_srcdir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]"
-        fi
-        dnl we need abs pathes ($acjf_abs_top_builddir) here to enable a correct fixup also for relative configure calls.
-        [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]="$acjf_abs_top_builddir/$ACJF_VAR_ANON_SHELLVARPREFIX[pkgname_srcdir]"
-      else
-        AC_MSG_ERROR([Internal error: internal location specified for ACJF_VAR_PKGNAME but source tree location given in configure.in is nonexistent!])
-      fi
-    fi
+dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]"
+dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]"
+dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]"
+dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]"
+dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_cppflags_other]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_cppflags_other]"
+dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_ldflags_other]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_ldflags_other]"
+dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]"
 
-    dnl echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]"
-    dnl echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]"
-    dnl echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]"
-    dnl echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_cppflags_other]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_cppflags_other]"
-    dnl echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_ldflags_other]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_ldflags_other]"
-    dnl echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]"
+    if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"bundled" -o \
+            x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled"; then
+      [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]"
+      [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]"
+    fi
+    if test \( x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config" -o \
+               x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled" \) -a \
+            -d "$srcdir/pkgconfig"; then
+      test -d pkgconfig || mkdir pkgconfig
+      touch pkgconfig/.pkg_config_path
+      echo "$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_pkg_config_path]" | tr ':' '\n' | while read line; do
+        echo "$line"
+      done >> pkgconfig/.pkg_config_path
+      [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]"
+      [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]"
+    fi
 
     if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" != x"$acjf_disabled_type"; then
       ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND]="yes"
@@ -882,11 +911,15 @@ dnl       echo "LIBS: $LIBS"
         [AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_USE_SRCDIR_VERSION], [false])])
       m4_divert_pop([INIT_PREPARE])
       AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_USE_SRCDIR_VERSION],
-        test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"$[acjf_bundled_type]")
-      if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"$[acjf_bundled_type]"; then
-        dnl no caching of incpath and libpath for source tree location
+        test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"bundled" -o \
+             x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled")
+      if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"bundled" -o \
+              x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled"; then
+        dnl no caching of incpath, libpath, srcdir, builddir for bundled stuff
         unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]
         unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]
+        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]
+        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]
       fi])
 
     AC_SUBST(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH])dnl
