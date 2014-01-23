@@ -36,6 +36,11 @@ dnl Example:
 dnl   ACJF_M4_QUOTE([foo],[bar])
 dnl Result:
 dnl   [foo],[bar]
+dnl
+dnl Example:
+dnl   ACJF_M4_QUOTE(ACJF_M4_QUOTE([foo],[bar]))
+dnl Result:
+dnl   [[foo],[bar]]
 AC_DEFUN([ACJF_M4_QUOTE], [[$@]])dnl
 dnl ACJF_M4_UNQUOTE(<arg>)
 dnl
