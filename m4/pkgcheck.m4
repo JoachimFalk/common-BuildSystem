@@ -417,6 +417,8 @@ m4_divert_push([INIT_PREPARE])
 ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
   dnl Setup ACJF_VAR_PKGNAME and ACJF_VAR_TAGS macros
   m4_pushdef([ACJF_VAR_PKGNAME], [[$1]])dnl
+  dnl default srcdir subdirectory is <pkgname>
+  m4_pushdef([ACJF_VAR_SUBDIR], [[$1]])dnl
   dnl if no tags are specified add extern tag
   m4_if([$2], [],
    [m4_pushdef([ACJF_VAR_TAGS], [[[extern]]])],
@@ -424,35 +426,59 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
   dnl append disabled tag to tags if not found
   m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<disabled\>]), [-1],
    [ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_TAGS], [[disabled]])])dnl
+  dnl Iterate over tags to set ACJF_VAR_SUBDIR from inter:xxx or compile:xxx tag
+  ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS,
+   [dnl set ACJF_VAR_SUBDIR from intern:xxx or compile:xxx tag
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [intern:\|compile:]), [0],
+     [m4_define([ACJF_VAR_SUBDIR], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^[^:]*:\(.*\)], [[\1]]))])dnl
+   ])dnl
   m4_pushdef([ACJF_VAR_CONFIGSCRIPT], [])dnl
   m4_pushdef([ACJF_VAR_PKGCONFIGMOD], [])dnl
-  m4_pushdef([ACJF_VAR_INTERNMSG], [[intern to use the source tree version]])dnl
-  m4_pushdef([ACJF_VAR_COMPILEMSG], [[intern to compile the source tree version]])dnl
+  m4_pushdef([ACJF_VAR_INTERNMSG], [[intern to use the source tree version from the ]ACJF_VAR_SUBDIR[ directory]])dnl
+  m4_pushdef([ACJF_VAR_COMPILEMSG], [[intern to compile the source tree version located in the ]ACJF_VAR_SUBDIR[ directory]])dnl
   m4_pushdef([ACJF_VAR_EXTERNMSG], [[prefix or extern to use an installed library]])dnl
   dnl Iterate over tags to set ACJF_VAR_CONFIGSCRIPT or ACJF_VAR_PKGCONFIGMOD as well as update the messages for
   dnl intern, compile, extern according to the modus used to locate the package.
-  ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS, [
-    dnl set ACJF_VAR_CONFIGSCRIPT from configscript:xxx tag
+  ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS,
+   [dnl set ACJF_VAR_CONFIGSCRIPT from configscript:xxx tag
     m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [configscript:]), [0],
-     [m4_define([ACJF_VAR_CONFIGSCRIPT], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<configscript:\(.*\)], [[\1]]))dnl
+     [m4_define([ACJF_VAR_CONFIGSCRIPT], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^configscript:\(.*\)], [[\1]]))dnl
       m4_define([ACJF_VAR_INTERNMSG],  [m4_fatal([Internal error: source tree location possible for ]ACJF_VAR_PKGNAME[ but configscript: modus used to locate the package not supported for source tree location!])])dnl
       m4_define([ACJF_VAR_COMPILEMSG], [m4_fatal([Internal error: compiling package possible for ]ACJF_VAR_PKGNAME[ but configscript: modus used to locate the package not supported for source tree location!])])dnl
       m4_define([ACJF_VAR_EXTERNMSG], [[extern or location of configscript ]ACJF_VAR_CONFIGSCRIPT[ to use an installed library]])])dnl
     dnl set ACJF_VAR_PKGCONFIGMOD from pkgconfig:xxx tag
     m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [pkgconfig:]), [0],
-     [m4_define([ACJF_VAR_PKGCONFIGMOD], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<pkgconfig:\(.*\)], [[\1]]))dnl
-      m4_define([ACJF_VAR_INTERNMSG],  [[intern to use the source tree version for pkg-config module ]ACJF_VAR_PKGCONFIGMOD])dnl
-      m4_define([ACJF_VAR_COMPILEMSG], [[intern to compile the source tree version for pkg-config module ]ACJF_VAR_PKGCONFIGMOD])dnl
+     [m4_define([ACJF_VAR_PKGCONFIGMOD], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^pkgconfig:\(.*\)], [[\1]]))dnl
+      m4_define([ACJF_VAR_INTERNMSG],  [[intern to use the source tree version from the ]ACJF_VAR_SUBDIR[ directory to provide the pkg-config module ]ACJF_VAR_PKGCONFIGMOD])dnl
+      m4_define([ACJF_VAR_COMPILEMSG], [[intern to compile the source tree version located in the ]ACJF_VAR_SUBDIR[ directory to provide the pkg-config module ]ACJF_VAR_PKGCONFIGMOD])dnl
       m4_define([ACJF_VAR_EXTERNMSG], [[extern or location of pkg-config module ]ACJF_VAR_PKGCONFIGMOD[ to use an installed library]])])dnl
-  ])dnl
+   ])dnl
+  dnl m4_pattern_allow([ACJF_VAR_PKGNAME])dnl
+  dnl echo "[ACJF_VAR_PKGNAME]: ACJF_M4_QUOTE(ACJF_VAR_PKGNAME)"
+  dnl m4_pattern_allow([ACJF_VAR_SUBDIR])dnl
+  dnl echo "[ACJF_VAR_SUBDIR]: ACJF_M4_QUOTE(ACJF_VAR_SUBDIR)"
+  dnl m4_pattern_allow([ACJF_VAR_TAGS])dnl
+  dnl echo "[ACJF_VAR_TAGS]: ACJF_M4_QUOTE(ACJF_VAR_TAGS)"
+  dnl m4_pattern_allow([ACJF_VAR_CONFIGSCRIPT])dnl
+  dnl echo "[ACJF_VAR_CONFIGSCRIPT]: ACJF_M4_QUOTE(ACJF_VAR_CONFIGSCRIPT)"
+  dnl m4_pattern_allow([ACJF_VAR_PKGCONFIGMOD])dnl
+  dnl echo "[ACJF_VAR_PKGCONFIGMOD]: ACJF_M4_QUOTE(ACJF_VAR_PKGCONFIGMOD)"
+  dnl m4_pattern_allow([ACJF_VAR_INTERNMSG])dnl
+  dnl echo "[ACJF_VAR_INTERNMSG]: ACJF_M4_QUOTE(ACJF_VAR_INTERNMSG)"
+  dnl m4_pattern_allow([ACJF_VAR_COMPILEMSG])dnl
+  dnl echo "[ACJF_VAR_COMPILEMSG]: ACJF_M4_QUOTE(ACJF_VAR_COMPILEMSG)"
+  dnl m4_pattern_allow([ACJF_VAR_EXTERNMSG])dnl
+  dnl echo "[ACJF_VAR_EXTERNMSG]: ACJF_M4_QUOTE(ACJF_VAR_EXTERNMSG)"
   dnl Iterate over tags to assemble the help message for the --with-<pkgname> option.
   m4_pushdef([ACJF_VAR_WITHOPT], ACJF_M4_DOWNCASE(m4_bpatsubst(ACJF_M4_QUOTE(ACJF_VAR_PKGNAME), [\([^][a-zA-Z0-9]\|[ 	]+\)],[-])))dnl
   m4_pushdef([ACJF_VAR_WITHLIST], [])dnl
   m4_pushdef([ACJF_VAR_DEFAULTMSG], [[ (default)]])dnl
-  ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS, [
-    m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [intern], [
+  ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS,
+   [dnl m4_pattern_allow([ACJF_VAR_TAG])dnl
+    dnl echo "[ACJF_VAR_TAG]: ACJF_M4_QUOTE(ACJF_VAR_TAG)"
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^intern$\|^intern:]), [0], [
       ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHLIST], ACJF_VAR_INTERNMSG[]ACJF_VAR_DEFAULTMSG)dnl
-    ], [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [compile], [
+    ], [m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^compile$\|^compile:]), [0], [
       ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHLIST], ACJF_VAR_COMPILEMSG[]ACJF_VAR_DEFAULTMSG)dnl
     ], [m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [extern], [
       ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHLIST], ACJF_VAR_EXTERNMSG[]ACJF_VAR_DEFAULTMSG)dnl
@@ -460,9 +486,9 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
       ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_WITHLIST], [no to disable]ACJF_VAR_DEFAULTMSG)dnl
     ])])])])dnl
     dnl only first is marked as default
-    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [intern\|compile\|extern\|disabled]), [0],
-     [m4_define([ACJF_VAR_DEFAULTMSG], [[]])])
-  ])dnl
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^intern$\|^intern:\|^compile$\|^compile:\|^extern$\|^disabled$]), [0],
+     [m4_define([ACJF_VAR_DEFAULTMSG], [[]])])dnl
+   ])dnl
   m4_popdef([ACJF_VAR_DEFAULTMSG])dnl
   m4_popdef([ACJF_VAR_EXTERNMSG])dnl
   m4_popdef([ACJF_VAR_COMPILEMSG])dnl
@@ -538,7 +564,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
   ACJF_PKG_CLEARLOC(ACJF_VAR_PKGNAME)dnl
   acjf_var_matchtag=no
   ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS, [
-    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [intern\|compile]), [0],
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^intern$\|^intern:\|^compile$\|^compile:]), [0],
      [case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
         ""|yes|intern)
           m4_if(ACJF_VAR_PKGCONFIGMOD, [],
@@ -558,7 +584,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
           ;;
       esac
      ])dnl
-    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [extern\|compile]), [0],
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^extern$\|^compile$\|^compile:]), [0],
      [case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
         ""|yes|extern)
           m4_if(ACJF_VAR_PKGCONFIGMOD, [],
@@ -613,10 +639,11 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
   fi
   unset acjf_var_tag
   unset acjf_var_matchtag
-  m4_popdef([ACJF_VAR_TAGS])dnl
-  m4_popdef([ACJF_VAR_PKGNAME])dnl
-  m4_popdef([ACJF_VAR_CONFIGSCRIPT])dnl
   m4_popdef([ACJF_VAR_PKGCONFIGMOD])dnl
+  m4_popdef([ACJF_VAR_CONFIGSCRIPT])dnl
+  m4_popdef([ACJF_VAR_TAGS])dnl
+  m4_popdef([ACJF_VAR_SUBDIR])dnl
+  m4_popdef([ACJF_VAR_PKGNAME])dnl
 ])dnl ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), ...)
 m4_divert_pop([INIT_PREPARE])
 ])

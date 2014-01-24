@@ -22,53 +22,53 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>])
 AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT],
 [dnl
-  ACJF_ARG_WITHPKG([CoSupport], [[intern],[extern],[pkgconfig:libcosupport]])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-allocators])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-initializer])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-math])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-path])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-random])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-smartptr])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-streams])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-string])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-systemc])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-tracing])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [libcosupport-xerces])dnl
+  ACJF_ARG_WITHPKG([CoSupport], [[intern:Support],[extern],[pkgconfig:libcosupport]])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Allocators])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Initializer])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Math])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Path])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Random])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-SmartPtr])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Streams])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-String])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-SystemC])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Tracing])dnl
+  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Xerces])dnl
   AC_LANG_PUSH([C++])
-  ACJF_CHECK_LIB_TESTER([libcosupport-allocators], [Support],
+  ACJF_CHECK_LIB_TESTER([CoSupport-Allocators], [[intern:Support],[pkgconfig:libcosupport-allocators]],
     [ACJF_CHECK_PKG_TESTMACRO],
     [$1], [$2])
-  ACJF_CHECK_LIB_TESTER([libcosupport-initializer], [Support],
+  ACJF_CHECK_LIB_TESTER([CoSupport-Initializer], [[intern:Support],[pkgconfig:libcosupport-initializer]],
     [ACJF_CHECK_PKG_TESTMACRO],
     [$1], [$2])
-  ACJF_CHECK_LIB_TESTER([libcosupport-math], [Support],
+  ACJF_CHECK_LIB_TESTER([CoSupport-Math], [[intern:Support],[pkgconfig:libcosupport-math]],
     [ACJF_CHECK_PKG_TESTMACRO],
     [$1], [$2])
-  ACJF_CHECK_LIB_TESTER([libcosupport-path], [Support],
+  ACJF_CHECK_LIB_TESTER([CoSupport-Path], [[intern:Support],[pkgconfig:libcosupport-path]],
     [ACJF_CHECK_PKG_TESTMACRO],
     [$1], [$2])
-  ACJF_CHECK_LIB_TESTER([libcosupport-random], [Support],
+  ACJF_CHECK_LIB_TESTER([CoSupport-Random], [[intern:Support],[pkgconfig:libcosupport-random]],
     [ACJF_CHECK_PKG_TESTMACRO],
     [$1], [$2])
-  ACJF_CHECK_LIB_TESTER([libcosupport-smartptr], [Support],
+  ACJF_CHECK_LIB_TESTER([CoSupport-SmartPtr], [[intern:Support],[pkgconfig:libcosupport-smartptr]],
     [ACJF_CHECK_PKG_TESTMACRO],
     [$1], [$2])
-  ACJF_CHECK_LIB_TESTER([libcosupport-streams], [Support],
+  ACJF_CHECK_LIB_TESTER([CoSupport-Streams], [[intern:Support],[pkgconfig:libcosupport-streams]],
     [ACJF_CHECK_PKG_TESTMACRO],
     [$1], [$2])
-  ACJF_CHECK_LIB_TESTER([libcosupport-string], [Support],
+  ACJF_CHECK_LIB_TESTER([CoSupport-String], [[intern:Support],[pkgconfig:libcosupport-string]],
     [ACJF_CHECK_PKG_TESTMACRO],
     [$1], [$2])
-  ACJF_CHECK_LIB_TESTER([libcosupport-systemc], [Support],
+  ACJF_CHECK_LIB_TESTER([CoSupport-SystemC], [[intern:Support],[pkgconfig:libcosupport-systemc]],
     [ACJF_CHECK_PKG_TESTMACRO],
     [$1], [$2])
-  ACJF_CHECK_LIB_TESTER([libcosupport-tracing], [Support],
+  ACJF_CHECK_LIB_TESTER([CoSupport-Tracing], [[intern:Support],[pkgconfig:libcosupport-tracing]],
     [ACJF_CHECK_PKG_TESTMACRO],
     [$1], [$2])
-  ACJF_CHECK_LIB_TESTER([libcosupport-xerces], [Support],
+  ACJF_CHECK_LIB_TESTER([CoSupport-Xerces], [[intern:Support],[pkgconfig:libcosupport-xerces]],
     [ACJF_CHECK_PKG_TESTMACRO],
     [$1], [$2])
-  ACJF_CHECK_LIB_TESTER([CoSupport], [Support],
+  ACJF_CHECK_LIB_TESTER([CoSupport], [[intern:Support],[pkgconfig:libcosupport]],
     [ACJF_CHECK_PKG_TESTMACRO],
     [$1], [$2])
   AC_LANG_POP
