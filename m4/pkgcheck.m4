@@ -101,7 +101,7 @@ AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG_INTERN], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="source tree via pkg-config for $2"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="pkg-config-bundled"];
-  ACJF_VAR_ANONYMOUS_SHELL_VAR[_modules="$2"];
+  dnl ACJF_VAR_ANONYMOUS_SHELL_VAR[_modules="$2"];
   dnl Register vars on search list!
   [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] ACJF_VAR_ANONYMOUS_SHELL_VAR";
   m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
@@ -116,7 +116,7 @@ AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG_STD], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="standard search paths via pkg-config for $2"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="pkg-config"];
-  ACJF_VAR_ANONYMOUS_SHELL_VAR[_modules="$2"];
+  dnl ACJF_VAR_ANONYMOUS_SHELL_VAR[_modules="$2"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_pkg_config_dir=""];
   dnl Register vars on search list!
   [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] ACJF_VAR_ANONYMOUS_SHELL_VAR";
@@ -133,7 +133,7 @@ AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG_PREFIX], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="$2 via pkg-config for $3"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="pkg-config"];
-  ACJF_VAR_ANONYMOUS_SHELL_VAR[_modules="$3"];
+  dnl ACJF_VAR_ANONYMOUS_SHELL_VAR[_modules="$3"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_pkg_config_dir="$2/lib/pkgconfig"];
   dnl Register vars on search list!
   [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] ACJF_VAR_ANONYMOUS_SHELL_VAR";
@@ -154,112 +154,13 @@ dnl   --cppflags
 dnl   --cflags
 dnl   --cxxflags
 AC_DEFUN([ACJF_PKG_ADDLOC_CONFIGSCRIPT], [AC_REQUIRE([ACJF_INIT])dnl
-dnl m4_pushdef([ACJF_VAR_ANON_SHELLVARPREFIX], ACJF_GEN_ANONYMOUS_SHELL_VAR)
-  if test x"${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_script]+set}" != x"set"; then
-    AC_PATH_PROG([acjf_cv_]ACJF_M4_CANON_DC([$2])[_script], [$2], [not found])
-    if test x"$[acjf_cv_]ACJF_M4_CANON_DC([$2])[_script]" != x"not found"; then
-      [acjf_cv_]ACJF_M4_CANON_DC([$2])[_desc]="configuration from $[acjf_cv_]ACJF_M4_CANON_DC([$2])[_script]"
-      [acjf_cv_]ACJF_M4_CANON_DC([$2])[_type]="configscript"
-      [acjf_cv_]ACJF_M4_CANON_DC([$2])[_configscript]="$[acjf_cv_]ACJF_M4_CANON_DC([$2])[_script]"
-      [acjf_cv_]ACJF_M4_CANON_DC([$2])[_incpath]=""
-      [acjf_cv_]ACJF_M4_CANON_DC([$2])[_libpath]=""
-      [acjf_cv_]ACJF_M4_CANON_DC([$2])[_cppflags_other]=""
-      [acjf_cv_]ACJF_M4_CANON_DC([$2])[_ldflags_other]=""
-      [acjf_cv_]ACJF_M4_CANON_DC([$2])[_libs]=""
-      acjf_var_include=`$[acjf_cv_]ACJF_M4_CANON_DC([$2])[_script] --include 2>/dev/null`
-      acjf_var_cppflags=`$[acjf_cv_]ACJF_M4_CANON_DC([$2])[_script] --cppflags 2>/dev/null`
-      acjf_var_cflags=`$[acjf_cv_]ACJF_M4_CANON_DC([$2])[_script] --cflags 2>/dev/null`
-      acjf_var_cxxflags=`$[acjf_cv_]ACJF_M4_CANON_DC([$2])[_script] --cxxflags 2>/dev/null`
-      set dummy $acjf_var_include $acjf_var_cppflags $acjf_var_cflags $acjf_var_cxxflags
-      shift
-      while test $[]# != 0
-      do
-        case $[]1 in
-          [-[ID])]
-            ac_option=$[]1
-            ac_optarg=$[]2
-            ac_shift=shift
-            ;;
-          [-[ID]*)]
-            ac_option=`expr "x$[]1" : 'x\(..\)'`
-            ac_optarg=`expr "x$[]1" : 'x..\(.*\)'`
-            ac_shift=:
-            ;;
-          [*)]
-            # This is not an option, so the user has probably given explicit
-            # arguments.
-            ac_option=$[]1
-            ac_shift=:
-        esac
-        case $ac_option in
-          -I)
-            [acjf_cv_]ACJF_M4_CANON_DC([$2])[_incpath]="${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_incpath]} $ac_optarg"; $ac_shift;
-            ;;
-          -D)
-            [acjf_cv_]ACJF_M4_CANON_DC([$2])[_cppflags]="${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_cppflags]} -D$ac_optarg"; $ac_shift;
-            ;;
-          *)
-            [acjf_cv_]ACJF_M4_CANON_DC([$2])[_cppflags]="${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_cppflags]} $ac_option";
-            ;;
-        esac
-        shift
-      done
-      acjf_var_includedir=`$[acjf_cv_]ACJF_M4_CANON_DC([$2])[_script] --includedir 2>/dev/null`
-      [acjf_cv_]ACJF_M4_CANON_DC([$2])[_incpath]="${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_incpath]} $acjf_var_includedir";
-
-      acjf_var_libs=`$[acjf_cv_]ACJF_M4_CANON_DC([$2])[_script] --libs 2>/dev/null`
-      acjf_var_ldflags=`$[acjf_cv_]ACJF_M4_CANON_DC([$2])[_script] --ldflags 2>/dev/null`
-      set dummy $acjf_var_libs $acjf_var_ldflags
-      shift
-      while test $[]# != 0
-      do
-        case $[]1 in
-          [-L)]
-            ac_option=$[]1
-            ac_optarg=$[]2
-            ac_shift=shift
-            ;;
-          [-[Ll]*)]
-            ac_option=`expr "x$[]1" : 'x\(..\)'`
-            ac_optarg=`expr "x$[]1" : 'x..\(.*\)'`
-            ac_shift=:
-            ;;
-          [*)]
-            # This is not an option, so the user has probably given explicit
-            # arguments.
-            ac_option=$[]1
-            ac_shift=:
-        esac
-        case $ac_option in
-          -L)
-            [acjf_cv_]ACJF_M4_CANON_DC([$2])[_libpath]="${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_libpath]} $ac_optarg"; $ac_shift;
-            ;;
-          -l)
-            [acjf_cv_]ACJF_M4_CANON_DC([$2])[_libs]="${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_libs]} -l$ac_optarg"; $ac_shift;
-            ;;
-          *)
-            [acjf_cv_]ACJF_M4_CANON_DC([$2])[_ldflags_other]="${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_ldflags_other]} $ac_option";
-            ;;
-        esac
-        shift
-      done
-      acjf_var_libdir=`$[acjf_cv_]ACJF_M4_CANON_DC([$2])[_script] --libdir 2>/dev/null`
-      [acjf_cv_]ACJF_M4_CANON_DC([$2])[_libpath]="${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_libpath]} $acjf_var_libdir";
-#     echo "[acjf_cv_]ACJF_M4_CANON_DC([$2])[_desc]: ${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_desc]}"
-#     echo "[acjf_cv_]ACJF_M4_CANON_DC([$2])[_configscript]: ${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_configscript]}"
-#     echo "[acjf_cv_]ACJF_M4_CANON_DC([$2])[_incpath]: ${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_incpath]}"
-#     echo "[acjf_cv_]ACJF_M4_CANON_DC([$2])[_libpath]: ${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_libpath]}"
-#     echo "[acjf_cv_]ACJF_M4_CANON_DC([$2])[_cppflags_other]: ${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_cppflags_other]}"
-#     echo "[acjf_cv_]ACJF_M4_CANON_DC([$2])[_ldflags_other]: ${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_ldflags_other]}"
-#     echo "[acjf_cv_]ACJF_M4_CANON_DC([$2])[_libs]: ${[acjf_cv_]ACJF_M4_CANON_DC([$2])[_libs]}"
-    else
-      [acjf_cv_]ACJF_M4_CANON_DC([$2])[_desc="configuration from $2"];
-      [acjf_cv_]ACJF_M4_CANON_DC([$2])[_invalid]="yes";
-    fi
-  fi
+  m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="configuration from $2"];
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="configscript"];
+  ACJF_VAR_ANONYMOUS_SHELL_VAR[_configscript="$2"];
   dnl Register vars on search list!
-  [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] [acjf_cv_]ACJF_M4_CANON_DC([$2])";
-dnl m4_popdef([[acjf_cv_]ACJF_M4_CANON_DC([$2])])
+  [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] ACJF_VAR_ANONYMOUS_SHELL_VAR";
+  m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
 ])
 
 dnl ACJF_PKG_EVALLOC(
@@ -267,8 +168,10 @@ dnl   <varprefix>,
 dnl   <searchentry>)
 dnl 
 dnl Requires:
-dnl   ACJF_VAR_SUBDIR   must be defined
-dnl   ACJF_VAR_PKGNAME  must be defined
+dnl   ACJF_VAR_SUBDIR         must be defined
+dnl   ACJF_VAR_PKGNAME        must be defined
+dnl   ACJF_VAR_PKGCONFIGMOD   must be defined
+dnl   ACJF_VAR_CONFIGSCRIPT   must be defined
 dnl
 dnl evaluate the given <searchentry> and set the shell variables
 dnl   <varprefix>_invalid
@@ -279,15 +182,17 @@ dnl   <varprefix>_ldflags_other
 dnl   <varprefix>_libs
 dnl
 AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
-  m4_ifdef([ACJF_VAR_SUBDIR], [], [m4_fatal([Missing definition of ACJF_VAR_SUBDIR macro!])])dnl
-  m4_ifdef([ACJF_VAR_PKGNAME],[], [m4_fatal([Missing definition of ACJF_VAR_PKGNAME macro!])])dnl
-  eval [$1_desc=\$${$2}_desc;]
-  eval [$1_type=\$${$2}_type;]
+  m4_ifdef([ACJF_VAR_SUBDIR],       [], [m4_fatal([Missing definition of ACJF_VAR_SUBDIR macro!])])dnl
+  m4_ifdef([ACJF_VAR_PKGNAME],      [], [m4_fatal([Missing definition of ACJF_VAR_PKGNAME macro!])])dnl
+  m4_ifdef([ACJF_VAR_PKGCONFIGMOD], [], [m4_fatal([Missing definition of ACJF_VAR_PKGCONFIGMOD macro!])])dnl
+  m4_ifdef([ACJF_VAR_CONFIGSCRIPT], [], [m4_fatal([Missing definition of ACJF_VAR_CONFIGSCRIPT macro!])])dnl
+  eval [$1_desc=\$${$2}_desc]
+  eval [$1_type=\$${$2}_type]
   if test [x"${$1_type}" = x"bundled" -o x"${$1_type}" = x"pkg-config-bundled";] then
     m4_if(ACJF_VAR_SUBDIR, [],
      [AC_MSG_ERROR([Internal error: internal location specified for ACJF_VAR_PKGNAME but source tree location not given in configure.in!])])dnl
     _ACJF_SOURCE_TREE_LOCATION_SEARCHER(acjf_var_pkgname_srcdir)dnl
-    if test x"${acjf_var_pkgname_srcdir}" != x"/invalid" -a -f "${acjf_abs_top_builddir}/${acjf_var_pkgname_srcdir}/Makefile"; then
+    if test [x"${acjf_var_pkgname_srcdir}" != x"/invalid" -a -f "${acjf_abs_top_builddir}/${acjf_var_pkgname_srcdir}/Makefile";] then
       dnl we need abs pathes (${acjf_abs_top_srcdir}) here to enable a correct fixup also for relative configure calls.
       [$1_srcdir="${acjf_abs_top_srcdir}/${acjf_var_pkgname_srcdir}"]
       dnl we need abs pathes (${acjf_abs_top_builddir}) here to enable a correct fixup also for relative configure calls.
@@ -310,10 +215,14 @@ AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CO
       [$1_libs=""]
       [$1_invalid="no"]
     elif test [x"${$1_type}" = x"pkg-config" -o x"${$1_type}" = x"pkg-config-bundled";] then
-      eval [$1_modules=\$${$2}_modules;]
+      eval [$1_modules=\$${$2}_modules]
+      if test [x"${$1_modules}" = x"";] then
+        [$1_modules]="ACJF_VAR_PKGCONFIGMOD"
+      fi
       if test [x"${$1_type}" = x"pkg-config-bundled";] then
-        [$1_pkg_config_dir="${$1_builddir}/pkgconfig"];
+        [$1_pkg_config_dir="${$1_builddir}/pkgconfig"]
         [$1_pkg_config_path="${$1_pkg_config_dir}"]
+        [$1_desc="source tree directory ]ACJF_VAR_SUBDIR[ to provide the pkg-config module ${$1_modules}"]
         if test -f "${$1_pkg_config_dir}/.pkg_config_path"; then
           while read line; do
             case "$line" in
@@ -329,8 +238,13 @@ AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CO
           done < "${$1_pkg_config_dir}/.pkg_config_path"
         fi
       else # x"${$1_type}" = x"pkg-config"
-        eval [$1_pkg_config_dir=\$${$2}_pkg_config_dir;]
+        eval [$1_pkg_config_dir=\$${$2}_pkg_config_dir]
         [$1_pkg_config_path="${$1_pkg_config_dir}"]
+        if test [x"${$1_pkg_config_dir}" = x""]; then
+          [$1_desc="standard search path to provide the pkg-config module ${$1_modules}"]
+        else
+          [$1_desc="${$1_pkg_config_dir} to provide the pkg-config module ${$1_modules}"]
+        fi
       fi
       acjf_var_old_PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
       if test x"$PKG_CONFIG_PATH" = x""; then
@@ -342,17 +256,17 @@ AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CO
       dnl echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
       if test -n "$PKG_CONFIG" && AC_RUN_LOG([$PKG_CONFIG --exists --print-errors "${$1_modules}"]); then
         dnl echo "yep"
-        [$1_invalid="no";]
-        [$1_incpath=`$PKG_CONFIG --cflags-only-I "${$1_modules}" 2>/dev/null | sed -e 's/^-I[ 	]*//;s/[ 	][ 	]*-I[ 	]*/ /g;s/^[ 	]*//;s/[ 	]*$//'`;]
-        [$1_libpath=`$PKG_CONFIG --libs-only-L   "${$1_modules}" 2>/dev/null | sed -e 's/^-L[ 	]*//;s/[ 	][ 	]*-L[ 	]*/ /g;s/^[ 	]*//;s/[ 	]*$//'`;]
-        [$1_cppflags_other=`$PKG_CONFIG --cflags-only-other "${$1_modules}" 2>/dev/null`;]
-        [$1_ldflags_other=`$PKG_CONFIG --libs-only-other "${$1_modules}" 2>/dev/null`;]
-        [$1_libs=`$PKG_CONFIG --libs-only-l "${$1_modules}" 2>/dev/null`;]
+        [$1_invalid="no"]
+        [$1_incpath=`$PKG_CONFIG --cflags-only-I "${$1_modules}" 2>/dev/null | sed -e 's/^-I[ 	]*//;s/[ 	][ 	]*-I[ 	]*/ /g;s/^[ 	]*//;s/[ 	]*$//'`]
+        [$1_libpath=`$PKG_CONFIG --libs-only-L   "${$1_modules}" 2>/dev/null | sed -e 's/^-L[ 	]*//;s/[ 	][ 	]*-L[ 	]*/ /g;s/^[ 	]*//;s/[ 	]*$//'`]
+        [$1_cppflags_other=`$PKG_CONFIG --cflags-only-other "${$1_modules}" 2>/dev/null`]
+        [$1_ldflags_other=`$PKG_CONFIG --libs-only-other "${$1_modules}" 2>/dev/null`]
+        [$1_libs=`$PKG_CONFIG --libs-only-l "${$1_modules}" 2>/dev/null`]
       else
         dnl echo "nope"
-        [$1_invalid="yes";]
+        [$1_invalid="yes"]
         _PKG_SHORT_ERRORS_SUPPORTED
-        if test $_pkg_short_errors_supported = yes; then
+        if test [x"$_pkg_short_errors_supported" = x"yes";] then
           acjf_var_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "$2"`
         else 
           acjf_var_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "$2"`
@@ -361,24 +275,128 @@ AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CO
         echo "$acjf_var_PKG_ERRORS" >&AS_MESSAGE_LOG_FD
       fi
       PKG_CONFIG_PATH=${acjf_var_old_PKG_CONFIG_PATH}
+      unset acjf_var_old_PKG_CONFIG_PATH
+    elif test [x"${$1_type}" = x"configscript";] then
+      eval [$1_rel_configscript=\$${$2}_configscript]
+      if test [x"${$1_rel_configscript}" = x"";] then
+        [$1_rel_configscript]="ACJF_VAR_CONFIGSCRIPT"
+      fi
+      AC_PATH_PROG([$1_configscript], [${$1_rel_configscript}], [not found])
+      if test [x"${$1_configscript}" != x"not found";] then
+        [$1_invalid="no"]
+        [$1_desc="configuration from ${$1_configscript}"]
+        [$1_incpath=""]
+        [$1_libpath=""]
+        [$1_cppflags_other=""]
+        [$1_ldflags_other=""]
+        [$1_libs=""]
+        [acjf_var_includedir=`${$1_configscript} --includedir 2>/dev/null`]
+        [acjf_var_include=`${$1_configscript} --include 2>/dev/null`]
+        [acjf_var_cppflags=`${$1_configscript} --cppflags 2>/dev/null`]
+        [acjf_var_cflags=`${$1_configscript} --cflags 2>/dev/null`]
+        [acjf_var_cxxflags=`${$1_configscript} --cxxflags 2>/dev/null`]
+        [acjf_var_libdir=`${$1_configscript} --libdir 2>/dev/null`]
+        [acjf_var_ldflags=`${$1_configscript} --ldflags 2>/dev/null`]
+        [acjf_var_libs=`${$1_configscript} --libs 2>/dev/null`]
+        set dummy $acjf_var_include $acjf_var_cppflags $acjf_var_cflags $acjf_var_cxxflags
+        shift
+        while test $[]# != 0
+        do
+          case $[]1 in
+            [-[ID])]
+              ac_option=$[]1
+              ac_optarg=$[]2
+              ac_shift=shift
+              ;;
+            [-[ID]*)]
+              ac_option=`expr "x$[]1" : 'x\(..\)'`
+              ac_optarg=`expr "x$[]1" : 'x..\(.*\)'`
+              ac_shift=:
+              ;;
+            [*)]
+              # This is not an option, so the user has probably given explicit
+              # arguments.
+              ac_option=$[]1
+              ac_shift=:
+          esac
+          case $ac_option in
+            -I)
+              [$1_incpath="${$1_incpath} $ac_optarg"; $ac_shift]
+              ;;
+            -D)
+              [$1_cppflags="${$1_cppflags} -D$ac_optarg"; $ac_shift]
+              ;;
+            *)
+              [$1_cppflags="${$1_cppflags} $ac_option"]
+              ;;
+          esac
+          shift
+        done
+        [$1_incpath="${$1_incpath} $acjf_var_includedir"]
+        set dummy $acjf_var_libs $acjf_var_ldflags
+        shift
+        while test $[]# != 0
+        do
+          case $[]1 in
+            [-L)]
+              ac_option=$[]1
+              ac_optarg=$[]2
+              ac_shift=shift
+              ;;
+            [-[Ll]*)]
+              ac_option=`expr "x$[]1" : 'x\(..\)'`
+              ac_optarg=`expr "x$[]1" : 'x..\(.*\)'`
+              ac_shift=:
+              ;;
+            [*)]
+              # This is not an option, so the user has probably given explicit
+              # arguments.
+              ac_option=$[]1
+              ac_shift=:
+          esac
+          case $ac_option in
+            -L)
+              [$1_libpath="${$1_libpath} $ac_optarg"; $ac_shift]
+              ;;
+            -l)
+              [$1_libs="${$1_libs} -l$ac_optarg"; $ac_shift]
+              ;;
+            *)
+              [$1_ldflags_other="${$1_ldflags_other} $ac_option"]
+              ;;
+          esac
+          shift
+        done
+        [$1_libpath="${$1_libpath} $acjf_var_libdir"]
+        unset acjf_var_includedir
+        unset acjf_var_include
+        unset acjf_var_cppflags
+        unset acjf_var_cflags
+        unset acjf_var_cxxflags
+        unset acjf_var_libdir
+        unset acjf_var_ldflags
+        unset acjf_var_libs
+      else
+        [$1_invalid="yes"]
+      fi
     else
-      eval [$1_invalid=\$${$2}_invalid;]
-      eval [$1_incpath=\$${$2}_incpath;]
-      eval [$1_libpath=\$${$2}_libpath;]
-      eval [$1_cppflags_other=\$${$2}_cppflags_other;]
-      eval [$1_ldflags_other=\$${$2}_ldflags_other;]
-      eval [$1_libs=\$${$2}_libs;]
+      eval [$1_invalid=\$${$2}_invalid]
+      eval [$1_incpath=\$${$2}_incpath]
+      eval [$1_libpath=\$${$2}_libpath]
+      eval [$1_cppflags_other=\$${$2}_cppflags_other]
+      eval [$1_ldflags_other=\$${$2}_ldflags_other]
+      eval [$1_libs=\$${$2}_libs]
     fi
   fi
   unset acjf_var_pkgname_srcdir
-  dnl echo ["$1_desc=$$1_desc";]
-  dnl echo ["$1_type=$$1_type";]
-  dnl echo ["$1_invalid=$$1_invalid";]
-  dnl echo ["$1_incpath=$$1_incpath";]
-  dnl echo ["$1_libpath=$$1_libpath";]
-  dnl echo ["$1_cppflags_other=$$1_cppflags_other";]
-  dnl echo ["$1_ldflags_other=$$1_ldflags_other";]
-  dnl echo ["$1_libs=$$1_libs";]
+  dnl echo ["$1_desc=${$1_desc}"]
+  dnl echo ["$1_type=${$1_type}"]
+  dnl echo ["$1_invalid=${$1_invalid}"]
+  dnl echo ["$1_incpath=${$1_incpath}"]
+  dnl echo ["$1_libpath=${$1_libpath}"]
+  dnl echo ["$1_cppflags_other=${$1_cppflags_other}"]
+  dnl echo ["$1_ldflags_other=${$1_ldflags_other}"]
+  dnl echo ["$1_libs=${$1_libs}"]
 ])
 
 dnl ACJF_ARG_WITHPKG(
@@ -797,16 +815,27 @@ AC_DEFUN([ACJF_CHECK_LIB_TESTER], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_TEST_MACRO], [[$3]])dnl
   m4_pushdef([ACJF_VAR_CODE_IF_TRUE], [[$4]])dnl
   m4_pushdef([ACJF_VAR_CODE_IF_FALSE], [[$5]])dnl
-  m4_pushdef([ACJF_VAR_ANON_SHELLVARPREFIX], ACJF_GEN_ANONYMOUS_SHELL_VAR)
-  dnl Iterate over tags to set ACJF_VAR_SUBDIR.
+  dnl Iterate over tags to set
+  dnl ACJF_VAR_SUBDIR       from intern:xxx tag
+  dnl ACJF_VAR_CONFIGSCRIPT from configscript:xxx tag
+  dnl ACJF_VAR_PKGCONFIGMOD from pkgconfig:xxx tag
+  m4_pushdef([ACJF_VAR_CONFIGSCRIPT], [])dnl
+  m4_pushdef([ACJF_VAR_PKGCONFIGMOD], [])dnl
   ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS,
    [dnl set ACJF_VAR_SUBDIR from intern:xxx tag
-    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<intern:]), [0],
-     [m4_define([ACJF_VAR_SUBDIR], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [\<intern:\(.*\)], [[\1]]))dnl
-   ])])dnl
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^intern:]), [0],
+     [m4_define([ACJF_VAR_SUBDIR], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^intern:\(.*\)], [[\1]]))])dnl
+    dnl set ACJF_VAR_CONFIGSCRIPT from configscript:xxx tag
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^configscript:]), [0],
+     [m4_define([ACJF_VAR_CONFIGSCRIPT], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^configscript:\(.*\)], [[\1]]))])dnl
+    dnl set ACJF_VAR_PKGCONFIGMOD from pkgconfig:xxx tag
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^pkgconfig:]), [0],
+     [m4_define([ACJF_VAR_PKGCONFIGMOD], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^pkgconfig:\(.*\)], [[\1]]))])dnl
+   ])dnl
 
-  ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_CHECK_LIB_TESTER::$1::subdir::$2]), [
-  dnl echo "Are here: ACJF_M4_CANON_DC([ACJF_CHECK_LIB_TESTER::$1::subdir::$2]) [[BEGIN]]"
+  ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_CHECK_LIB_TESTER::$1::subdir::$2]),
+   [dnl echo "Are here: ACJF_M4_CANON_DC([ACJF_CHECK_LIB_TESTER::$1::subdir::$2]) [[BEGIN]]"
+    m4_pushdef([ACJF_VAR_ANON_SHELLVARPREFIX], ACJF_GEN_ANONYMOUS_SHELL_VAR)
 
     m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND])dnl
     m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH])dnl
@@ -996,8 +1025,9 @@ dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]: $[acjf_cv_]ACJ
         [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]),
       ACJF_VAR_SUBSTVARFIXUP)))dnl
 
+    m4_popdef([ACJF_VAR_ANON_SHELLVARPREFIX])dnl
     dnl echo "Are here: ACJF_M4_CANON_DC([ACJF_CHECK_LIB_TESTER::$1::subdir::$2]) [[END]]"
-  ])dnl end of once code
+   ])dnl end of once code
 
   dnl echo "ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND]:   $ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND]"
   dnl echo "ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH]: $ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH]"
@@ -1022,7 +1052,8 @@ dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]: $[acjf_cv_]ACJ
       ACJF_VAR_CODE_IF_FALSE])
   fi
 
-  m4_popdef([ACJF_VAR_ANON_SHELLVARPREFIX])dnl
+  m4_popdef([ACJF_VAR_PKGCONFIGMOD])dnl
+  m4_popdef([ACJF_VAR_CONFIGSCRIPT])dnl
   m4_popdef([ACJF_VAR_CODE_IF_FALSE])dnl
   m4_popdef([ACJF_VAR_CODE_IF_TRUE])dnl
   m4_popdef([ACJF_VAR_TEST_MACRO])dnl
