@@ -1,5 +1,5 @@
 dnl vim: set sw=2 ts=8 syn=config:
-dnl Copyright (C) 2001 - 2013 Joachim Falk <joachim.falk@gmx.de>
+dnl Copyright (C) 2001 - 2014 Joachim Falk <joachim.falk@gmx.de>
 dnl 
 dnl This file is part of the BuildSystem distribution of Joachim Falk;
 dnl you can redistribute it and/or modify it under the terms of the
@@ -174,12 +174,15 @@ dnl   ACJF_VAR_PKGCONFIGMOD   must be defined
 dnl   ACJF_VAR_CONFIGSCRIPT   must be defined
 dnl
 dnl evaluate the given <searchentry> and set the shell variables
+dnl   <varprefix>_desc
+dnl   <varprefix>_type
 dnl   <varprefix>_invalid
 dnl   <varprefix>_incpath
 dnl   <varprefix>_libpath
 dnl   <varprefix>_cppflags_other
 dnl   <varprefix>_ldflags_other
 dnl   <varprefix>_libs
+dnl   <varprefix>_deps
 dnl
 AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
   m4_ifdef([ACJF_VAR_SUBDIR],       [], [m4_fatal([Missing definition of ACJF_VAR_SUBDIR macro!])])dnl
@@ -188,17 +191,38 @@ AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CO
   m4_ifdef([ACJF_VAR_CONFIGSCRIPT], [], [m4_fatal([Missing definition of ACJF_VAR_CONFIGSCRIPT macro!])])dnl
   eval [$1_desc=\$${$2}_desc]
   eval [$1_type=\$${$2}_type]
-  if test [x"${$1_type}" = x"bundled" -o x"${$1_type}" = x"pkg-config-bundled";] then
-    m4_if(ACJF_VAR_SUBDIR, [],
-     [AC_MSG_ERROR([Internal error: internal location specified for ACJF_VAR_PKGNAME but source tree location not given in configure.in!])])dnl
-    _ACJF_SOURCE_TREE_LOCATION_SEARCHER(acjf_var_pkgname_srcdir)dnl
-    if test [x"${acjf_var_pkgname_srcdir}" != x"/invalid" -a -f "${acjf_abs_top_builddir}/${acjf_var_pkgname_srcdir}/Makefile";] then
-      dnl we need abs pathes (${acjf_abs_top_srcdir}) here to enable a correct fixup also for relative configure calls.
-      [$1_srcdir="${acjf_abs_top_srcdir}/${acjf_var_pkgname_srcdir}"]
-      dnl we need abs pathes (${acjf_abs_top_builddir}) here to enable a correct fixup also for relative configure calls.
-      [$1_builddir="${acjf_abs_top_builddir}/${acjf_var_pkgname_srcdir}"]
-    else
-      [$1_invalid="yes"]
+  eval [$1_invalid=\$${$2}_invalid]
+  eval [$1_incpath=\$${$2}_incpath]
+  eval [$1_libpath=\$${$2}_libpath]
+  eval [$1_cppflags_other=\$${$2}_cppflags_other]
+  eval [$1_ldflags_other=\$${$2}_ldflags_other]
+  eval [$1_libs=\$${$2}_libs]
+  eval [$1_deps=\$${$2}_deps]
+dnl  echo "INITIAL:"
+dnl  echo ["  $1_desc=${$1_desc}"]
+dnl  echo ["  $1_type=${$1_type}"]
+dnl  echo ["  $1_invalid=${$1_invalid}"]
+dnl  echo ["  $1_incpath=${$1_incpath}"]
+dnl  echo ["  $1_libpath=${$1_libpath}"]
+dnl  echo ["  $1_cppflags_other=${$1_cppflags_other}"]
+dnl  echo ["  $1_ldflags_other=${$1_ldflags_other}"]
+dnl  echo ["  $1_libs=${$1_libs}"]
+dnl  echo ["  $1_deps=${$1_deps}"]
+  
+  if test [x"${$1_invalid}" != x"yes"]; then
+    if test [x"${$1_type}" = x"bundled" -o x"${$1_type}" = x"pkg-config-bundled";] then
+      m4_if(ACJF_VAR_SUBDIR, [],
+       [AC_MSG_ERROR([Internal error: internal location specified for ACJF_VAR_PKGNAME but source tree location not given in configure.in!])])dnl
+      _ACJF_SOURCE_TREE_LOCATION_SEARCHER(acjf_var_pkgname_srcdir)dnl
+      if test [x"${acjf_var_pkgname_srcdir}" != x"/invalid" -a -f "${acjf_abs_top_builddir}/${acjf_var_pkgname_srcdir}/Makefile";] then
+        dnl we need abs pathes (${acjf_abs_top_srcdir}) here to enable a correct fixup also for relative configure calls.
+        [$1_srcdir="${acjf_abs_top_srcdir}/${acjf_var_pkgname_srcdir}"]
+        dnl we need abs pathes (${acjf_abs_top_builddir}) here to enable a correct fixup also for relative configure calls.
+        [$1_builddir="${acjf_abs_top_builddir}/${acjf_var_pkgname_srcdir}"]
+      else
+        [$1_invalid="yes"]
+      fi
+      unset acjf_var_pkgname_srcdir
     fi
   fi
   if test [x"${$1_invalid}" != x"yes"]; then
@@ -214,189 +238,241 @@ AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CO
       [$1_ldflags_other=""]
       [$1_libs=""]
       [$1_invalid="no"]
-    elif test [x"${$1_type}" = x"pkg-config" -o x"${$1_type}" = x"pkg-config-bundled";] then
-      eval [$1_modules=\$${$2}_modules]
-      if test [x"${$1_modules}" = x"";] then
-        [$1_modules]="ACJF_VAR_PKGCONFIGMOD"
-      fi
-      if test [x"${$1_type}" = x"pkg-config-bundled";] then
-        [$1_pkg_config_dir="${$1_builddir}/pkgconfig"]
-        [$1_pkg_config_path="${$1_pkg_config_dir}"]
-        [$1_desc="source tree directory ]ACJF_VAR_SUBDIR[ to provide the pkg-config module ${$1_modules}"]
-        if test -f "${$1_pkg_config_dir}/.pkg_config_path"; then
-          while read line; do
-            case "$line" in
-              "") # ignore
-                ;;
-              /*) # abs path
-                [$1_pkg_config_path="${$1_pkg_config_path}:${line}"]
-                ;;
-              *) # rel path
-                [$1_pkg_config_path="${$1_pkg_config_path}:${$1_pkg_config_dir}/${line}"]
-                ;;
-            esac
-          done < "${$1_pkg_config_dir}/.pkg_config_path"
+    elif test [x"${$1_type}" = x"pkg-config" -o \
+               x"${$1_type}" = x"pkg-config-bundled" -o \
+               x"${$1_type}" = x"configscript";] then
+      if test [x"${$1_type}" = x"pkg-config" -o x"${$1_type}" = x"pkg-config-bundled";] then
+        eval [$1_modules=\$${$2}_modules]
+        if test [x"${$1_modules}" = x"";] then
+          [$1_modules]="ACJF_VAR_PKGCONFIGMOD"
         fi
-      else # x"${$1_type}" = x"pkg-config"
-        eval [$1_pkg_config_dir=\$${$2}_pkg_config_dir]
-        [$1_pkg_config_path="${$1_pkg_config_dir}"]
-        if test [x"${$1_pkg_config_dir}" = x""]; then
-          [$1_desc="standard search path to provide the pkg-config module ${$1_modules}"]
+        if test [x"${$1_type}" = x"pkg-config-bundled";] then
+          [$1_pkg_config_dir="${$1_builddir}/pkgconfig"]
+          [$1_pkg_config_path="${$1_pkg_config_dir}"]
+          [$1_desc="source tree directory ]ACJF_VAR_SUBDIR[ to provide the pkg-config module ${$1_modules}"]
+          if test -f "${$1_pkg_config_dir}/.pkg_config_path"; then
+            while read line; do
+              case "$line" in
+                "") # ignore
+                  ;;
+                /*) # abs path
+                  [$1_pkg_config_path="${$1_pkg_config_path}:${line}"]
+                  ;;
+                *) # rel path
+                  [$1_pkg_config_path="${$1_pkg_config_path}:${$1_pkg_config_dir}/${line}"]
+                  ;;
+              esac
+            done < "${$1_pkg_config_dir}/.pkg_config_path"
+          fi
+        else # x"${$1_type}" = x"pkg-config"
+          eval [$1_pkg_config_dir=\$${$2}_pkg_config_dir]
+          [$1_pkg_config_path="${$1_pkg_config_dir}"]
+          if test [x"${$1_pkg_config_dir}" = x""]; then
+            [$1_desc="standard search path to provide the pkg-config module ${$1_modules}"]
+          else
+            [$1_desc="${$1_pkg_config_dir} to provide the pkg-config module ${$1_modules}"]
+          fi
+        fi
+        acjf_var_old_PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
+        if test x"$PKG_CONFIG_PATH" = x""; then
+          [PKG_CONFIG_PATH="${$1_pkg_config_path}"]
         else
-          [$1_desc="${$1_pkg_config_dir} to provide the pkg-config module ${$1_modules}"]
+          [PKG_CONFIG_PATH="${$1_pkg_config_path}:${PKG_CONFIG_PATH}"]
+        fi
+        export PKG_CONFIG_PATH
+        dnl echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
+        if test -n "$PKG_CONFIG" && AC_RUN_LOG([$PKG_CONFIG --exists --print-errors "${$1_modules}"]); then
+          dnl echo "yep"
+          [$1_invalid="no"]
+          [acjf_var_includedir=""]
+          [acjf_var_include=""]
+          [acjf_var_cppflags=`$PKG_CONFIG --cflags "${$1_modules}" 2>/dev/null`]
+          [acjf_var_cflags=""]
+          [acjf_var_cxxflags=""]
+          [acjf_var_libdir=""]
+          [acjf_var_ldflags=""]
+          [acjf_var_libs=`$PKG_CONFIG --libs "${$1_modules}" 2>/dev/null`]
+        else
+          dnl echo "nope"
+          [$1_invalid="yes"]
+          _PKG_SHORT_ERRORS_SUPPORTED
+          if test [x"$_pkg_short_errors_supported" = x"yes";] then
+            acjf_var_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "$2"`
+          else 
+            acjf_var_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "$2"`
+          fi
+          # Put the nasty error message in config.log where it belongs
+          echo "$acjf_var_PKG_ERRORS" >&AS_MESSAGE_LOG_FD
+        fi
+        PKG_CONFIG_PATH=${acjf_var_old_PKG_CONFIG_PATH}
+        unset acjf_var_old_PKG_CONFIG_PATH
+      else
+        eval [$1_rel_configscript=\$${$2}_configscript]
+        if test [x"${$1_rel_configscript}" = x"";] then
+          [$1_rel_configscript]="ACJF_VAR_CONFIGSCRIPT"
+        fi
+        AC_PATH_PROG([$1_configscript], [${$1_rel_configscript}], [not found])
+        if test [x"${$1_configscript}" != x"not found";] then
+          [$1_invalid="no"]
+          [$1_desc="configuration from ${$1_configscript}"]
+          [acjf_var_includedir=`${$1_configscript} --includedir 2>/dev/null`]
+          [acjf_var_include=`${$1_configscript} --include 2>/dev/null`]
+          [acjf_var_cppflags=`${$1_configscript} --cppflags 2>/dev/null`]
+          [acjf_var_cflags=`${$1_configscript} --cflags 2>/dev/null`]
+          [acjf_var_cxxflags=`${$1_configscript} --cxxflags 2>/dev/null`]
+          [acjf_var_libdir=`${$1_configscript} --libdir 2>/dev/null`]
+          [acjf_var_ldflags=`${$1_configscript} --ldflags 2>/dev/null`]
+          [acjf_var_libs=`${$1_configscript} --libs 2>/dev/null`]
+        else
+          [$1_invalid="yes"]
         fi
       fi
-      acjf_var_old_PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
-      if test x"$PKG_CONFIG_PATH" = x""; then
-        [PKG_CONFIG_PATH="${$1_pkg_config_path}"]
-      else
-        [PKG_CONFIG_PATH="${$1_pkg_config_path}:${PKG_CONFIG_PATH}"]
-      fi
-      export PKG_CONFIG_PATH
-      dnl echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
-      if test -n "$PKG_CONFIG" && AC_RUN_LOG([$PKG_CONFIG --exists --print-errors "${$1_modules}"]); then
-        dnl echo "yep"
-        [$1_invalid="no"]
-        [$1_incpath=`$PKG_CONFIG --cflags-only-I "${$1_modules}" 2>/dev/null | sed -e 's/^-I[ 	]*//;s/[ 	][ 	]*-I[ 	]*/ /g;s/^[ 	]*//;s/[ 	]*$//'`]
-        [$1_libpath=`$PKG_CONFIG --libs-only-L   "${$1_modules}" 2>/dev/null | sed -e 's/^-L[ 	]*//;s/[ 	][ 	]*-L[ 	]*/ /g;s/^[ 	]*//;s/[ 	]*$//'`]
-        [$1_cppflags_other=`$PKG_CONFIG --cflags-only-other "${$1_modules}" 2>/dev/null`]
-        [$1_ldflags_other=`$PKG_CONFIG --libs-only-other "${$1_modules}" 2>/dev/null`]
-        [$1_libs=`$PKG_CONFIG --libs-only-l "${$1_modules}" 2>/dev/null`]
-      else
-        dnl echo "nope"
-        [$1_invalid="yes"]
-        _PKG_SHORT_ERRORS_SUPPORTED
-        if test [x"$_pkg_short_errors_supported" = x"yes";] then
-          acjf_var_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "$2"`
-        else 
-          acjf_var_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "$2"`
-        fi
-        # Put the nasty error message in config.log where it belongs
-        echo "$acjf_var_PKG_ERRORS" >&AS_MESSAGE_LOG_FD
-      fi
-      PKG_CONFIG_PATH=${acjf_var_old_PKG_CONFIG_PATH}
-      unset acjf_var_old_PKG_CONFIG_PATH
-    elif test [x"${$1_type}" = x"configscript";] then
-      eval [$1_rel_configscript=\$${$2}_configscript]
-      if test [x"${$1_rel_configscript}" = x"";] then
-        [$1_rel_configscript]="ACJF_VAR_CONFIGSCRIPT"
-      fi
-      AC_PATH_PROG([$1_configscript], [${$1_rel_configscript}], [not found])
-      if test [x"${$1_configscript}" != x"not found";] then
-        [$1_invalid="no"]
-        [$1_desc="configuration from ${$1_configscript}"]
+      if test [x"${$1_invalid}" != x"yes"]; then
         [$1_incpath=""]
         [$1_libpath=""]
         [$1_cppflags_other=""]
         [$1_ldflags_other=""]
         [$1_libs=""]
-        [acjf_var_includedir=`${$1_configscript} --includedir 2>/dev/null`]
-        [acjf_var_include=`${$1_configscript} --include 2>/dev/null`]
-        [acjf_var_cppflags=`${$1_configscript} --cppflags 2>/dev/null`]
-        [acjf_var_cflags=`${$1_configscript} --cflags 2>/dev/null`]
-        [acjf_var_cxxflags=`${$1_configscript} --cxxflags 2>/dev/null`]
-        [acjf_var_libdir=`${$1_configscript} --libdir 2>/dev/null`]
-        [acjf_var_ldflags=`${$1_configscript} --ldflags 2>/dev/null`]
-        [acjf_var_libs=`${$1_configscript} --libs 2>/dev/null`]
         set dummy $acjf_var_include $acjf_var_cppflags $acjf_var_cflags $acjf_var_cxxflags
         shift
         while test $[]# != 0
         do
           case $[]1 in
             [-[ID])]
-              ac_option=$[]1
-              ac_optarg=$[]2
-              ac_shift=shift
+              acjf_var_option=$[]1
+              acjf_var_optarg=$[]2
+              acjf_var_shift=shift
               ;;
             [-[ID]*)]
-              ac_option=`expr "x$[]1" : 'x\(..\)'`
-              ac_optarg=`expr "x$[]1" : 'x..\(.*\)'`
-              ac_shift=:
+              acjf_var_option=`expr "x$[]1" : 'x\(..\)'`
+              acjf_var_optarg=`expr "x$[]1" : 'x..\(.*\)'`
+              acjf_var_shift=:
               ;;
             [*)]
               # This is not an option, so the user has probably given explicit
               # arguments.
-              ac_option=$[]1
-              ac_shift=:
+              acjf_var_option=$[]1
+              acjf_var_shift=:
           esac
-          case $ac_option in
+          case $acjf_var_option in
             -I)
-              [$1_incpath="${$1_incpath} $ac_optarg"; $ac_shift]
+              if test [x"${$1_incpath}" != x"";] then
+                if ! expr [x" ${$1_incpath} " : x".*[ 	]$acjf_var_optarg[ 	]" > /dev/null;] then
+                  [$1_incpath="${$1_incpath} $acjf_var_optarg"]
+                fi
+              else
+                [$1_incpath="$acjf_var_optarg"]
+              fi
+              $acjf_var_shift
               ;;
             -D)
-              [$1_cppflags="${$1_cppflags} -D$ac_optarg"; $ac_shift]
+              [$1_cppflags_other="${$1_cppflags} -D$acjf_var_optarg"; $acjf_var_shift]
               ;;
             *)
-              [$1_cppflags="${$1_cppflags} $ac_option"]
+              [$1_cppflags_other="${$1_cppflags} $acjf_var_option"]
               ;;
           esac
           shift
         done
-        [$1_incpath="${$1_incpath} $acjf_var_includedir"]
+        if test x"$acjf_var_includedir" != x""; then
+          if test [x"${$1_incpath}" != x"";] then
+            if ! expr [x" ${$1_incpath} " : x".*[ 	]$acjf_var_includedir[ 	]" > /dev/null;] then
+              [$1_incpath="${$1_incpath} $acjf_var_includedir"]
+            fi
+          else
+            [$1_incpath="$acjf_var_includedir"]
+          fi
+        fi
         set dummy $acjf_var_libs $acjf_var_ldflags
         shift
         while test $[]# != 0
         do
           case $[]1 in
             [-L)]
-              ac_option=$[]1
-              ac_optarg=$[]2
-              ac_shift=shift
+              acjf_var_option=$[]1
+              acjf_var_optarg=$[]2
+              acjf_var_shift=shift
               ;;
             [-[Ll]*)]
-              ac_option=`expr "x$[]1" : 'x\(..\)'`
-              ac_optarg=`expr "x$[]1" : 'x..\(.*\)'`
-              ac_shift=:
+              acjf_var_option=`expr "x$[]1" : 'x\(..\)'`
+              acjf_var_optarg=`expr "x$[]1" : 'x..\(.*\)'`
+              acjf_var_shift=:
               ;;
             [*)]
               # This is not an option, so the user has probably given explicit
               # arguments.
-              ac_option=$[]1
-              ac_shift=:
+              acjf_var_option=$[]1
+              acjf_var_shift=:
           esac
-          case $ac_option in
+          case $acjf_var_option in
             -L)
-              [$1_libpath="${$1_libpath} $ac_optarg"; $ac_shift]
+              if test [x"${$1_libpath}" != x"";] then
+                if ! expr [x" ${$1_libpath} " : x".*[ 	]$acjf_var_optarg[ 	]" > /dev/null;] then
+                  [$1_libpath="${$1_libpath} $acjf_var_optarg"]
+                fi
+              else
+                [$1_libpath="$acjf_var_optarg"]
+              fi
+              $acjf_var_shift
               ;;
             -l)
-              [$1_libs="${$1_libs} -l$ac_optarg"; $ac_shift]
+              [$1_libs="${$1_libs} -l$acjf_var_optarg"; $acjf_var_shift]
+              ;;
+            lib*.la|lib*.a|lib*.so|*/lib*.la|*/lib*.a|*/lib*.so)
+              [$1_deps="${$1_deps} $acjf_var_option"]
+              acjf_var_flummy=`dirname "$acjf_var_option"`
+              if test [x"${$1_libpath}" != x"";] then
+                if ! expr [x" ${$1_libpath} " : x".*[ 	]$acjf_var_flummy[ 	]" > /dev/null;] then
+                  [$1_libpath="${$1_libpath} $acjf_var_flummy"]
+                fi
+              else
+                [$1_libpath="$acjf_var_flummy"]
+              fi
+              [acjf_var_flummy=`basename "$acjf_var_option"`]
+              [acjf_var_flummy=`expr "$acjf_var_flummy" : "lib\(.*\)\."`]
+              [$1_libs="${$1_libs} -l$acjf_var_flummy"]
+              unset acjf_var_flummy
+              $acjf_var_shift
               ;;
             *)
-              [$1_ldflags_other="${$1_ldflags_other} $ac_option"]
+              [$1_ldflags_other="${$1_ldflags_other} $acjf_var_option"]
               ;;
           esac
           shift
         done
-        [$1_libpath="${$1_libpath} $acjf_var_libdir"]
-        unset acjf_var_includedir
-        unset acjf_var_include
-        unset acjf_var_cppflags
-        unset acjf_var_cflags
-        unset acjf_var_cxxflags
-        unset acjf_var_libdir
-        unset acjf_var_ldflags
-        unset acjf_var_libs
-      else
-        [$1_invalid="yes"]
+        if test x"$acjf_var_libdir" != x""; then
+          if test [x"${$1_libpath}" != x"";] then
+            if ! expr [x" ${$1_libpath} " : x".*[ 	]$acjf_var_libdir[ 	]" > /dev/null;] then
+              [$1_libpath="${$1_libpath} $acjf_var_libdir"]
+            fi
+          else
+            [$1_libpath="$acjf_var_libdir"]
+          fi
+        fi
       fi
-    else
-      eval [$1_invalid=\$${$2}_invalid]
-      eval [$1_incpath=\$${$2}_incpath]
-      eval [$1_libpath=\$${$2}_libpath]
-      eval [$1_cppflags_other=\$${$2}_cppflags_other]
-      eval [$1_ldflags_other=\$${$2}_ldflags_other]
-      eval [$1_libs=\$${$2}_libs]
+      unset acjf_var_option
+      unset acjf_var_optarg
+      unset acjf_var_shift
+      unset acjf_var_includedir
+      unset acjf_var_include
+      unset acjf_var_cppflags
+      unset acjf_var_cflags
+      unset acjf_var_cxxflags
+      unset acjf_var_libdir
+      unset acjf_var_ldflags
+      unset acjf_var_libs
     fi
   fi
-  unset acjf_var_pkgname_srcdir
-  dnl echo ["$1_desc=${$1_desc}"]
-  dnl echo ["$1_type=${$1_type}"]
-  dnl echo ["$1_invalid=${$1_invalid}"]
-  dnl echo ["$1_incpath=${$1_incpath}"]
-  dnl echo ["$1_libpath=${$1_libpath}"]
-  dnl echo ["$1_cppflags_other=${$1_cppflags_other}"]
-  dnl echo ["$1_ldflags_other=${$1_ldflags_other}"]
-  dnl echo ["$1_libs=${$1_libs}"]
+dnl  echo "FINAL:"
+dnl  echo ["  $1_desc=${$1_desc}"]
+dnl  echo ["  $1_type=${$1_type}"]
+dnl  echo ["  $1_invalid=${$1_invalid}"]
+dnl  echo ["  $1_incpath=${$1_incpath}"]
+dnl  echo ["  $1_libpath=${$1_libpath}"]
+dnl  echo ["  $1_cppflags_other=${$1_cppflags_other}"]
+dnl  echo ["  $1_ldflags_other=${$1_ldflags_other}"]
+dnl  echo ["  $1_libs=${$1_libs}"]
+dnl  echo ["  $1_deps=${$1_deps}"]
 ])
 
 dnl ACJF_ARG_WITHPKG(
@@ -785,7 +861,8 @@ dnl ACJF_CHECK_LIB_TESTER in sequence.  Usage of ACJF_CHECK_LIB_TESTER is
 dnl only required for certain packages which require custom code to find header and
 dnl library paths.
 dnl
-dnl IF pkg found define:
+dnl If pkg found define:
+dnl   PKGNAME_FOUND          yes
 dnl   PKGNAME_INCLUDE        only -I flags (whitespace seperated)
 dnl   PKGNAME_CPPFLAGS_OTHER odd compile flags like defines or -pthread (whitespace seperated)
 dnl   PKGNAME_CPPFLAGS       PKGNAME_INCLUDE and PKGNAME_CPPFLAGS_OTHER all in one
@@ -793,17 +870,21 @@ dnl   PKGNAME_LFLAGS         only -L flags (whitespace seperated)
 dnl   PKGNAME_LDFLAGS_OTHER  odd link flags like -rpath, -pthread, etc.
 dnl   PKGNAME_LDFLAGS        PKGNAME_LFLAGS and PKGNAME_LDFLAGS_OTHER all in one
 dnl   PKGNAME_LIBS           -l options (whitespace seperated)
-dnl   PKGNAME_FOUND          yes or no
-dnl IF pkg is from srcdir:
-dnl   PKGNAME_INCPATH include directory
-dnl   PKGNAME_LIBPATH library directory
-dnl   pkg_pkgname_srcdir
-dnl   pkg_pkgname_builddir
-dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := true
-dnl IF pkg is from extern:
-dnl   PKGNAME_INCPATH if possible whitespace seperated list of include directories
-dnl   PKGNAME_LIBPATH if possible whitespace seperated list of library directories
-dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := false
+dnl   PKGNAME_DEPENDENCIES   fully qualified path to the libs if possible
+dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND := true
+dnl   If pkg is from srcdir:
+dnl     PKGNAME_INCPATH      include directory
+dnl     PKGNAME_LIBPATH      library directory
+dnl     pkg_pkgname_srcdir
+dnl     pkg_pkgname_builddir
+dnl     AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := true
+dnl   If pkg is from extern:
+dnl     PKGNAME_INCPATH      if possible whitespace seperated list of include directories
+dnl     PKGNAME_LIBPATH      if possible whitespace seperated list of library directories
+dnl     AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := false
+dnl If pkg not found define:
+dnl   PKGNAME_FOUND          no
+dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND := false
 AC_DEFUN([ACJF_CHECK_LIB_TESTER], [AC_REQUIRE([ACJF_INIT])dnl
   m4_if(m4_eval([$#<3]), [1], [m4_fatal([At least three arguments required for ACJF_CHECK_LIB_TESTER])])dnl
   m4_pushdef([ACJF_VAR_PKGNAME], [[$1]])dnl
@@ -941,6 +1022,7 @@ dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]: $[acjf_cv_]
 dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_cppflags_other]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_cppflags_other]"
 dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_ldflags_other]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_ldflags_other]"
 dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]"
+dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_deps]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_deps]"
 
     if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"bundled" -o \
             x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled"; then
@@ -976,12 +1058,20 @@ dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]: $[acjf_cv_]ACJ
         ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LFLAGS]="$ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LFLAGS] -L$ACJF_VAR_ANON_SHELLVARPREFIX[item2]";
       done
       ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBS]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]"
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_DEPENDENCIES]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_deps]"
       ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS_OTHER]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_ldflags_other]"
       ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS]="$ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LFLAGS] $ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS_OTHER]"
     else
       ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND]="no"
     fi
-
+    
+    m4_divert_push([INIT_PREPARE])
+    ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND]),
+      [AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND], [false])])
+    m4_divert_pop([INIT_PREPARE])
+    AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND],
+      test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" != x"$acjf_disabled_type")
+    
     m4_if(ACJF_VAR_SUBDIR, [], [],
      [m4_pattern_allow([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_USE_SRCDIR_VERSION])
       m4_divert_push([INIT_PREPARE])
@@ -998,6 +1088,8 @@ dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]: $[acjf_cv_]ACJ
         unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]
         unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]
         unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]
+        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]
+        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_deps]
       fi])
 
     AC_SUBST(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH])dnl
@@ -1021,6 +1113,7 @@ dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]: $[acjf_cv_]ACJ
         ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS_OTHER],
         ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS],
         ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBS],
+        ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_DEPENDENCIES],
         [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir],
         [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]),
       ACJF_VAR_SUBSTVARFIXUP)))dnl
@@ -1113,7 +1206,8 @@ dnl  [<code if not found, default is bailout>]])
 dnl
 dnl After execution of the macro
 dnl
-dnl IF pkg found define:
+dnl If pkg found define:
+dnl   PKGNAME_FOUND          yes
 dnl   PKGNAME_INCLUDE        only -I flags (whitespace seperated)
 dnl   PKGNAME_CPPFLAGS_OTHER odd compile flags like defines or -pthread (whitespace seperated)
 dnl   PKGNAME_CPPFLAGS       PKGNAME_INCLUDE and PKGNAME_CPPFLAGS_OTHER all in one
@@ -1121,12 +1215,17 @@ dnl   PKGNAME_LFLAGS         only -L flags (whitespace seperated)
 dnl   PKGNAME_LDFLAGS_OTHER  odd link flags like -rpath, -pthread, etc.
 dnl   PKGNAME_LDFLAGS        PKGNAME_LFLAGS and PKGNAME_LDFLAGS_OTHER all in one
 dnl   PKGNAME_LIBS           -l options (whitespace seperated)
-dnl   PKGNAME_FOUND          yes or no
+dnl   PKGNAME_DEPENDENCIES   fully qualified path to the libs if possible
 dnl   PKGNAME_INCPATH        include directory
 dnl   PKGNAME_LIBPATH        library directory
 dnl   pkg_pkgname_srcdir
 dnl   pkg_pkgname_builddir
+dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND := true
 dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := true
+dnl If pkg not found define:
+dnl   PKGNAME_FOUND          no
+dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND := false
+dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := false
 AC_DEFUN([ACJF_CHECK_PKG], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_ARGSLIST], [[$@]])dnl
   dnl echo "ACJF_M4_QUOTE(ACJF_VAR_ARGSLIST)"
@@ -1207,7 +1306,8 @@ dnl   <lib name>,
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 dnl
-dnl IF pkg found define:
+dnl If pkg found define:
+dnl   PKGNAME_FOUND          yes
 dnl   PKGNAME_INCLUDE        only -I flags (whitespace seperated)
 dnl   PKGNAME_CPPFLAGS_OTHER odd compile flags like defines or -pthread (whitespace seperated)
 dnl   PKGNAME_CPPFLAGS       PKGNAME_INCLUDE and PKGNAME_CPPFLAGS_OTHER all in one
@@ -1215,17 +1315,21 @@ dnl   PKGNAME_LFLAGS         only -L flags (whitespace seperated)
 dnl   PKGNAME_LDFLAGS_OTHER  odd link flags like -rpath, -pthread, etc.
 dnl   PKGNAME_LDFLAGS        PKGNAME_LFLAGS and PKGNAME_LDFLAGS_OTHER all in one
 dnl   PKGNAME_LIBS           -l options (whitespace seperated)
-dnl   PKGNAME_FOUND          yes or no
-dnl IF pkg is from srcdir:
-dnl   PKGNAME_INCPATH include directory
-dnl   PKGNAME_LIBPATH library directory
-dnl   pkg_pkgname_srcdir
-dnl   pkg_pkgname_builddir
-dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := true
-dnl IF pkg is from extern:
-dnl   PKGNAME_INCPATH if possible whitespace seperated list of include directories
-dnl   PKGNAME_LIBPATH if possible whitespace seperated list of library directories
-dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := false
+dnl   PKGNAME_DEPENDENCIES   fully qualified path to the libs if possible
+dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND := true
+dnl   If pkg is from srcdir:
+dnl     PKGNAME_INCPATH      include directory
+dnl     PKGNAME_LIBPATH      library directory
+dnl     pkg_pkgname_srcdir
+dnl     pkg_pkgname_builddir
+dnl     AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := true
+dnl   If pkg is from extern:
+dnl     PKGNAME_INCPATH      if possible whitespace seperated list of include directories
+dnl     PKGNAME_LIBPATH      if possible whitespace seperated list of library directories
+dnl     AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := false
+dnl If pkg not found define:
+dnl   PKGNAME_FOUND          no
+dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND := false
 AC_DEFUN([ACJF_CHECK_LIB], [dnl
   m4_pushdef([ACJF_VAR_ARGSLIST], [[$@]])dnl
   dnl echo "ACJF_M4_QUOTE(ACJF_VAR_ARGSLIST)"
