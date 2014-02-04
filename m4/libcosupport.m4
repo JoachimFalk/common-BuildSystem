@@ -22,10 +22,10 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT_ALLOCATORS], [dnl
   ACJF_ARG_WITHPKG([CoSupport], [[intern:Support],[extern],[pkgconfig:libcosupport]])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Allocators])dnl
+  ACJF_PKG_SEARCHLOC_COPY([CoSupport], [CoSupport-Allocators])dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([CoSupport-Allocators], [[intern:Support],[pkgconfig:libcosupport-allocators $1]],
-    [ACJF_CHECK_PKG_TESTMACRO],
+    ACJF_PKG_TESTMACROGEN_DUMMY,
     [$2], [$3])
   AC_LANG_POP
 ])
@@ -36,10 +36,10 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT_INITIALIZER], [dnl
   ACJF_ARG_WITHPKG([CoSupport], [[intern:Support],[extern],[pkgconfig:libcosupport]])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Initializer])dnl
+  ACJF_PKG_SEARCHLOC_COPY([CoSupport], [CoSupport-Initializer])dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([CoSupport-Initializer], [[intern:Support],[pkgconfig:libcosupport-initializer $1]],
-    [ACJF_CHECK_PKG_TESTMACRO],
+    ACJF_PKG_TESTMACROGEN_DUMMY,
     [$2], [$3])
   AC_LANG_POP
 ])
@@ -50,10 +50,10 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT_MATH], [dnl
   ACJF_ARG_WITHPKG([CoSupport], [[intern:Support],[extern],[pkgconfig:libcosupport]])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Math])dnl
+  ACJF_PKG_SEARCHLOC_COPY([CoSupport], [CoSupport-Math])dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([CoSupport-Math], [[intern:Support],[pkgconfig:libcosupport-math $1]],
-    [ACJF_CHECK_PKG_TESTMACRO],
+    ACJF_PKG_TESTMACROGEN_DUMMY,
     [$2], [$3])
   AC_LANG_POP
 ])
@@ -64,10 +64,10 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT_PATH], [dnl
   ACJF_ARG_WITHPKG([CoSupport], [[intern:Support],[extern],[pkgconfig:libcosupport]])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Path])dnl
+  ACJF_PKG_SEARCHLOC_COPY([CoSupport], [CoSupport-Path])dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([CoSupport-Path], [[intern:Support],[pkgconfig:libcosupport-path $1]],
-    [ACJF_CHECK_PKG_TESTMACRO],
+    ACJF_PKG_TESTMACROGEN_DUMMY,
     [$2], [$3])
   AC_LANG_POP
 ])
@@ -78,10 +78,10 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT_RANDOM], [dnl
   ACJF_ARG_WITHPKG([CoSupport], [[intern:Support],[extern],[pkgconfig:libcosupport]])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Random])dnl
+  ACJF_PKG_SEARCHLOC_COPY([CoSupport], [CoSupport-Random])dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([CoSupport-Random], [[intern:Support],[pkgconfig:libcosupport-random $1]],
-    [ACJF_CHECK_PKG_TESTMACRO],
+    ACJF_PKG_TESTMACROGEN_DUMMY,
     [$2], [$3])
   AC_LANG_POP
 ])
@@ -92,10 +92,10 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT_SMARTPTR], [dnl
   ACJF_ARG_WITHPKG([CoSupport], [[intern:Support],[extern],[pkgconfig:libcosupport]])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-SmartPtr])dnl
+  ACJF_PKG_SEARCHLOC_COPY([CoSupport], [CoSupport-SmartPtr])dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([CoSupport-SmartPtr], [[intern:Support],[pkgconfig:libcosupport-smartptr $1]],
-    [ACJF_CHECK_PKG_TESTMACRO],
+    ACJF_PKG_TESTMACROGEN_DUMMY,
     [$2], [$3])
   AC_LANG_POP
 ])
@@ -106,10 +106,10 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT_STREAMS], [dnl
   ACJF_ARG_WITHPKG([CoSupport], [[intern:Support],[extern],[pkgconfig:libcosupport]])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Streams])dnl
+  ACJF_PKG_SEARCHLOC_COPY([CoSupport], [CoSupport-Streams])dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([CoSupport-Streams], [[intern:Support],[pkgconfig:libcosupport-streams $1]],
-    ACJF_CHECK_LIB_TESTMACROGEN(
+    ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
      [#include <iostream>
       #include <CoSupport/Streams/DebugOStream.hpp>],
      [CoSupport::Streams::dout << "Hello World !" << std::endl;]),
@@ -124,10 +124,10 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT_STRING], [dnl
   ACJF_ARG_WITHPKG([CoSupport], [[intern:Support],[extern],[pkgconfig:libcosupport]])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-String])dnl
+  ACJF_PKG_SEARCHLOC_COPY([CoSupport], [CoSupport-String])dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([CoSupport-String], [[intern:Support],[pkgconfig:libcosupport-string $1]],
-    [ACJF_CHECK_PKG_TESTMACRO],
+    ACJF_PKG_TESTMACROGEN_DUMMY,
     [$2], [$3])
   AC_LANG_POP
 ])
@@ -138,10 +138,10 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT_SYSTEMC], [dnl
   ACJF_ARG_WITHPKG([CoSupport], [[intern:Support],[extern],[pkgconfig:libcosupport]])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-SystemC])dnl
+  ACJF_PKG_SEARCHLOC_COPY([CoSupport], [CoSupport-SystemC])dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([CoSupport-SystemC], [[intern:Support],[pkgconfig:libcosupport-systemc $1]],
-    [ACJF_CHECK_PKG_TESTMACRO],
+    ACJF_PKG_TESTMACROGEN_DUMMY,
     [$2], [$3])
   AC_LANG_POP
 ])
@@ -152,10 +152,10 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT_TRACING], [dnl
   ACJF_ARG_WITHPKG([CoSupport], [[intern:Support],[extern],[pkgconfig:libcosupport]])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Tracing])dnl
+  ACJF_PKG_SEARCHLOC_COPY([CoSupport], [CoSupport-Tracing])dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([CoSupport-Tracing], [[intern:Support],[pkgconfig:libcosupport-tracing $1]],
-    [ACJF_CHECK_PKG_TESTMACRO],
+    ACJF_PKG_TESTMACROGEN_DUMMY,
     [$2], [$3])
   AC_LANG_POP
 ])
@@ -166,10 +166,10 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT_XERCES], [dnl
   ACJF_ARG_WITHPKG([CoSupport], [[intern:Support],[extern],[pkgconfig:libcosupport]])dnl
-  ACJF_PKG_COPY_OPTIONS([CoSupport], [CoSupport-Xerces])dnl
+  ACJF_PKG_SEARCHLOC_COPY([CoSupport], [CoSupport-Xerces])dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([CoSupport-Xerces], [[intern:Support],[pkgconfig:libcosupport-xerces $1]],
-    [ACJF_CHECK_PKG_TESTMACRO],
+    ACJF_PKG_TESTMACROGEN_DUMMY,
     [$2], [$3])
   AC_LANG_POP
 ])
@@ -222,7 +222,7 @@ AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT], [dnl
     ACJF_CHECK_LIB_COSUPPORT_TRACING(ACJF_VAR_PKG_CONDITION,[],ACJF_VAR_CHILD_CODE_IF_FALSE)dnl
     ACJF_CHECK_LIB_COSUPPORT_XERCES(ACJF_VAR_PKG_CONDITION,[],ACJF_VAR_CHILD_CODE_IF_FALSE)dnl
     ACJF_CHECK_LIB_TESTER([CoSupport], [[intern:Support],[pkgconfig:libcosupport]] ACJF_M4_QUOTE(ACJF_VAR_PKG_CONDITION),
-      [ACJF_CHECK_PKG_TESTMACRO],
+      ACJF_PKG_TESTMACROGEN_DUMMY,
       [], ACJF_VAR_CHILD_CODE_IF_FALSE)dnl
     break
   done
