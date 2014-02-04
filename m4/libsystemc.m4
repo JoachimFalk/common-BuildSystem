@@ -16,10 +16,6 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-dnl ACJF_SYSTEMC check for systemc library (obsolete)
-AU_DEFUN([ACJF_SYSTEMC], [ACJF_CHECK_LIB_SYSTEMC],
-  [ACJF_SYSTEMC is considered obsolete use ACJF_CHECK_LIB_SYSTEMC instead.])
-
 dnl ACJF_CHECK_LIB_SYSTEMC(
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])

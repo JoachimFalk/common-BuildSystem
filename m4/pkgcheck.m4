@@ -16,55 +16,55 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-dnl ACJF_PKG_CLEARLOC
+dnl ACJF_PKG_SEARCHLOC_CLEAR
 dnl   <pkgname>)
 dnl
 dnl Clear search list for <pkgname>.
-AC_DEFUN([ACJF_PKG_CLEARLOC], [AC_REQUIRE([ACJF_INIT])dnl
+AC_DEFUN([ACJF_PKG_SEARCHLOC_CLEAR], [AC_REQUIRE([ACJF_INIT])dnl
   unset [acjf_]ACJF_M4_CANON_DC([$1])[_search_list];
 ])
 
-dnl ACJF_PKG_COPY_OPTIONS(
+dnl ACJF_PKG_SEARCHLOC_COPY(
 dnl   <src pkgname>, <dst pkgname>)
 dnl
 dnl Copy search option form <src pkgname>, usually derived by macro
 dnl ACJF_ARG_WITHPKG, to <dst pkgname>. This enables the usage of
 dnl a simple --with-<src pkgname> option to control the location of
 dnl multiple libraries <dst pkgname>s.
-AC_DEFUN([ACJF_PKG_COPY_OPTIONS], [AC_REQUIRE([ACJF_INIT])dnl
+AC_DEFUN([ACJF_PKG_SEARCHLOC_COPY], [AC_REQUIRE([ACJF_INIT])dnl
   [acjf_]ACJF_M4_CANON_DC([$2])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list]"
 ])
 
-dnl ACJF_PKG_ADDLOC_INTERN(
+dnl ACJF_PKG_SEARCHLOC_ADD_INTERN(
 dnl   <pkgname>)
 dnl
 dnl Add source tree version to the list of search locations for <pkgname>.
-AC_DEFUN([ACJF_PKG_ADDLOC_INTERN], [AC_REQUIRE([ACJF_INIT])dnl
+AC_DEFUN([ACJF_PKG_SEARCHLOC_ADD_INTERN], [AC_REQUIRE([ACJF_INIT])dnl
   [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] acjf_bundled";
 ])
 
-dnl ACJF_PKG_ADDLOC_STD(
+dnl ACJF_PKG_SEARCHLOC_ADD_STD(
 dnl   <pkgname>)
 dnl
 dnl Add standard include/lib to the list of search locations for <pkgname>.
-AC_DEFUN([ACJF_PKG_ADDLOC_STD], [AC_REQUIRE([ACJF_INIT])dnl
+AC_DEFUN([ACJF_PKG_SEARCHLOC_ADD_STD], [AC_REQUIRE([ACJF_INIT])dnl
   [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] acjf_std";
 ])
 
-dnl ACJF_PKG_ADDLOC_DISABLED(
+dnl ACJF_PKG_SEARCHLOC_ADD_DISABLED(
 dnl   <pkgname>)
 dnl
 dnl Add disabled as a valid state for <pkgname>.
-AC_DEFUN([ACJF_PKG_ADDLOC_DISABLED], [AC_REQUIRE([ACJF_INIT])dnl
+AC_DEFUN([ACJF_PKG_SEARCHLOC_ADD_DISABLED], [AC_REQUIRE([ACJF_INIT])dnl
   [acjf_]ACJF_M4_CANON_DC([$1])[_search_list]="$[acjf_]ACJF_M4_CANON_DC([$1])[_search_list] acjf_disabled";
 ])
 
-dnl ACJF_PKG_ADDLOC_PREFIX(
+dnl ACJF_PKG_SEARCHLOC_ADD_PREFIX(
 dnl   <pkgname>,
 dnl   <prefix>)
 dnl
 dnl Add <prefix> to the list of search locations for <pkgname>.
-AC_DEFUN([ACJF_PKG_ADDLOC_PREFIX], [AC_REQUIRE([ACJF_INIT])dnl
+AC_DEFUN([ACJF_PKG_SEARCHLOC_ADD_PREFIX], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="from install location $2"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="inclib"];
@@ -75,13 +75,13 @@ AC_DEFUN([ACJF_PKG_ADDLOC_PREFIX], [AC_REQUIRE([ACJF_INIT])dnl
   m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
 ])
 
-dnl ACJF_PKG_ADDLOC_INCLIB(
+dnl ACJF_PKG_SEARCHLOC_ADD_INCLIB(
 dnl   <pkgname>,
 dnl   <include path>,
 dnl   <lib path>)
 dnl
 dnl Add <include path> and <lib path> to the list of search locations for <pkgname>.
-AC_DEFUN([ACJF_PKG_ADDLOC_INCLIB], [AC_REQUIRE([ACJF_INIT])dnl
+AC_DEFUN([ACJF_PKG_SEARCHLOC_ADD_INCLIB], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="includes from $2, libs from $3"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="inclib"];
@@ -92,12 +92,12 @@ AC_DEFUN([ACJF_PKG_ADDLOC_INCLIB], [AC_REQUIRE([ACJF_INIT])dnl
   m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
 ])
 
-dnl ACJF_PKG_ADDLOC_PKGCONFIG_INTERN(
+dnl ACJF_PKG_SEARCHLOC_ADD_PKGCONFIG_INTERN(
 dnl   <pkgname>,
 dnl   <pkgconfig>)
 dnl
 dnl Add <pkgconfig> from source tree
-AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG_INTERN], [AC_REQUIRE([ACJF_INIT])dnl
+AC_DEFUN([ACJF_PKG_SEARCHLOC_ADD_PKGCONFIG_INTERN], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="source tree via pkg-config for $2"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="pkg-config-bundled"];
@@ -107,12 +107,12 @@ AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG_INTERN], [AC_REQUIRE([ACJF_INIT])dnl
   m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
 ])
 
-dnl ACJF_PKG_ADDLOC_PKGCONFIG_STD(
+dnl ACJF_PKG_SEARCHLOC_ADD_PKGCONFIG_STD(
 dnl   <pkgname>,
 dnl   <pkgconfig>)
 dnl
 dnl Add <pkgconfig> from standard pkg-config search path
-AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG_STD], [AC_REQUIRE([ACJF_INIT])dnl
+AC_DEFUN([ACJF_PKG_SEARCHLOC_ADD_PKGCONFIG_STD], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="standard search paths via pkg-config for $2"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="pkg-config"];
@@ -123,13 +123,13 @@ AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG_STD], [AC_REQUIRE([ACJF_INIT])dnl
   m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
 ])
 
-dnl ACJF_PKG_ADDLOC_PKGCONFIG_PREFIX(
+dnl ACJF_PKG_SEARCHLOC_ADD_PKGCONFIG_PREFIX(
 dnl   <pkgname>,
 dnl   <prefix>,
 dnl   <pkgconfig>)
 dnl
 dnl Add <pkgconfig> under <prefix>/lib/pkgconfig to the list of search locations for <pkgname>.
-AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG_PREFIX], [AC_REQUIRE([ACJF_INIT])dnl
+AC_DEFUN([ACJF_PKG_SEARCHLOC_ADD_PKGCONFIG_PREFIX], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="$2 via pkg-config for $3"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="pkg-config"];
@@ -140,7 +140,7 @@ AC_DEFUN([ACJF_PKG_ADDLOC_PKGCONFIG_PREFIX], [AC_REQUIRE([ACJF_INIT])dnl
   m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
 ])
 
-dnl ACJF_PKG_ADDLOC_CONFIGSCRIPT(
+dnl ACJF_PKG_SEARCHLOC_ADD_CONFIGSCRIPT(
 dnl   <pkgname>,
 dnl   <script>)
 dnl
@@ -153,7 +153,7 @@ dnl   --libs
 dnl   --cppflags
 dnl   --cflags
 dnl   --cxxflags
-AC_DEFUN([ACJF_PKG_ADDLOC_CONFIGSCRIPT], [AC_REQUIRE([ACJF_INIT])dnl
+AC_DEFUN([ACJF_PKG_SEARCHLOC_ADD_CONFIGSCRIPT], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_ANONYMOUS_SHELL_VAR], ACJF_GEN_ANONYMOUS_SHELL_VAR)
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_desc="configuration from $2"];
   ACJF_VAR_ANONYMOUS_SHELL_VAR[_type="configscript"];
@@ -163,7 +163,7 @@ AC_DEFUN([ACJF_PKG_ADDLOC_CONFIGSCRIPT], [AC_REQUIRE([ACJF_INIT])dnl
   m4_popdef([ACJF_VAR_ANONYMOUS_SHELL_VAR])
 ])
 
-dnl ACJF_PKG_EVALLOC(
+dnl ACJF_PKG_SEARCHLOC_EVALUATE(
 dnl   <varprefix>,
 dnl   <searchentry>)
 dnl 
@@ -184,7 +184,7 @@ dnl   <varprefix>_ldflags_other
 dnl   <varprefix>_libs
 dnl   <varprefix>_deps
 dnl
-AC_DEFUN([ACJF_PKG_EVALLOC], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
+AC_DEFUN([ACJF_PKG_SEARCHLOC_EVALUATE], [AC_REQUIRE([ACJF_INIT])AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
   m4_ifdef([ACJF_VAR_SUBDIR],       [], [m4_fatal([Missing definition of ACJF_VAR_SUBDIR macro!])])dnl
   m4_ifdef([ACJF_VAR_PKGNAME],      [], [m4_fatal([Missing definition of ACJF_VAR_PKGNAME macro!])])dnl
   m4_ifdef([ACJF_VAR_PKGCONFIGMOD], [], [m4_fatal([Missing definition of ACJF_VAR_PKGCONFIGMOD macro!])])dnl
@@ -213,7 +213,7 @@ dnl  echo ["  $1_deps=${$1_deps}"]
     if test [x"${$1_type}" = x"bundled" -o x"${$1_type}" = x"pkg-config-bundled";] then
       m4_if(ACJF_VAR_SUBDIR, [],
        [AC_MSG_ERROR([Internal error: internal location specified for ACJF_VAR_PKGNAME but source tree location not given in configure.in!])])dnl
-      _ACJF_SOURCE_TREE_LOCATION_SEARCHER(acjf_var_pkgname_srcdir)dnl
+      _ACJF_PKG_SRCTREE_SEARCHER(acjf_var_pkgname_srcdir)dnl
       if test [x"${acjf_var_pkgname_srcdir}" != x"/invalid" -a -f "${acjf_abs_top_builddir}/${acjf_var_pkgname_srcdir}/Makefile";] then
         dnl we need abs pathes (${acjf_abs_top_srcdir}) here to enable a correct fixup also for relative configure calls.
         [$1_srcdir="${acjf_abs_top_srcdir}/${acjf_var_pkgname_srcdir}"]
@@ -520,7 +520,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
   dnl append disabled tag to tags if not found
   m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<disabled\>]), [-1],
    [ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_TAGS], [[disabled]])])dnl
-  dnl Iterate over tags to set ACJF_VAR_SUBDIR from inter:xxx or compile:xxx tag
+  dnl Iterate over tags to set ACJF_VAR_SUBDIR from intern:xxx or compile:xxx tag
   ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS,
    [dnl set ACJF_VAR_SUBDIR from intern:xxx or compile:xxx tag
     m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [intern:\|compile:]), [0],
@@ -654,8 +654,8 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
    ])dnl m4_if(m4_bregexp(ACJF_VAR_TAGS, [\<extern\>]), ...)
   
   dnl Clear search list for <pkgname>. The search list will later be populated
-  dnl via ACJF_PKG_ADDLOC_XXX macros.
-  ACJF_PKG_CLEARLOC(ACJF_VAR_PKGNAME)dnl
+  dnl via ACJF_PKG_SEARCHLOC_ADD_XXX macros.
+  ACJF_PKG_SEARCHLOC_CLEAR(ACJF_VAR_PKGNAME)dnl
   acjf_var_matchtag=no
   ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS, [
     m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^intern$\|^intern:\|^compile$\|^compile:]), [0],
@@ -664,7 +664,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
           m4_if(ACJF_VAR_PKGCONFIGMOD, [],
            [m4_if(ACJF_VAR_CONFIGSCRIPT, [],
              [dnl neither configscript nor pkgconfig mode
-              ACJF_PKG_ADDLOC_INTERN(ACJF_VAR_PKGNAME)
+              ACJF_PKG_SEARCHLOC_ADD_INTERN(ACJF_VAR_PKGNAME)
              ],
              [dnl configscript mode
 
@@ -672,7 +672,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
              ])
            ],
            [dnl pkgconfig mode
-            ACJF_PKG_ADDLOC_PKGCONFIG_INTERN(ACJF_VAR_PKGNAME, ACJF_VAR_PKGCONFIGMOD)dnl
+            ACJF_PKG_SEARCHLOC_ADD_PKGCONFIG_INTERN(ACJF_VAR_PKGNAME, ACJF_VAR_PKGCONFIGMOD)dnl
            ])dnl
           acjf_var_matchtag=yes
           ;;
@@ -686,11 +686,11 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
              [dnl neither configscript nor pkgconfig mode
               if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" != x"" -o \
                       x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" != x""; then
-                ACJF_PKG_ADDLOC_INCLIB(ACJF_VAR_PKGNAME,
+                ACJF_PKG_SEARCHLOC_ADD_INCLIB(ACJF_VAR_PKGNAME,
                   [$acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath],
                   [$acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath])
               else
-                ACJF_PKG_ADDLOC_STD(ACJF_VAR_PKGNAME)
+                ACJF_PKG_SEARCHLOC_ADD_STD(ACJF_VAR_PKGNAME)
               fi
              ],
              [dnl configscript mode
@@ -698,7 +698,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
              ])
            ],
            [dnl pkgconfig mode
-            ACJF_PKG_ADDLOC_PKGCONFIG_STD(ACJF_VAR_PKGNAME, ACJF_VAR_PKGCONFIGMOD)dnl
+            ACJF_PKG_SEARCHLOC_ADD_PKGCONFIG_STD(ACJF_VAR_PKGNAME, ACJF_VAR_PKGCONFIGMOD)dnl
            ])dnl
           acjf_var_matchtag=yes
           ;;
@@ -706,14 +706,14 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
           m4_if(ACJF_VAR_PKGCONFIGMOD, [],
            [m4_if(ACJF_VAR_CONFIGSCRIPT, [],
              [dnl neither configscript nor pkgconfig mode
-              ACJF_PKG_ADDLOC_PREFIX(ACJF_VAR_PKGNAME, $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME))
+              ACJF_PKG_SEARCHLOC_ADD_PREFIX(ACJF_VAR_PKGNAME, $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME))
              ],
              [dnl configscript mode
 
              ])
            ],
            [dnl pkgconfig mode
-            ACJF_PKG_ADDLOC_PKGCONFIG_PREFIX(ACJF_VAR_PKGNAME, $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME), ACJF_VAR_PKGCONFIGMOD)dnl
+            ACJF_PKG_SEARCHLOC_ADD_PKGCONFIG_PREFIX(ACJF_VAR_PKGNAME, $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME), ACJF_VAR_PKGCONFIGMOD)dnl
            ])dnl
           acjf_var_matchtag=yes
           ;;
@@ -722,7 +722,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
     m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [disabled],
      [case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
         ""|no)
-          ACJF_PKG_ADDLOC_DISABLED(ACJF_VAR_PKGNAME)
+          ACJF_PKG_SEARCHLOC_ADD_DISABLED(ACJF_VAR_PKGNAME)
           acjf_var_matchtag=yes
           ;;
       esac
@@ -742,7 +742,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
 m4_divert_pop([INIT_PREPARE])
 ])
 
-dnl ACJF_CHECK_LIB_TESTMACROGEN(
+dnl ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
 dnl   <actual include directives>,
 dnl   <code in main routine for link check>,
 dnl   <lib list,.e.g., xerces-c systemc>)
@@ -752,21 +752,27 @@ dnl of the given library. The generated macro takes two arguments, i.e.,
 dnl
 dnl   ACJF_M4_ANONYMOUS_XXX(
 dnl     <name of lib check (pkgname)>,
-dnl     <description shell variable>,
-dnl     <code if found, default does nothing>,
-dnl     <code if not found, default does nothing>)
-AC_DEFUN([ACJF_CHECK_LIB_TESTMACROGEN], [AC_REQUIRE([ACJF_INIT])dnl
+dnl     <shell variable prefix set by ACJF_PKG_SEARCHLOC_EVALUATE>,
+dnl    [<code if found, default does nothing>,
+dnl    [<code if not found, default does nothing>]])
+AC_DEFUN([ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK], [AC_REQUIRE([ACJF_INIT])dnl
 m4_pushdef([ACJF_VAR_ANONYMOUS_M4_MACRO], ACJF_GEN_ANONYMOUS_M4_MACRO)dnl
 ACJF_VAR_ANONYMOUS_M4_MACRO[]dnl
+dnl ACJF_M4_ANONYMOUS_XXX(
+dnl   <name of lib check (pkgname)>,
+dnl   <shell variable prefix set by ACJF_PKG_SEARCHLOC_EVALUATE>,
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
 m4_define(ACJF_VAR_ANONYMOUS_M4_MACRO, ACJF_M4_QUOTEDARGS([
-  AC_MSG_CHECKING([for §1 package in $§2])
+  AC_MSG_CHECKING([for §1 package in ${§2_desc}])
   m4_if([$3], [], [
     AC_COMPILE_IFELSE(
       [AC_LANG_PROGRAM([[$1]], [[$2]])],
       [AC_MSG_RESULT([yes]); §3],
       [AC_MSG_RESULT([no]); §4])
   ], [
-    if test x"$§2" = x"$acjf_bundled_desc"; then
+    if test [x"${§2_type}" = x"bundled" -o \
+             x"${§2_type}" = x"pkg-config-bundled"]; then
       AC_COMPILE_IFELSE(
         [AC_LANG_PROGRAM([[$1]], [[$2]])],
         [AC_MSG_RESULT([yes]); §3],
@@ -792,8 +798,40 @@ m4_define(ACJF_VAR_ANONYMOUS_M4_MACRO, ACJF_M4_QUOTEDARGS([
 m4_popdef([ACJF_VAR_ANONYMOUS_M4_MACRO])dnl
 ])
 
-dnl _ACJF_SOURCE_TREE_LOCATION_SEARCHER helper macro
-m4_define([_ACJF_SOURCE_TREE_LOCATION_SEARCHER], [
+dnl ACJF_PKG_TESTMACROGEN_DUMMY()
+dnl
+dnl This macro uses the macro _ACJF_PKG_TESTMACRO_DUMMY defined below
+dnl
+dnl   _ACJF_PKG_TESTMACRO_DUMMY(
+dnl     <name of lib check (pkgname)>,
+dnl     <description shell variable>,
+dnl    [<code if found, default does nothing>,
+dnl    [<code if not found, default does nothing>]])
+AC_DEFUN([ACJF_PKG_TESTMACROGEN_DUMMY], [[_ACJF_PKG_TESTMACRO_DUMMY]])
+
+dnl _ACJF_PKG_TESTMACRO_DUMMY(
+dnl   <name of lib check (pkgname)>,
+dnl   <description shell variable>,
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+dnl
+dnl If not source tree location => execute code if not found
+dnl If source tree location => execute code if found
+m4_define([_ACJF_PKG_TESTMACRO_DUMMY], [
+  AC_MSG_CHECKING([for $1 package in ${$2_desc}])
+  if test [x"${$2_type}" = x"bundled" -o \
+           x"${$2_type}" = x"pkg-config-bundled" -o \
+           x"${$2_type}" = x"pkg-config"]; then
+    AC_MSG_RESULT([yes]);
+    m4_if([$3], [], [true], [$3])
+  else
+    AC_MSG_RESULT([no]);
+    m4_if([$4], [], [false], [$4])
+  fi
+])
+
+dnl _ACJF_PKG_SRCTREE_SEARCHER helper macro
+m4_define([_ACJF_PKG_SRCTREE_SEARCHER], [
   $1="/invalid";
   m4_pushdef([_ACJF_VAR_DIR],ACJF_VAR_SUBPROJECT_DIR[dummy])dnl
   ACJF_M4_WHILE([m4_if(_ACJF_VAR_DIR, [.], [0], [1])],
@@ -957,7 +995,7 @@ AC_DEFUN([ACJF_CHECK_LIB_TESTER], [AC_REQUIRE([ACJF_INIT])dnl
     if test x"${[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc]+set}" != x"set"; then
       [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_concat]="$ACJF_VAR_ANON_SHELLVARPREFIX[concat]"
       for ACJF_VAR_ANON_SHELLVARPREFIX[item] in $[acjf_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_search_list]; do
-        ACJF_PKG_EVALLOC([acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME), ACJF_VAR_ANON_SHELLVARPREFIX[item])
+        ACJF_PKG_SEARCHLOC_EVALUATE([acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME), ACJF_VAR_ANON_SHELLVARPREFIX[item])
         if test x"${[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]}" = x"disabled"; then
           break
         elif test x"${[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_invalid]}" = x"yes"; then
@@ -984,7 +1022,7 @@ dnl       echo "LDFLAGS: $LDFLAGS"
 dnl       echo "LIBS: $LIBS"
           ACJF_M4_UNQUOTE(ACJF_VAR_TEST_MACRO[(
            ACJF_VAR_PKGNAME,
-           [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_desc],
+           [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME),
            [break],
            [false])])
         fi
@@ -994,7 +1032,7 @@ dnl       echo "LIBS: $LIBS"
             x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled"; then
       # Reevaluate as we do not cache all stuff for bundled software
       ACJF_VAR_ANON_SHELLVARPREFIX[item]="[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)"
-      ACJF_PKG_EVALLOC([acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME), ACJF_VAR_ANON_SHELLVARPREFIX[item])
+      ACJF_PKG_SEARCHLOC_EVALUATE([acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME), ACJF_VAR_ANON_SHELLVARPREFIX[item])
     fi
 
     CPPFLAGS="$ACJF_VAR_ANON_SHELLVARPREFIX[CPPFLAGS]";
@@ -1155,27 +1193,6 @@ dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_deps]: $[acjf_cv_]ACJ
   m4_popdef([ACJF_VAR_PKGNAME])dnl
 ])dnl
 
-dnl ACJF_CHECK_PKG_TESTMACRO(
-dnl   <name of lib check (pkgname)>,
-dnl   <description shell variable>,
-dnl  [<code if found, default does nothing>,
-dnl  [<code if not found, default is bailout>]])
-dnl
-dnl If not source tree location => execute code if not found
-dnl If source tree location => execute code if found
-AC_DEFUN([ACJF_CHECK_PKG_TESTMACRO], [
-  AC_MSG_CHECKING([for $1 package in $$2])
-  if test x"$[acjf_cv_]ACJF_M4_CANON_DC([$1])[_type]" = x"bundled" -o \
-          x"$[acjf_cv_]ACJF_M4_CANON_DC([$1])[_type]" = x"pkg-config-bundled" -o \
-          x"$[acjf_cv_]ACJF_M4_CANON_DC([$1])[_type]" = x"pkg-config"; then
-    AC_MSG_RESULT([yes]);
-    m4_if([$3], [], [true], [$3])
-  else
-    AC_MSG_RESULT([no]);
-    m4_if([$4], [], [false], [$4])
-  fi
-])
-
 dnl NEW ACJF_CHECK_PKG USAGE:
 dnl
 dnl ACJF_CHECK_PKG(
@@ -1262,7 +1279,7 @@ AC_DEFUN([ACJF_CHECK_PKG], [AC_REQUIRE([ACJF_INIT])dnl
   dnl echo "ACJF_M4_QUOTE(ACJF_VAR_ARGSLIST)"
   ACJF_ARG_WITHPKG(ACJF_VAR_PKGNAME, ACJF_VAR_TAGS)dnl
   ACJF_CHECK_LIB_TESTER(ACJF_VAR_PKGNAME, ACJF_VAR_TAGS,
-    [ACJF_CHECK_PKG_TESTMACRO],
+    ACJF_PKG_TESTMACROGEN_DUMMY,
     ACJF_VAR_CODE_IF_TRUE,
     ACJF_VAR_CODE_IF_FALSE)
   m4_popdef([ACJF_VAR_CODE_IF_FALSE])dnl
@@ -1372,7 +1389,7 @@ AC_DEFUN([ACJF_CHECK_LIB], [dnl
   dnl echo "ACJF_M4_QUOTE(ACJF_VAR_ARGSLIST)"
   ACJF_ARG_WITHPKG(ACJF_VAR_PKGNAME, ACJF_VAR_TAGS)dnl
   ACJF_CHECK_LIB_TESTER(ACJF_VAR_PKGNAME, ACJF_VAR_TAGS,
-    ACJF_CHECK_LIB_TESTMACROGEN(
+    ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
       ACJF_VAR_TESTCODE_INCLUDE,
       ACJF_VAR_TESTCODE_BODY,
       ACJF_VAR_TESTCODE_LIB),

@@ -17,16 +17,12 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 
-dnl ACJF_CHECK_LIB_SYSTEMOCTESTMACRO(
+dnl _ACJF_PKG_TESTMACRO_SYSTEMOC(
 dnl  <name of lib check (pkgname)>,
-dnl  <description shell variable>,
+dnl  <shell variable prefix set by ACJF_PKG_SEARCHLOC_EVALUATE>,
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default does nothing>]])
-AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOCTESTMACRO], [
-
-dnl dnl ignore AM_CONDITIONAL in the called macros
-dnl m4_pushdef([AM_CONDITIONAL], m4_defn([ACJF_M4_NULL]))
-
+m4_define([_ACJF_PKG_TESTMACRO_SYSTEMOC], [
 acjf_var_systemoc_error=""
 acjf_var_systemoc_found=""
 acjf_cv_systemoc_sgx_support=""
@@ -36,7 +32,7 @@ acjf_cv_systemoc_enable_maestromm=""
 acjf_cv_systemoc_mm_support=""
 if test x"$acjf_var_systemoc_found" != x"no"; then
   # Checks for header files.
-  AC_MSG_CHECKING([for $1 package in $$2])
+  AC_MSG_CHECKING([for $1 package in ${$2_desc}])
   AC_COMPILE_IFELSE(
    [AC_LANG_PROGRAM(
     [[
@@ -127,8 +123,8 @@ if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_enable_maest
   fi
 fi
 if test x"$acjf_var_systemoc_found" != x"no" -o x"$acjf_var_systemoc_error" != x""; then
-  if test x"$$2" = x"$acjf_bundled_desc"; then
-    AC_MSG_CHECKING([if $1 from $$2 can compile an example])
+  if test x"${$2_type}" = x"bundled"; then
+    AC_MSG_CHECKING([if $1 from ${$2_desc} can compile an example])
     if test x"$acjf_var_systemoc_error" != x""; then
       AC_MSG_RESULT([$acjf_var_systemoc_error]);
     else
@@ -144,7 +140,7 @@ int x;
         [AC_MSG_RESULT([no])])
     fi
   else
-    AC_MSG_CHECKING([if $1 from $$2 can compile and link an example])
+    AC_MSG_CHECKING([if $1 from ${$2_desc} can compile and link an example])
     if test x"$acjf_var_systemoc_error" != x""; then
       AC_MSG_RESULT([$acjf_var_systemoc_error]);
     else
@@ -209,7 +205,7 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
   if test x"$SYSTEMOC_FOUND" != x"no"; then
     AC_LANG_PUSH([C++])
     ACJF_CHECK_LIB_TESTER([SysteMoC], [SysteMoC],
-      [ACJF_CHECK_LIB_SYSTEMOCTESTMACRO],
+      [_ACJF_PKG_TESTMACRO_SYSTEMOC],
       [true], [false])
     AC_LANG_POP
   fi

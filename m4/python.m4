@@ -78,8 +78,8 @@ dnl  [<code if not found, default is bailout>]])
 dnl
 dnl check for systemc library
 AC_DEFUN([ACJF_CHECK_PYTHON],
- [ACJF_PKG_ADDLOC_CONFIGSCRIPT([python], [python2.7-config])
-  ACJF_CHECK_LIB_TESTER([python], [], ACJF_CHECK_LIB_TESTMACROGEN(
+ [ACJF_PKG_SEARCHLOC_ADD_CONFIGSCRIPT([python], [python2.7-config])
+  ACJF_CHECK_LIB_TESTER([python], [], ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
     [
 #include <Python.h>
 
