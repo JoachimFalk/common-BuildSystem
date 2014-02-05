@@ -259,10 +259,8 @@ dnl   ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_FRONT([x,[y,z]], [a,[b,[c,d]],[e],[f],g,h]
 dnl Result:
 dnl   [x,[y,z],a,[b,[c,d]],[e],[f],g,h]
 AC_DEFUN([ACJF_M4_LIST_PUSH_FRONT],
-[ACJF_M4_ARGSTOLIST([$1]m4_if([$2], [],
-  [],
-  [m4_if([$1], [], [], [,])ACJF_M4_LISTTOARGS([$2])]))dnl
-])dnl
+ [m4_if([$1], [], [[$2]],
+   [m4_if([$2], [], [[$1]], [[$1,$2]])])])dnl
 dnl ACJF_M4_LIST_BACK([<item1>,<item2>,...])
 dnl Example:
 dnl   ACJF_M4_LIST_BACK([a,b,c,d,ef,g,h])
@@ -312,11 +310,7 @@ dnl Example:
 dnl   ACJF_M4_QUOTE(ACJF_M4_LIST_PUSH_BACK([x,[y,z]], [a,[b,[c,d]],[e],[f],g,h]))
 dnl Result:
 dnl   [a,[b,[c,d]],[e],[f],g,h,x,[y,z]]
-AC_DEFUN([ACJF_M4_LIST_PUSH_BACK],
-[ACJF_M4_ARGSTOLIST(m4_if([$2], [],
-  [],
-  [ACJF_M4_LISTTOARGS([$2])m4_if([$1], [], [], [,])])[$1])dnl
-])dnl
+AC_DEFUN([ACJF_M4_LIST_PUSH_BACK], [ACJF_M4_LIST_PUSH_FRONT([$2],[$1])])dnl
 dnl ACJF_M4_LIST_TOP( [<item1>,<item2>,...], <how many>)
 dnl Example:
 dnl   ACJF_M4_QUOTE(ACJF_M4_LIST_TOP([a,b,c,d,ef,g,h],3))
