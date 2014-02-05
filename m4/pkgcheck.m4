@@ -869,6 +869,48 @@ m4_define([_ACJF_PKG_SRCTREE_SEARCHER], [
   unset acjf_var_subdir
 ])
 
+dnl ACJF_CHECK_HELPER_SET_VARS(
+dnl  <arglist>,
+dnl  <m4 code to evalute with var environment>)
+dnl 
+dnl The argument list <arglist> should conform to
+dnl ([<tags>],
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+dnl
+dnl This sets the folowing m4 defined for the <m4 code to evalute with var environment>
+dnl
+dnl ACJF_VAR_TAGS
+dnl ACJF_VAR_CODE_IF_TRUE
+dnl ACJF_VAR_CODE_IF_FALSE
+AC_DEFUN([ACJF_CHECK_HELPER_SET_VARS], [
+  m4_pushdef([ACJF_VAR_ARGSLIST], [[$1]])dnl
+  dnl m4_pattern_allow([ACJF_VAR_ARGSLIST])dnl
+  dnl echo "[ACJF_VAR_ARGSLIST]: ACJF_M4_QUOTE(ACJF_VAR_ARGSLIST)"
+  m4_if(m4_eval(ACJF_M4_ARG_SIZE(ACJF_VAR_ARGSLIST)>3), [1],
+   [m4_fatal([At most three arguments required, but given "$1"!])])dnl
+  m4_if(m4_bregexp(ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST), [\<disabled\>\|\<intern:\|\<intern\>\|\<extern\>\|\<pkgconfig:\|\<configscript:\|\<version:]), [-1], 
+   [m4_pushdef([ACJF_VAR_TAGS], [[]])],
+   [m4_pushdef([ACJF_VAR_TAGS], ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST))ACJF_M4_LISTVAR_POP_FRONT([ACJF_VAR_ARGSLIST])])dnl
+  dnl m4_pattern_allow([ACJF_VAR_TAGS])dnl
+  dnl echo "[ACJF_VAR_TAGS]: ACJF_M4_QUOTE(ACJF_VAR_TAGS)"
+  dnl echo "[ACJF_VAR_ARGSLIST]: ACJF_M4_QUOTE(ACJF_VAR_ARGSLIST)"
+  m4_pushdef([ACJF_VAR_CODE_IF_TRUE], ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST)ACJF_M4_LISTVAR_POP_FRONT([ACJF_VAR_ARGSLIST]))
+  dnl m4_pattern_allow([ACJF_VAR_CODE_IF_TRUE])dnl
+  dnl echo "[ACJF_VAR_CODE_IF_TRUE]: ACJF_M4_QUOTE(ACJF_VAR_CODE_IF_TRUE)"
+  dnl echo "[ACJF_VAR_ARGSLIST]: ACJF_M4_QUOTE(ACJF_VAR_ARGSLIST)"
+  m4_pushdef([ACJF_VAR_CODE_IF_FALSE], ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST)ACJF_M4_LISTVAR_POP_FRONT([ACJF_VAR_ARGSLIST]))
+  dnl m4_pattern_allow([ACJF_VAR_CODE_IF_FALSE])dnl
+  dnl echo "[ACJF_VAR_CODE_IF_FALSE]: ACJF_M4_QUOTE(ACJF_VAR_CODE_IF_FALSE)"
+  dnl echo "[ACJF_VAR_ARGSLIST]: ACJF_M4_QUOTE(ACJF_VAR_ARGSLIST)"
+  m4_popdef([ACJF_VAR_ARGSLIST])dnl
+  $2 dnl this is <m4 code to evalute with var environment>
+  dnl cleanup var environment
+  m4_popdef([ACJF_VAR_TAGS])dnl
+  m4_popdef([ACJF_VAR_CODE_IF_TRUE])dnl
+  m4_popdef([ACJF_VAR_CODE_IF_FALSE])dnl
+])dnl
+
 dnl NEW ACJF_CHECK_LIB_TESTER USAGE:
 dnl
 dnl ACJF_CHECK_LIB_TESTER(

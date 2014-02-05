@@ -16,42 +16,24 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-dnl ACJF_CHECK_HELPER_SET_VARS(
-dnl  <arglist>,
-dnl  <m4 code to evalute with var environment>)
-dnl 
-dnl The argument list <arglist> should conform to
-dnl ([<tags>],
+dnl ACJF_CHECK_PYTHON_SGX check for cosupport library
+dnl
+dnl NEW ACJF_CHECK_PYTHON_SGX USAGE:
+dnl
+dnl ACJF_CHECK_LIB_SGX(
+dnl  [<tags>,]
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
-dnl
-dnl This sets the folowing m4 defined for the <m4 code to evalute with var environment>
-dnl
-dnl ACJF_VAR_TAGS
-dnl ACJF_VAR_CODE_IF_TRUE
-dnl ACJF_VAR_CODE_IF_FALSE
-AC_DEFUN([ACJF_CHECK_HELPER_SET_VARS], [
-  m4_pushdef([ACJF_VAR_ARGSLIST], [$1])dnl
-  m4_if(m4_eval(ACJF_M4_ARG_SIZE(ACJF_VAR_ARGSLIST)>3), [1],
-   [m4_fatal([At most three arguments required, but given "$1"!])])dnl
-  m4_if(m4_bregexp(ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST), [\<disabled\>\|\<intern:\|\<intern\>\|\<extern\>\|\<pkgconfig:\|\<configscript:\|\<version:]), [-1], 
-   [m4_pushdef([ACJF_VAR_TAGS], [[]])],
-   [m4_pushdef([ACJF_VAR_TAGS], ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST))ACJF_M4_LISTVAR_POP_FRONT([ACJF_VAR_ARGSLIST])])dnl
-  dnl echo "ACJF_M4_QUOTE(ACJF_VAR_ARGSLIST)"
-  m4_pushdef([ACJF_VAR_CODE_IF_TRUE], ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST)ACJF_M4_LISTVAR_POP_FRONT([ACJF_VAR_ARGSLIST]))
-  dnl m4_pattern_allow([ACJF_VAR_CODE_IF_TRUE])dnl
-  dnl echo "[ACJF_VAR_CODE_IF_TRUE]: ACJF_M4_QUOTE(ACJF_VAR_CODE_IF_TRUE)"
-  dnl echo "ACJF_M4_QUOTE(ACJF_VAR_ARGSLIST)"
-  m4_pushdef([ACJF_VAR_CODE_IF_FALSE], ACJF_M4_LIST_FRONT(ACJF_VAR_ARGSLIST)ACJF_M4_LISTVAR_POP_FRONT([ACJF_VAR_ARGSLIST]))
-  dnl m4_pattern_allow([ACJF_VAR_CODE_IF_FALSE])dnl
-  dnl echo "[ACJF_VAR_CODE_IF_FALSE]: ACJF_M4_QUOTE(ACJF_VAR_CODE_IF_FALSE)"
-  m4_popdef([ACJF_VAR_ARGSLIST])dnl
-  $2 dnl this is <m4 code to evalute with var environment>
-  dnl cleanup var environment
-  m4_popdef([ACJF_VAR_TAGS])dnl
-  m4_popdef([ACJF_VAR_CODE_IF_TRUE])dnl
-  m4_popdef([ACJF_VAR_CODE_IF_FALSE])dnl
-])dnl
+AC_DEFUN([ACJF_CHECK_PYTHON_SGX], [ACJF_CHECK_HELPER_SET_VARS([$@], [
+  ACJF_ARG_WITHPKG([LibSGX], [[intern],[extern],[pkgconfig:libsgx]])dnl
+  ACJF_PKG_SEARCHLOC_COPY([LibSGX], [PySGX])dnl
+  AC_LANG_PUSH([C++])
+  ACJF_CHECK_LIB_TESTER([PySGX], ACJF_VAR_TAGS[,[intern:LibSGX],[pkgconfig:pysgx]],
+    ACJF_PKG_TESTMACROGEN_DUMMY,
+    ACJF_VAR_CODE_IF_TRUE,
+    ACJF_VAR_CODE_IF_FALSE)dnl
+  AC_LANG_POP
+])])
 
 dnl ACJF_CHECK_LIB_SGX check for cosupport library
 dnl
