@@ -19,7 +19,7 @@ dnl Boston, MA 02111-1307, USA.
 
 dnl _ACJF_PKG_TESTMACRO_SYSTEMOC(
 dnl  <name of lib check (pkgname)>,
-dnl  <shell variable prefix set by ACJF_PKG_SEARCHLOC_EVALUATE>,
+dnl  <shell variable prefix set by ACJF_SEARCHLOC_EVALUATE>,
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default does nothing>]])
 m4_define([_ACJF_PKG_TESTMACRO_SYSTEMOC], [
