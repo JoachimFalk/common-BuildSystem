@@ -106,12 +106,13 @@ AC_SUBST([root_srcdir])dnl
 root_builddir='$(top_builddir)/'"$acjf_root_builddir";
 AC_SUBST([root_builddir])dnl
 ACJF_M4_FOREACH([ACJF_VAR_SUBSTVAR], ACJF_VAR_SUBSTVARFIXUP,
- [ACJF_VAR_SUBSTVAR=`echo "$ACJF_VAR_SUBSTVAR" | sed dnl Note that [ 	] contains a TAB character!!!
-    -e ['s@/\.libs$][@@'] -e ['s@/\.libs\([ 	]\)@\1@g'] dnl
-    -e ["s@\(-I\|-L\|^\|[ 	]\)$acjf_abs_top_builddir\(/\|$\|[ 	]\)@\1\\$(top_builddir)\2@g"] dnl
-    -e ["s@\(-I\|-L\|^\|[ 	]\)$acjf_abs_top_srcdir\(/\|$\|[ 	]\)@\1\\$(top_srcdir)\2@g"] dnl
-    -e ["s@\(-I\|-L\|^\|[ 	]\)$acjf_abs_root_builddir\(/\|$\|[ 	]\)@\1\\$(root_builddir)\2@g"] dnl
-    -e ["s@\(-I\|-L\|^\|[ 	]\)$acjf_abs_root_srcdir\(/\|$\|[ 	]\)@\1\\$(root_srcdir)\2@g"]`
+ [dnl FIXME: The ':' is a hardcoded unix path seperator!!!
+  ACJF_VAR_SUBSTVAR=`echo "$ACJF_VAR_SUBSTVAR" | sed dnl Note that [: 	] contains a TAB character!!!
+    -e ['s@/\.libs$][@@'] -e ['s@/\.libs\([: 	]\)@\1@g'] dnl
+    -e ["s@\(-I\|-L\|^\|[: 	]\)$acjf_abs_top_builddir\(/\|$\|[: 	]\)@\1\\$(top_builddir)\2@g"] dnl
+    -e ["s@\(-I\|-L\|^\|[: 	]\)$acjf_abs_top_srcdir\(/\|$\|[: 	]\)@\1\\$(top_srcdir)\2@g"] dnl
+    -e ["s@\(-I\|-L\|^\|[: 	]\)$acjf_abs_root_builddir\(/\|$\|[: 	]\)@\1\\$(root_builddir)\2@g"] dnl
+    -e ["s@\(-I\|-L\|^\|[: 	]\)$acjf_abs_root_srcdir\(/\|$\|[: 	]\)@\1\\$(root_srcdir)\2@g"]`
   AC_SUBST(ACJF_VAR_SUBSTVAR)])dnl
 ])
 

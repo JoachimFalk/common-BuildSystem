@@ -520,8 +520,7 @@ m4_divert_push([INIT_PREPARE])
 ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
   dnl Setup ACJF_VAR_PKGNAME and ACJF_VAR_TAGS macros
   m4_pushdef([ACJF_VAR_PKGNAME], [[$1]])dnl
-  dnl default srcdir subdirectory is <pkgname>
-  m4_pushdef([ACJF_VAR_SUBDIR], [[$1]])dnl
+  m4_pushdef([ACJF_VAR_SUBDIR], [])dnl
   dnl if no tags are specified add extern tag
   m4_if([$2], [],
    [m4_pushdef([ACJF_VAR_TAGS], [[[extern]]])],
@@ -532,8 +531,11 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
   dnl Iterate over tags to set ACJF_VAR_SUBDIR from intern:xxx or compile:xxx tag
   ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS,
    [dnl set ACJF_VAR_SUBDIR from intern:xxx or compile:xxx tag
-    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [intern:\|compile:]), [0],
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^intern:\|^compile:]), [0],
      [m4_define([ACJF_VAR_SUBDIR], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^[^:]*:\(.*\)], [[\1]]))])dnl
+    dnl set ACJF_VAR_SUBDIR to default ACJF_VAR_PKGNAME if intern or compile tag given
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^intern$\|^compile$]), [0],
+     [m4_define([ACJF_VAR_SUBDIR], ACJF_M4_QUOTE(ACJF_VAR_PKGNAME))])dnl
    ])dnl
   m4_pushdef([ACJF_VAR_CONFIGSCRIPT], [])dnl
   m4_pushdef([ACJF_VAR_PKGCONFIGMOD], [])dnl
@@ -959,34 +961,34 @@ dnl only required for certain packages which require custom code to find header 
 dnl library paths.
 dnl
 dnl If pkg found define:
-dnl   PKGNAME_FOUND          yes
-dnl   PKGNAME_INCLUDE        only -I flags (whitespace seperated)
-dnl   PKGNAME_CPPFLAGS_OTHER odd compile flags like defines or -pthread (whitespace seperated)
-dnl   PKGNAME_CPPFLAGS       PKGNAME_INCLUDE and PKGNAME_CPPFLAGS_OTHER all in one
-dnl   PKGNAME_LFLAGS         only -L flags (whitespace seperated)
-dnl   PKGNAME_LDFLAGS_OTHER  odd link flags like -rpath, -pthread, etc.
-dnl   PKGNAME_LDFLAGS        PKGNAME_LFLAGS and PKGNAME_LDFLAGS_OTHER all in one
-dnl   PKGNAME_LIBS           -l options (whitespace seperated)
-dnl   PKGNAME_DEPENDENCIES   fully qualified path to the libs if possible
-dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND := true
-dnl   If pkg is from srcdir:
-dnl     PKGNAME_INCPATH      include directory
-dnl     PKGNAME_LIBPATH      library directory
-dnl     pkg_pkgname_srcdir
-dnl     pkg_pkgname_builddir
-dnl     AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := true
-dnl   If pkg is from extern:
-dnl     PKGNAME_INCPATH      if possible whitespace seperated list of include directories
-dnl     PKGNAME_LIBPATH      if possible whitespace seperated list of library directories
-dnl     AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := false
+dnl   PKGNAME_FOUND           yes
+dnl   PKGNAME_INCPATH         whitespace seperated list of include directories
+dnl                           excluding standard compiler search directories
+dnl   PKGNAME_INCLUDE         only -I flags (whitespace seperated)
+dnl   PKGNAME_CPPFLAGS_OTHER  odd compile flags like defines or -pthread (whitespace seperated)
+dnl   PKGNAME_CPPFLAGS        PKGNAME_INCLUDE and PKGNAME_CPPFLAGS_OTHER all in one
+dnl   PKGNAME_LIBPATH         library directory if pkg is compiled from source tree
+dnl   PKGNAME_LIBPATH         whitespace seperated list of library directories
+dnl                           excluding standard compiler/linker search directories
+dnl                           if pkg is from extern
+dnl   PKGNAME_LFLAGS          only -L flags (whitespace seperated)
+dnl   PKGNAME_LDFLAGS_OTHER   odd link flags like -rpath, -pthread, etc.
+dnl   PKGNAME_LDFLAGS         PKGNAME_LFLAGS and PKGNAME_LDFLAGS_OTHER all in one
+dnl   PKGNAME_LIBS            -l options (whitespace seperated)
+dnl   PKGNAME_DEPENDENCIES    fully qualified path to the libs if possible
+dnl   PKGNAME_PKG_CONFIG_PATH if pkg-config or pkg-config-bundled mode
+dnl   pkg_pkgname_srcdir      source tree directory if the pkg is compiled from source tree
+dnl   pkg_pkgname_builddir    build directory if the pkg is compiled from source tree
+dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND              := true
+dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := true  if pkg is compiled from source tree
+dnl                                                    false otherwise
 dnl If pkg not found define:
 dnl   PKGNAME_FOUND          no
-dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND := false
+dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND              := false
 AC_DEFUN([ACJF_CHECK_LIB_TESTER], [AC_REQUIRE([ACJF_INIT])dnl
   m4_if(m4_eval([$#<3]), [1], [m4_fatal([At least three arguments required for ACJF_CHECK_LIB_TESTER])])dnl
   m4_pushdef([ACJF_VAR_PKGNAME], [[$1]])dnl
-  dnl default srcdir subdirectory is <pkgname>
-  m4_pushdef([ACJF_VAR_SUBDIR], [[$1]])dnl
+  m4_pushdef([ACJF_VAR_SUBDIR], [])dnl
   m4_if(m4_bregexp([$2], [\<disabled\>\|\<intern\>\|\<intern:\|\<extern\>\|\<configscript:\|\<pkgconfig:]), [-1],
    [m4_pushdef([ACJF_VAR_TAGS], [[intern:$2]])],
    [m4_pushdef([ACJF_VAR_TAGS], [[$2]])])dnl
@@ -1000,9 +1002,12 @@ AC_DEFUN([ACJF_CHECK_LIB_TESTER], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_CONFIGSCRIPT], [])dnl
   m4_pushdef([ACJF_VAR_PKGCONFIGMOD], [])dnl
   ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS,
-   [dnl set ACJF_VAR_SUBDIR from intern:xxx tag
-    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^intern:]), [0],
-     [m4_define([ACJF_VAR_SUBDIR], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^intern:\(.*\)], [[\1]]))])dnl
+   [dnl set ACJF_VAR_SUBDIR from intern:xxx or compile:xxx tag
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^intern:\|^compile:]), [0],
+     [m4_define([ACJF_VAR_SUBDIR], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^[^:]*:\(.*\)], [[\1]]))])dnl
+    dnl set ACJF_VAR_SUBDIR to default ACJF_VAR_PKGNAME if intern or compile tag given
+    m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^intern$\|^compile$]), [0],
+     [m4_define([ACJF_VAR_SUBDIR], ACJF_M4_QUOTE(ACJF_VAR_PKGNAME))])dnl
     dnl set ACJF_VAR_CONFIGSCRIPT from configscript:xxx tag
     m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^configscript:]), [0],
      [m4_define([ACJF_VAR_CONFIGSCRIPT], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^configscript:\(.*\)], [[\1]]))])dnl
@@ -1015,28 +1020,9 @@ AC_DEFUN([ACJF_CHECK_LIB_TESTER], [AC_REQUIRE([ACJF_INIT])dnl
    [dnl echo "Are here: ACJF_M4_CANON_DC([ACJF_CHECK_LIB_TESTER::$1::subdir::$2]) [[BEGIN]]"
     m4_pushdef([ACJF_VAR_ANON_SHELLVARPREFIX], ACJF_GEN_ANONYMOUS_SHELL_VAR)
 
-    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND])dnl
-    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH])dnl
-    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE])dnl
-    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_CPPFLAGS_OTHER])dnl
-    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_CPPFLAGS])dnl
-    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBPATH])dnl
-    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LFLAGS])dnl
-    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS_OTHER])dnl
-    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS])dnl
-    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBS])
-
     dnl dnl For debug
     dnl echo "CODE IF TRUE: _[]ACJF_M4_CANON_DC(ACJF_VAR_CODE_IF_TRUE)[]_"
     dnl echo "CODE IF FALSE: _[]ACJF_M4_CANON_DC(ACJF_VAR_CODE_IF_FALSE)[]_"
-
-    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE]
-    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH]
-    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS]
-    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBPATH]
-    m4_if(ACJF_VAR_SUBDIR, [], [],
-     [unset [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]
-      unset [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]])
 
     ACJF_VAR_ANON_SHELLVARPREFIX[CPPFLAGS]="$CPPFLAGS";
     ACJF_VAR_ANON_SHELLVARPREFIX[LDFLAGS]="$LDFLAGS";
@@ -1121,23 +1107,45 @@ dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_ldflags_other]: $[acj
 dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]"
 dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_deps]: $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_deps]"
 
-    if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"bundled" -o \
-            x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled"; then
-      [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]"
-      [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]"
-    fi
-    if test \( x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config" -o \
-               x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled" \) -a \
-            -d "$srcdir/pkgconfig"; then
-      test -d pkgconfig || mkdir pkgconfig
-      touch pkgconfig/.pkg_config_path
-      echo "$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_pkg_config_path]" | tr ':' '\n' | while read line; do
-        echo "$line"
-      done >> pkgconfig/.pkg_config_path
-      [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]"
-      [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]"
-    fi
+    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND])dnl
+    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH])dnl
+    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE])dnl
+    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_CPPFLAGS_OTHER])dnl
+    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_CPPFLAGS])dnl
+    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBPATH])dnl
+    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LFLAGS])dnl
+    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS_OTHER])dnl
+    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS])dnl
+    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBS])dnl
+    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_DEPENDENCIES])dnl
+    m4_pattern_allow(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_PKG_CONFIG_PATH])dnl
+    m4_pattern_allow([pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir])dnl
+    m4_pattern_allow([pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir])dnl
+    m4_pattern_allow([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND])dnl
+    m4_pattern_allow([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_USE_SRCDIR_VERSION])dnl
 
+    dnl Cleanup stuff first
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND]
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH]
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE]
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_CPPFLAGS_OTHER]
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_CPPFLAGS]
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBPATH]
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LFLAGS]
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS_OTHER]
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS]
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBS]
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_DEPENDENCIES]
+    unset ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_PKG_CONFIG_PATH]
+    unset [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]
+    unset [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]
+
+    m4_divert_push([INIT_PREPARE])
+    ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND]),
+      [AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND], [false])])
+    m4_divert_pop([INIT_PREPARE])
+    AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND],
+      test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" != x"$acjf_disabled_type")
     if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" != x"$acjf_disabled_type"; then
       ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND]="yes"
       # compile flags stuff
@@ -1154,41 +1162,14 @@ dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_deps]: $[acjf_cv_]ACJ
       for ACJF_VAR_ANON_SHELLVARPREFIX[item2] in $[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]; do
         ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LFLAGS]="$ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LFLAGS] -L$ACJF_VAR_ANON_SHELLVARPREFIX[item2]";
       done
-      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBS]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]"
-      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_DEPENDENCIES]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_deps]"
       ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS_OTHER]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_ldflags_other]"
       ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS]="$ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LFLAGS] $ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS_OTHER]"
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBS]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]"
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_DEPENDENCIES]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_deps]"
     else
       ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND]="no"
     fi
-    
-    m4_divert_push([INIT_PREPARE])
-    ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND]),
-      [AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND], [false])])
-    m4_divert_pop([INIT_PREPARE])
-    AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND],
-      test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" != x"$acjf_disabled_type")
-    
-    m4_if(ACJF_VAR_SUBDIR, [], [],
-     [m4_pattern_allow([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_USE_SRCDIR_VERSION])
-      m4_divert_push([INIT_PREPARE])
-      ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_USE_SRCDIR_VERSION]),
-        [AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_USE_SRCDIR_VERSION], [false])])
-      m4_divert_pop([INIT_PREPARE])
-      AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_USE_SRCDIR_VERSION],
-        test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"bundled" -o \
-             x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled")
-      if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"bundled" -o \
-              x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled"; then
-        dnl no caching of incpath, libpath, srcdir, builddir for bundled stuff
-        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]
-        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]
-        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]
-        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]
-        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]
-        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_deps]
-      fi])
-
+    AC_SUBST(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_FOUND])dnl
     AC_SUBST(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH])dnl
     AC_SUBST(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE])dnl
     AC_SUBST(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_CPPFLAGS_OTHER])dnl
@@ -1198,22 +1179,59 @@ dnl    echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_deps]: $[acjf_cv_]ACJ
     AC_SUBST(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS_OTHER])dnl
     AC_SUBST(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS])dnl
     AC_SUBST(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBS])dnl
+    AC_SUBST(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_DEPENDENCIES])dnl
+    ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_SUBSTVARFIXUP], ACJF_M4_ARGSTOLIST(
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH],
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE],
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_CPPFLAGS],
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBPATH],
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LFLAGS],
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS],
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBS],
+      ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_DEPENDENCIES]))dnl
 
-    m4_define([ACJF_VAR_SUBSTVARFIXUP], ACJF_M4_QUOTE(
-      ACJF_M4_LIST_PUSH_BACK(ACJF_M4_ARGSTOLIST(
-        ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCPATH],
-        ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_INCLUDE],
-        ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_CPPFLAGS_OTHER],
-        ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_CPPFLAGS],
-        ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBPATH],
-        ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LFLAGS],
-        ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS_OTHER],
-        ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LDFLAGS],
-        ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_LIBS],
-        ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_DEPENDENCIES],
+    m4_if(ACJF_VAR_SUBDIR, [], [],
+     [m4_divert_push([INIT_PREPARE])
+      ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_USE_SRCDIR_VERSION]),
+        [AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_USE_SRCDIR_VERSION], [false])])
+      m4_divert_pop([INIT_PREPARE])
+      AM_CONDITIONAL([PKG_]ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_USE_SRCDIR_VERSION],
+        test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"bundled" -o \
+             x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled")
+      if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"bundled" -o \
+              x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled"; then
+        [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]"
+        [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]"
+        dnl no caching of incpath, libpath, srcdir, builddir for bundled stuff
+        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]
+        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]
+        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir]
+        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]
+        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]
+        unset [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_deps]
+      fi
+      AC_SUBST([pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir])dnl
+      AC_SUBST([pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir])dnl
+      ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_SUBSTVARFIXUP], ACJF_M4_ARGSTOLIST(
         [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_srcdir],
-        [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]),
-      ACJF_VAR_SUBSTVARFIXUP)))dnl
+        [pkg_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_builddir]))dnl
+     ])dnl
+
+    m4_if(ACJF_VAR_PKGCONFIGMOD, [], [],
+     [if test \( x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config" -o \
+                 x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled" \) -a \
+              -d "$srcdir/pkgconfig"; then
+        test -d pkgconfig || mkdir pkgconfig
+        touch pkgconfig/.pkg_config_path
+        echo "$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_pkg_config_path]" | tr ':' '\n' | while read line; do
+          echo "$line"
+        done >> pkgconfig/.pkg_config_path
+        ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_PKG_CONFIG_PATH]="$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_pkg_config_path]"
+      fi
+      AC_SUBST(ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_PKG_CONFIG_PATH])
+      ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_SUBSTVARFIXUP], ACJF_M4_ARGSTOLIST(
+        ACJF_M4_CANON_DN(ACJF_VAR_PKGNAME)[_PKG_CONFIG_PATH]))dnl
+     ])dnl
 
     m4_popdef([ACJF_VAR_ANON_SHELLVARPREFIX])dnl
     dnl echo "Are here: ACJF_M4_CANON_DC([ACJF_CHECK_LIB_TESTER::$1::subdir::$2]) [[END]]"
@@ -1283,25 +1301,30 @@ dnl
 dnl After execution of the macro
 dnl
 dnl If pkg found define:
-dnl   PKGNAME_FOUND          yes
-dnl   PKGNAME_INCLUDE        only -I flags (whitespace seperated)
-dnl   PKGNAME_CPPFLAGS_OTHER odd compile flags like defines or -pthread (whitespace seperated)
-dnl   PKGNAME_CPPFLAGS       PKGNAME_INCLUDE and PKGNAME_CPPFLAGS_OTHER all in one
-dnl   PKGNAME_LFLAGS         only -L flags (whitespace seperated)
-dnl   PKGNAME_LDFLAGS_OTHER  odd link flags like -rpath, -pthread, etc.
-dnl   PKGNAME_LDFLAGS        PKGNAME_LFLAGS and PKGNAME_LDFLAGS_OTHER all in one
-dnl   PKGNAME_LIBS           -l options (whitespace seperated)
-dnl   PKGNAME_DEPENDENCIES   fully qualified path to the libs if possible
-dnl   PKGNAME_INCPATH        include directory
-dnl   PKGNAME_LIBPATH        library directory
-dnl   pkg_pkgname_srcdir
-dnl   pkg_pkgname_builddir
-dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND := true
-dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := true
+dnl   PKGNAME_FOUND           yes
+dnl   PKGNAME_INCPATH         whitespace seperated list of include directories
+dnl                           excluding standard compiler search directories
+dnl   PKGNAME_INCLUDE         only -I flags (whitespace seperated)
+dnl   PKGNAME_CPPFLAGS_OTHER  odd compile flags like defines or -pthread (whitespace seperated)
+dnl   PKGNAME_CPPFLAGS        PKGNAME_INCLUDE and PKGNAME_CPPFLAGS_OTHER all in one
+dnl   PKGNAME_LIBPATH         library directory if pkg is compiled from source tree
+dnl   PKGNAME_LIBPATH         whitespace seperated list of library directories
+dnl                           excluding standard compiler/linker search directories
+dnl                           if pkg is from extern
+dnl   PKGNAME_LFLAGS          only -L flags (whitespace seperated)
+dnl   PKGNAME_LDFLAGS_OTHER   odd link flags like -rpath, -pthread, etc.
+dnl   PKGNAME_LDFLAGS         PKGNAME_LFLAGS and PKGNAME_LDFLAGS_OTHER all in one
+dnl   PKGNAME_LIBS            -l options (whitespace seperated)
+dnl   PKGNAME_DEPENDENCIES    fully qualified path to the libs if possible
+dnl   PKGNAME_PKG_CONFIG_PATH if pkg-config or pkg-config-bundled mode
+dnl   pkg_pkgname_srcdir      source tree directory if the pkg is compiled from source tree
+dnl   pkg_pkgname_builddir    build directory if the pkg is compiled from source tree
+dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND              := true
+dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := true  if pkg is compiled from source tree
+dnl                                                    false otherwise
 dnl If pkg not found define:
 dnl   PKGNAME_FOUND          no
-dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND := false
-dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := false
+dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND              := false
 AC_DEFUN([ACJF_CHECK_PKG], [AC_REQUIRE([ACJF_INIT])dnl
   m4_pushdef([ACJF_VAR_ARGSLIST], [[$@]])dnl
   dnl echo "ACJF_M4_QUOTE(ACJF_VAR_ARGSLIST)"
@@ -1383,29 +1406,30 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 dnl
 dnl If pkg found define:
-dnl   PKGNAME_FOUND          yes
-dnl   PKGNAME_INCLUDE        only -I flags (whitespace seperated)
-dnl   PKGNAME_CPPFLAGS_OTHER odd compile flags like defines or -pthread (whitespace seperated)
-dnl   PKGNAME_CPPFLAGS       PKGNAME_INCLUDE and PKGNAME_CPPFLAGS_OTHER all in one
-dnl   PKGNAME_LFLAGS         only -L flags (whitespace seperated)
-dnl   PKGNAME_LDFLAGS_OTHER  odd link flags like -rpath, -pthread, etc.
-dnl   PKGNAME_LDFLAGS        PKGNAME_LFLAGS and PKGNAME_LDFLAGS_OTHER all in one
-dnl   PKGNAME_LIBS           -l options (whitespace seperated)
-dnl   PKGNAME_DEPENDENCIES   fully qualified path to the libs if possible
-dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND := true
-dnl   If pkg is from srcdir:
-dnl     PKGNAME_INCPATH      include directory
-dnl     PKGNAME_LIBPATH      library directory
-dnl     pkg_pkgname_srcdir
-dnl     pkg_pkgname_builddir
-dnl     AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := true
-dnl   If pkg is from extern:
-dnl     PKGNAME_INCPATH      if possible whitespace seperated list of include directories
-dnl     PKGNAME_LIBPATH      if possible whitespace seperated list of library directories
-dnl     AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := false
+dnl   PKGNAME_FOUND           yes
+dnl   PKGNAME_INCPATH         whitespace seperated list of include directories
+dnl                           excluding standard compiler search directories
+dnl   PKGNAME_INCLUDE         only -I flags (whitespace seperated)
+dnl   PKGNAME_CPPFLAGS_OTHER  odd compile flags like defines or -pthread (whitespace seperated)
+dnl   PKGNAME_CPPFLAGS        PKGNAME_INCLUDE and PKGNAME_CPPFLAGS_OTHER all in one
+dnl   PKGNAME_LIBPATH         library directory if pkg is compiled from source tree
+dnl   PKGNAME_LIBPATH         whitespace seperated list of library directories
+dnl                           excluding standard compiler/linker search directories
+dnl                           if pkg is from extern
+dnl   PKGNAME_LFLAGS          only -L flags (whitespace seperated)
+dnl   PKGNAME_LDFLAGS_OTHER   odd link flags like -rpath, -pthread, etc.
+dnl   PKGNAME_LDFLAGS         PKGNAME_LFLAGS and PKGNAME_LDFLAGS_OTHER all in one
+dnl   PKGNAME_LIBS            -l options (whitespace seperated)
+dnl   PKGNAME_DEPENDENCIES    fully qualified path to the libs if possible
+dnl   PKGNAME_PKG_CONFIG_PATH if pkg-config or pkg-config-bundled mode
+dnl   pkg_pkgname_srcdir      source tree directory if the pkg is compiled from source tree
+dnl   pkg_pkgname_builddir    build directory if the pkg is compiled from source tree
+dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND              := true
+dnl   AM_CONDITIONAL PKG_PKGNAME_USE_SRCDIR_VERSION := true  if pkg is compiled from source tree
+dnl                                                    false otherwise
 dnl If pkg not found define:
 dnl   PKGNAME_FOUND          no
-dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND := false
+dnl   AM_CONDITIONAL PKG_PKGNAME_FOUND              := false
 AC_DEFUN([ACJF_CHECK_LIB], [dnl
   m4_pushdef([ACJF_VAR_ARGSLIST], [[$@]])dnl
   dnl echo "ACJF_M4_QUOTE(ACJF_VAR_ARGSLIST)"
