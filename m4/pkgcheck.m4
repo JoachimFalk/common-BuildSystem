@@ -666,82 +666,90 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
   dnl via ACJF_SEARCHLOC_ADD_XXX macros.
   ACJF_SEARCHLOC_CLEAR(ACJF_VAR_PKGNAME)dnl
   acjf_var_matchtag=no
+  acjf_var_disabled=no
   ACJF_M4_FOREACH([ACJF_VAR_TAG], ACJF_VAR_TAGS, [
     m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^intern$\|^intern:\|^compile$\|^compile:]), [0],
-     [case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
-        ""|yes|intern)
-          m4_if(ACJF_VAR_PKGCONFIGMOD, [],
-           [m4_if(ACJF_VAR_CONFIGSCRIPT, [],
-             [dnl neither configscript nor pkgconfig mode
-              ACJF_SEARCHLOC_ADD_INTERN(ACJF_VAR_PKGNAME)
+     [if test x"$acjf_var_disabled" != x"yes"; then
+       case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
+          ""|yes|intern)
+            m4_if(ACJF_VAR_PKGCONFIGMOD, [],
+             [m4_if(ACJF_VAR_CONFIGSCRIPT, [],
+               [dnl neither configscript nor pkgconfig mode
+                ACJF_SEARCHLOC_ADD_INTERN(ACJF_VAR_PKGNAME)
+               ],
+               [dnl configscript mode
+
+
+               ])
              ],
-             [dnl configscript mode
-
-
-             ])
-           ],
-           [dnl pkgconfig mode
-            ACJF_SEARCHLOC_ADD_PKGCONFIG_INTERN(ACJF_VAR_PKGNAME, ACJF_VAR_PKGCONFIGMOD)dnl
-           ])dnl
-          acjf_var_matchtag=yes
-          ;;
-      esac
+             [dnl pkgconfig mode
+              ACJF_SEARCHLOC_ADD_PKGCONFIG_INTERN(ACJF_VAR_PKGNAME, ACJF_VAR_PKGCONFIGMOD)dnl
+             ])dnl
+            acjf_var_matchtag=yes
+            ;;
+        esac
+      fi
      ])dnl
     m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^extern$\|^compile$\|^compile:]), [0],
-     [case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
-        ""|yes|extern)
-          m4_if(ACJF_VAR_PKGCONFIGMOD, [],
-           [m4_if(ACJF_VAR_CONFIGSCRIPT, [],
-             [dnl neither configscript nor pkgconfig mode
-              if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" != x"" -o \
-                      x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" != x""; then
-                ACJF_SEARCHLOC_ADD_INCLIB(ACJF_VAR_PKGNAME,
-                  [$acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath],
-                  [$acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath])
-              else
-                ACJF_SEARCHLOC_ADD_STD(ACJF_VAR_PKGNAME)
-              fi
-             ],
-             [dnl configscript mode
+     [if test x"$acjf_var_disabled" != x"yes"; then
+        case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
+          ""|yes|extern)
+            m4_if(ACJF_VAR_PKGCONFIGMOD, [],
+             [m4_if(ACJF_VAR_CONFIGSCRIPT, [],
+               [dnl neither configscript nor pkgconfig mode
+                if test x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath]" != x"" -o \
+                        x"$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath]" != x""; then
+                  ACJF_SEARCHLOC_ADD_INCLIB(ACJF_VAR_PKGNAME,
+                    [$acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_incpath],
+                    [$acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libpath])
+                else
+                  ACJF_SEARCHLOC_ADD_STD(ACJF_VAR_PKGNAME)
+                fi
+               ],
+               [dnl configscript mode
 
-             ])
-           ],
-           [dnl pkgconfig mode
-            ACJF_SEARCHLOC_ADD_PKGCONFIG_STD(ACJF_VAR_PKGNAME, ACJF_VAR_PKGCONFIGMOD)dnl
-           ])dnl
-          acjf_var_matchtag=yes
-          ;;
-        "/"*)
-          m4_if(ACJF_VAR_PKGCONFIGMOD, [],
-           [m4_if(ACJF_VAR_CONFIGSCRIPT, [],
-             [dnl neither configscript nor pkgconfig mode
-              ACJF_SEARCHLOC_ADD_PREFIX(ACJF_VAR_PKGNAME, $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME))
+               ])
              ],
-             [dnl configscript mode
+             [dnl pkgconfig mode
+              ACJF_SEARCHLOC_ADD_PKGCONFIG_STD(ACJF_VAR_PKGNAME, ACJF_VAR_PKGCONFIGMOD)dnl
+             ])dnl
+            acjf_var_matchtag=yes
+            ;;
+          "/"*)
+            m4_if(ACJF_VAR_PKGCONFIGMOD, [],
+             [m4_if(ACJF_VAR_CONFIGSCRIPT, [],
+               [dnl neither configscript nor pkgconfig mode
+                ACJF_SEARCHLOC_ADD_PREFIX(ACJF_VAR_PKGNAME, $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME))
+               ],
+               [dnl configscript mode
 
-             ])
-           ],
-           [dnl pkgconfig mode
-            ACJF_SEARCHLOC_ADD_PKGCONFIG_PREFIX(ACJF_VAR_PKGNAME, $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME), ACJF_VAR_PKGCONFIGMOD)dnl
-           ])dnl
-          acjf_var_matchtag=yes
-          ;;
-      esac
+               ])
+             ],
+             [dnl pkgconfig mode
+              ACJF_SEARCHLOC_ADD_PKGCONFIG_PREFIX(ACJF_VAR_PKGNAME, $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME), ACJF_VAR_PKGCONFIGMOD)dnl
+             ])dnl
+            acjf_var_matchtag=yes
+            ;;
+        esac
+      fi
      ])dnl
     m4_if(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [disabled],
-     [case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
-        ""|no)
-          ACJF_SEARCHLOC_ADD_DISABLED(ACJF_VAR_PKGNAME)
-          acjf_var_matchtag=yes
-          ;;
-      esac
+     [if test x"$acjf_var_disabled" != x"yes"; then
+        case "$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)" in
+          ""|no)
+            ACJF_SEARCHLOC_ADD_DISABLED(ACJF_VAR_PKGNAME)
+            acjf_var_matchtag=yes
+            acjf_var_disabled=yes
+            ;;
+        esac
+      fi
      ])dnl
   ])dnl
   if test x"$acjf_var_matchtag" = x"no"; then
     AC_MSG_ERROR([Option --with-]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)=$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[ is not supported!])
   fi
-  unset acjf_var_tag
   unset acjf_var_matchtag
+  unset acjf_var_disabled
   m4_popdef([ACJF_VAR_PKGCONFIGMOD])dnl
   m4_popdef([ACJF_VAR_CONFIGSCRIPT])dnl
   m4_popdef([ACJF_VAR_TAGS])dnl
@@ -1498,6 +1506,7 @@ AC_DEFUN([ACJF_CONFIG_PKG], [dnl
   acjf_var_alt=no
   for acjf_var_item in $[acjf_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_search_list]; do
     eval acjf_var_item_type=\$${acjf_var_item}_type;
+    dnl echo "$1: $acjf_var_item_type"
     if test x"$acjf_var_item_type" = x"bundled" -o \
             x"$acjf_var_item_type" = x"pkg-config-bundled"; then
       acjf_var_bundled=yes
