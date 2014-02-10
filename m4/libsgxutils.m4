@@ -16,92 +16,97 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-dnl ACJF_CHECK_LIB_SGX check for cosupport library
-dnl ACJF_CHECK_LIB_SGX(
+dnl _ACJF_CHECK_PYTHON_SGXUTILS_TESTMACRO(
+dnl   <name of lib check (pkgname)>,
+dnl   <description shell variable>,
 dnl  [<code if found, default does nothing>,
-dnl  [<code if not found, default is bailout>])
-AC_DEFUN([ACJF_CHECK_LIB_SGXUTILS],
-[dnl
-AC_LANG_PUSH([C++])
-acjf_found_libsgxutils=""
-if test x"$acjf_found_libsgxutils" != x"no"; then
-  ACJF_CHECK_LIB_BOOST(
-   [acjf_got_boost="yes";],
-   [acjf_got_boost="no";])
-  if test x"$acjf_got_boost" = x"no"; then
-    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find boost library required by LibSGXUtils, bailing out!])], [])
-    acjf_found_libsgxutils="no"
+dnl  [<code if not found, default is bailout>]])
+dnl
+dnl If not source tree location => execute code if not found
+dnl If source tree location => execute code if found
+m4_define([_ACJF_CHECK_PYTHON_SGXUTILS_TESTMACRO], [
+  AC_MSG_CHECKING([for $1 package in ${$2_desc}])
+  if test [x"$2" != x"acjf_cv_pysgxutils"]; then
+    AC_MSG_ERROR([Internal error: Hardcoded variable prefix is different from expected one!])
   fi
-fi
-if test x"$acjf_found_libsgxutils" != x"no"; then
-  ACJF_CHECK_LIB_COSUPPORT(
-   [acjf_got_cosupport="yes";],
-   [acjf_got_cosupport="no";])
-  if test x"$acjf_got_cosupport" = x"no"; then
-    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find CoSupport library required by LibSGXUtils, bailing out!])], [])
-    acjf_found_libsgxutils="no"
-  fi
-fi
-if test x"$acjf_found_libsgxutils" != x"no"; then
-  ACJF_CHECK_LIB_SGX(
-   [acjf_got_libsgx="yes";],
-   [acjf_got_libsgx="no";])
-  if test x"$acjf_got_libsgx" = x"no"; then
-    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find LibSGX library required by LibSGXUtils, bailing out!])], [])
-    acjf_found_libsgxutils="no"
-  fi
-fi
-if test x"$acjf_found_libsgxutils" != x"no"; then
-  acjf_libsgxutils_CPPFLAGS="$CPPFLAGS";
-  CPPFLAGS="$CPPFLAGS $LIBSGX_INCLUDE $BOOST_INCLUDE $COSUPPORT_INCLUDE"
-  ACJF_CHECK_LIB(
-    [LibSGXUtils],
-    [LibSGXUtils SGXUtils],
-    [#include <sgx.hpp>
-     #include <sgxutils/RecursiveProblemGraphObjVisitor.hpp>
-
-     using namespace SystemCoDesigner::SGX;
-     using namespace SystemCoDesigner::SGXUtils;],
-    [NetworkGraphAccess ngx("some-file.sgx");
-
-     typedef RecursiveProblemGraphObjVisitor<Actor> RecActorVisitor;
-     typedef RecActorVisitor::Objs                  Actors;
-
-     RecActorVisitor av;
-     apply_visitor(av, ngx.problemGraph());
-     Actors actors = av;
-
-     return 0;],
-    [sgxutils],
-    [acjf_found_libsgxutils="yes";],
-    [acjf_found_libsgxutils="no";])
-  CPPFLAGS="$acjf_libsgxutils_CPPFLAGS"
-  if test x"$acjf_found_libsgxutils" = x"no"; then
-    m4_if([$1$2], [], [AC_MSG_ERROR([Cannot find LibSGXUtils library, bailing out!])], [])
-    acjf_found_libsgxutils="no"
+  if test [x"${$2_type}" = x"pkg-config-bundled" -o \
+           x"${$2_type}" = x"pkg-config"]; then
+    acjf_var_old_PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
+    if test x"$PKG_CONFIG_PATH" = x""; then
+      [PKG_CONFIG_PATH="${$2_pkg_config_path}"]
+    else
+      [PKG_CONFIG_PATH="${$2_pkg_config_path}:${PKG_CONFIG_PATH}"]
+    fi
+    export PKG_CONFIG_PATH
+    if test [x"${$2_type}" = x"pkg-config-bundled"]; then
+      [$2_srctreemode_pymodulepath=`$PKG_CONFIG "${$2_modules}" --variable srctreemode_pymodulepath 2>/dev/null`]
+    fi
+    [$2_pymodulepath=`$PKG_CONFIG "${$2_modules}" --variable pymodulepath 2>/dev/null`]
+    PKG_CONFIG_PATH=${acjf_var_old_PKG_CONFIG_PATH}
+    unset acjf_var_old_PKG_CONFIG_PATH
+    AC_MSG_RESULT([yes]);
+    m4_if([$3], [], [true], [$3])
   else
-    LIBSGXUTILS_INCLUDE="$LIBSGXUTILS_INCLUDE $LIBSGX_INCLUDE $BOOST_INCLUDE $COSUPPORT_INCLUDE"
-    LIBSGXUTILS_INCPATH="$LIBSGXUTILS_INCPATH $LIBSGX_INCPATH $BOOST_INCPATH $COSUPPORT_INCPATH"
+    AC_MSG_RESULT([no]);
+    m4_if([$4], [], [false], [$4])
   fi
-fi
-
-if test x"$pkg_libsgxutils_builddir" != x""; then
-  LIBSGXUTILS_DEPENDENCIES="$pkg_libsgxutils_builddir/libsgxutils.la"
-else
-  LIBSGXUTILS_DEPENDENCIES=""
-fi
-AC_SUBST([LIBSGXUTILS_DEPENDENCIES])
-
-m4_define([ACJF_VAR_SUBSTVARFIXUP], ACJF_M4_QUOTE(
-  ACJF_M4_LIST_PUSH_BACK([LIBSGXUTILS_DEPENDENCIES], ACJF_VAR_SUBSTVARFIXUP)))dnl
-
-if test x"$acjf_found_libsgxutils" = x"yes"; then
-  m4_if([$1], [], [true;], [$1])
-else
-  m4_if([$2], [], [true;], [$2])
-fi
-unset acjf_found_libsgxutils
-unset acjf_got_boost
-unset acjf_got_cosupport
-AC_LANG_POP
 ])
+
+dnl ACJF_CHECK_PYTHON_SGXUTILS check for LibSGXUtils python bindings
+dnl
+dnl ACJF_CHECK_PYTHON_SGXUTILS(
+dnl  [<tags>,]
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+AC_DEFUN([ACJF_CHECK_PYTHON_SGXUTILS], [ACJF_CHECK_HELPER_SET_VARS([$@], [
+  ACJF_ARG_WITHPKG([LibSGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[extern],[pkgconfig:libsgxutils]]))dnl
+  ACJF_SEARCHLOC_COPY([LibSGXUtils], [PySGXUtils])dnl
+  AC_LANG_PUSH([C++])
+  ACJF_CHECK_LIB_TESTER([PySGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:LibSGXUtils],[pkgconfig:pysgxutils]]),
+    [_ACJF_CHECK_PYTHON_SGXUTILS_TESTMACRO])
+  [pkg_pysgxutils_srctreemode_pymodulepath="${acjf_cv_pysgxutils_srctreemode_pymodulepath}"]
+  [pkg_pysgxutils_pymodulepath="${acjf_cv_pysgxutils_pymodulepath}"]
+  if test [x"${PYSGXUTILS_FOUND}" = x"yes";] then
+    m4_if(ACJF_VAR_CODE_IF_TRUE, [], 
+     [true;],
+     [dnl echo "ACJF_VAR_CODE_IF_TRUE";
+      ACJF_VAR_CODE_IF_TRUE])
+  else
+    m4_if(ACJF_VAR_CODE_IF_FALSE, [], 
+     [true;],
+     [dnl echo "ACJF_VAR_CODE_IF_FALSE";
+      ACJF_VAR_CODE_IF_FALSE])
+  fi
+  AC_LANG_POP
+])])
+
+dnl ACJF_CHECK_LIB_SGXUTILS check for LibSGXUtils library
+dnl
+dnl ACJF_CHECK_LIB_SGXUTILS(
+dnl  [<tags>,]
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+AC_DEFUN([ACJF_CHECK_LIB_SGXUTILS], [ACJF_CHECK_HELPER_SET_VARS([$@], [
+  ACJF_ARG_WITHPKG([LibSGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[extern],[pkgconfig:libsgxutils]]))dnl
+  AC_LANG_PUSH([C++])
+  ACJF_CHECK_LIB_TESTER([LibSGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:LibSGXUtils],[pkgconfig:libsgxutils]]),
+    ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
+     [#include <sgx.hpp>
+      #include <sgxutils/RecursiveProblemGraphObjVisitor.hpp>
+   
+      using namespace SystemCoDesigner::SGX;
+      using namespace SystemCoDesigner::SGXUtils;],
+     [NetworkGraphAccess ngx("some-file.sgx");
+
+      typedef RecursiveProblemGraphObjVisitor<Actor> RecActorVisitor;
+      typedef RecActorVisitor::Objs                  Actors;
+
+      RecActorVisitor av;
+      apply_visitor(av, ngx.problemGraph());
+      Actors actors = av;
+
+      return 0;]),
+    ACJF_VAR_CODE_IF_TRUE,
+    ACJF_VAR_CODE_IF_FALSE)dnl
+  AC_LANG_POP
+])])
