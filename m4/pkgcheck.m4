@@ -366,10 +366,10 @@ dnl  echo ["  $1_deps=${$1_deps}"]
               $acjf_var_shift
               ;;
             -D)
-              [$1_cppflags_other="${$1_cppflags} -D$acjf_var_optarg"; $acjf_var_shift]
+              [$1_cppflags_other="${$1_cppflags_other} -D$acjf_var_optarg"; $acjf_var_shift]
               ;;
             *)
-              [$1_cppflags_other="${$1_cppflags} $acjf_var_option"]
+              [$1_cppflags_other="${$1_cppflags_other} $acjf_var_option"]
               ;;
           esac
           shift
@@ -709,7 +709,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
                 fi
                ],
                [dnl configscript mode
-
+                ACJF_SEARCHLOC_ADD_CONFIGSCRIPT(ACJF_VAR_PKGNAME)
                ])
              ],
              [dnl pkgconfig mode
@@ -724,7 +724,7 @@ ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_ARG_WITHPKG::$1]), [
                 ACJF_SEARCHLOC_ADD_PREFIX(ACJF_VAR_PKGNAME, $[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME))
                ],
                [dnl configscript mode
-
+                ACJF_SEARCHLOC_ADD_CONFIGSCRIPT(ACJF_VAR_PKGNAME,$[acjf_with_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME))
                ])
              ],
              [dnl pkgconfig mode
