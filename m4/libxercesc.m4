@@ -30,9 +30,9 @@ for acjf_var_pthreadaux in "" "-lpthread"; do
     acjf_cv_xerces_auxlibs="${acjf_var_pthreadaux}"
     LIBS="-lxerces-c $acjf_cv_xerces_auxlibs $acjf_var_xerces_old_LIBS"
     if test x"$acjf_cv_xerces_auxlibs" != x""; then
-      AC_MSG_CHECKING([for $1 libraray in $$2 with auxiliary library $acjf_cv_xerces_auxlibs])
+      AC_MSG_CHECKING([for $1 library in ${$2_desc} with auxiliary library $acjf_cv_xerces_auxlibs])
     else
-      AC_MSG_CHECKING([for $1 libraray in $$2])
+      AC_MSG_CHECKING([for $1 library in ${$2_desc}])
     fi
     AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <xercesc/util/PlatformUtils.hpp>
@@ -48,7 +48,7 @@ unset acjf_var_xerces_old_LIBS
 if test x"$acjf_var_found_pkg" = x"yes"; then
   unset acjf_var_found_pkg
   if test x"$acjf_cv_xerces_auxlibs" != x""; then
-    $2="$$2 with auxiliary library $acjf_cv_xerces_auxlibs"
+    [$2_desc="${$2_desc} with auxiliary library $acjf_cv_xerces_auxlibs"]
   fi
   m4_if([$3], [], [true], [$3])
 else

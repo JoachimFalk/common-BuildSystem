@@ -33,9 +33,9 @@ dnl   echo "-lboost${acjf_var_boostpostfix}${acjf_var_boostmtpostfix}${acjf_var_
         acjf_cv_boost_libpostfix="${acjf_var_boostpostfix}${acjf_var_boostmtpostfix}${acjf_var_boostversion}"
         LIBS="-lboost_regex$acjf_cv_boost_libpostfix $acjf_var_boost_old_LIBS"
         if test x"$acjf_cv_boost_libpostfix" != x""; then
-          AC_MSG_CHECKING([for $1 (>= 1.45) package in $$2 with library postfix $acjf_cv_boost_libpostfix])
+          AC_MSG_CHECKING([for $1 (>= 1.45) package in ${$2_desc} with library postfix $acjf_cv_boost_libpostfix])
         else
-          AC_MSG_CHECKING([for $1 (>= 1.45) package in $$2])
+          AC_MSG_CHECKING([for $1 (>= 1.45) package in ${$2_desc}])
         fi
         AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <boost/version.hpp>
@@ -54,9 +54,9 @@ boost::regex_constants::match_flag_type x;
         acjf_cv_boost_libmtpostfix="${acjf_var_boostpostfix}${acjf_var_boostmtpostfix}${acjf_var_boostversion}"
         LIBS="-lboost_thread$acjf_cv_boost_libmtpostfix $acjf_var_boost_old_LIBS"
         if test x"$acjf_cv_boost_libmtpostfix" != x""; then
-          AC_MSG_CHECKING([for $1 multithreading support in $$2 with library postfix $acjf_cv_boost_libmtpostfix])
+          AC_MSG_CHECKING([for $1 multithreading support in ${$2_desc} with library postfix $acjf_cv_boost_libmtpostfix])
         else
-          AC_MSG_CHECKING([for $1 multithreading support in $$2])
+          AC_MSG_CHECKING([for $1 multithreading support in ${$2_desc}])
         fi
         AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <boost/version.hpp>
@@ -86,13 +86,13 @@ if test x"$acjf_var_found_pkg_st" = x"yes"; then
   unset acjf_var_found_pkg_st
   unset acjf_var_found_pkg_mt
   if test x"$acjf_cv_boost_libpostfix" != x""; then
-    $2="$$2 with $acjf_cv_boost_libpostfix library postfix"
+    [$2_desc="${$2_desc} with $acjf_cv_boost_libpostfix library postfix"]
     if test x"$acjf_cv_boost_libmtpostfix" != x"$acjf_cv_boost_libpostfix"; then
-      $2="$$2 ($acjf_cv_boost_libmtpostfix for multithreading)"
+      [$2_desc="${$2_desc} ($acjf_cv_boost_libmtpostfix for multithreading)"]
     fi
   else
     if test x"$acjf_cv_boost_libmtpostfix" != x""; then
-      $2="$$2 with $acjf_cv_boost_libmtpostfix multithreading library postfix"
+      [$2_desc="${$2_desc} with $acjf_cv_boost_libmtpostfix multithreading library postfix"]
     fi
   fi
   m4_if([$3], [], [true], [$3])
