@@ -1015,7 +1015,17 @@ AC_DEFUN([ACJF_CHECK_LIB_TESTER], [AC_REQUIRE([ACJF_INIT])dnl
     m4_if(m4_bregexp(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^pkgconfig:]), [0],
      [m4_define([ACJF_VAR_PKGCONFIGMOD], m4_bpatsubst(ACJF_M4_UNQUOTE(ACJF_VAR_TAG), [^pkgconfig:\(.*\)], [[\1]]))])dnl
    ])dnl
-
+  dnl m4_pattern_allow([ACJF_VAR_PKGNAME])
+  dnl echo "[ACJF_VAR_PKGNAME]: ACJF_VAR_PKGNAME"
+  dnl m4_pattern_allow([ACJF_VAR_SUBDIR])
+  dnl echo "[ACJF_VAR_SUBDIR]: ACJF_VAR_SUBDIR"
+  dnl m4_pattern_allow([ACJF_VAR_TAGS])
+  dnl echo "[ACJF_VAR_TAGS]: ACJF_VAR_TAGS"
+  dnl m4_pattern_allow([ACJF_VAR_CONFIGSCRIPT])
+  dnl echo "[ACJF_VAR_CONFIGSCRIPT]: ACJF_VAR_CONFIGSCRIPT"
+  dnl m4_pattern_allow([ACJF_VAR_PKGCONFIGMOD])
+  dnl echo "[ACJF_VAR_PKGCONFIGMOD]: ACJF_VAR_PKGCONFIGMOD"
+  
   ACJF_M4_ONCECODE(ACJF_M4_CANON_DC([ACJF_CHECK_LIB_TESTER::$1::subdir::$2]),
    [dnl echo "Are here: ACJF_M4_CANON_DC([ACJF_CHECK_LIB_TESTER::$1::subdir::$2]) [[BEGIN]]"
     m4_pushdef([ACJF_VAR_ANON_SHELLVARPREFIX], ACJF_GEN_ANONYMOUS_SHELL_VAR)
