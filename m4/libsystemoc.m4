@@ -17,236 +17,330 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 
-dnl _ACJF_PKG_TESTMACRO_SYSTEMOC(
-dnl  <name of lib check (pkgname)>,
-dnl  <shell variable prefix set by ACJF_SEARCHLOC_EVALUATE>,
+dnl _ACJF_CHECK_LIB_SYSTEMOC_TESTMACRO(
+dnl   <name of lib check (pkgname)>,
+dnl   <shell variable prefix set by ACJF_SEARCHLOC_EVALUATE>,
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default does nothing>]])
-m4_define([_ACJF_PKG_TESTMACRO_SYSTEMOC], [
-acjf_var_systemoc_error=""
-acjf_var_systemoc_found=""
-acjf_cv_systemoc_sgx_support=""
-acjf_cv_systemoc_enable_vpc=""
-acjf_cv_systemoc_wsdf_support=""
-acjf_cv_systemoc_enable_maestromm=""
-acjf_cv_systemoc_mm_support=""
-if test x"$acjf_var_systemoc_found" != x"no"; then
-  # Checks for header files.
-  AC_MSG_CHECKING([for $1 package in ${$2_desc}])
-  AC_COMPILE_IFELSE(
-   [AC_LANG_PROGRAM(
+m4_define([_ACJF_CHECK_LIB_SYSTEMOC_TESTMACRO], [
+  if test [x"$2" != x"acjf_cv_systemoc"]; then
+    AC_MSG_ERROR([Internal error: Hardcoded variable prefix is different from expected one!])
+  fi
+  m4_pushdef([ACJF_VAR_SYSTEMOC_TESTCODE], [AC_LANG_PROGRAM(
     [[
+#include <iostream>
+
+#include <systemoc/smoc_moc.hpp>
+#include <systemoc/smoc_port.hpp>
+#include <systemoc/smoc_fifo.hpp>
+#include <systemoc/smoc_node_types.hpp>
 #include <systemoc/smoc_config.h>
-    ]],
-    [[
+
 #ifndef SYSTEMOC_VERSION
 # error "NO SysteMoC!"
 #endif
-    ]])],
-   [AC_MSG_RESULT([yes]);],
-   [AC_MSG_RESULT([no]); acjf_var_systemoc_found="no";])
-fi
-if test x"$acjf_var_systemoc_found" != x"no"; then
-  # Checks for header files.
-  AC_MSG_CHECKING([for SGX support in $1 package])
-  AC_COMPILE_IFELSE(
-   [AC_LANG_PROGRAM(
-    [[
-#include <systemoc/smoc_config.h>
-    ]],
-    [[
-#ifndef SYSTEMOC_ENABLE_SGX
-# error "NO SGX!"
-#endif
-    ]])],
-   [AC_MSG_RESULT([yes]); acjf_cv_systemoc_sgx_support="yes";],
-   [AC_MSG_RESULT([no]); acjf_cv_systemoc_sgx_support="no";])
-fi
-if test x"$acjf_var_systemoc_found" != x"no"; then
-  # Checks for header files.
-  AC_MSG_CHECKING([for VPC support in $1 package])
-  AC_COMPILE_IFELSE(
-   [AC_LANG_PROGRAM(
-    [[
-#include <systemoc/smoc_config.h>
-    ]],
-    [[
-#ifndef SYSTEMOC_ENABLE_VPC
-# error "NO VPC!"
-#endif
-    ]])],
-   [AC_MSG_RESULT([yes]); acjf_cv_systemoc_enable_vpc="yes";],
-   [AC_MSG_RESULT([no]); acjf_cv_systemoc_enable_vpc="no";])
-fi
-if test x"$acjf_var_systemoc_found" != x"no"; then
-  # Checks for header files.
-  AC_MSG_CHECKING([for MaestroMM support in $1 package])
-  AC_COMPILE_IFELSE(
-   [AC_LANG_PROGRAM(
-    [[
-#include <systemoc/smoc_config.h>
-    ]],
-    [[
-#ifndef SYSTEMOC_ENABLE_MAESTROMM
-# error "NO MAESTROMM!"
-#endif
-    ]])],
-   [AC_MSG_RESULT([yes]); acjf_cv_systemoc_enable_maestromm="yes";],
-   [AC_MSG_RESULT([no]); acjf_cv_systemoc_enable_maestromm="no";])
-fi
 
-if test x"$acjf_var_systemoc_found" != x"no"; then
-  CPPFLAGS="$CPPFLAGS $SYSTEMC_INCLUDE"; LDFLAGS="$LDFLAGS $SYSTEMC_LDFLAGS"; LIBS="$LIBS -lsystemc"
-  CPPFLAGS="$CPPFLAGS $TLM1_INCLUDE";
-  CPPFLAGS="$CPPFLAGS $BOOST_INCLUDE"; LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"; LIBS="$LIBS -lboost_program_options$BOOST_LIBPOSTFIX"
-  CPPFLAGS="$CPPFLAGS $COSUPPORT_INCLUDE"; LDFLAGS="$LDFLAGS $COSUPPORT_LDFLAGS"; LIBS="$LIBS -lcosupport-smartptr -lcosupport-systemc"
-fi
-if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_sgx_support" = x"yes"; then
-  if test x"$LIBSGX_FOUND" = x"yes"; then
-    CPPFLAGS="$CPPFLAGS $LIBSGX_INCLUDE"; LDFLAGS="$LDFLAGS $LIBSGX_LDFLAGS"; LIBS="$LIBS -lsgx"
-  else
-    acjf_var_systemoc_error="LibSGX library missing"; acjf_var_systemoc_found="no";
-  fi
-fi
-if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_enable_vpc" = x"yes"; then
-  if test x"$SYSTEMC_VPC_FOUND" = x"yes"; then
-    CPPFLAGS="$CPPFLAGS $SYSTEMC_VPC_INCLUDE"; LDFLAGS="$LDFLAGS $SYSTEMC_VPC_LDFLAGS"; LIBS="$LIBS -lsystemcvpc"
-  else
-    acjf_var_systemoc_error="SystemC VPC library missing"; acjf_var_systemoc_found="no";
-  fi
-fi
-if test x"$acjf_var_systemoc_found" != x"no" -a x"$acjf_cv_systemoc_enable_maestromm" = x"yes"; then
-  if test x"$MAESTROMM_FOUND" = x"yes"; then
-    CPPFLAGS="$CPPFLAGS $MM_INCLUDE $MAESTROMM_INCLUDE"; LDFLAGS="$LDFLAGS $MM_LDFLAGS $MAESTROMM_LDFLAGS"; LIBS="$LIBS -lmm -lmaestromm"
-  else
-    acjf_var_systemoc_error="MAESTROMM library missing"; acjf_var_systemoc_found="no";
-  fi
-fi
-if test x"$acjf_var_systemoc_found" != x"no" -o x"$acjf_var_systemoc_error" != x""; then
-  if test x"${$2_type}" = x"bundled"; then
+#include <cmath>
+#include <cassert>
+#include <cstdlib> // for atoi
+
+#define main sc_main
+
+using namespace std; 
+
+// Maximum (and default) number of Src iterations. Lower default number via
+//  command line parameter.
+const int NUM_MAX_ITERATIONS = 1000000;
+
+class Src: public smoc_actor {
+public:
+  smoc_port_out<double> out;
+private:
+  int i;
+  
+  void src() {
+    std::cout << "src: " << i << std::endl;
+    out[0] = i++;
+  }
+  
+  smoc_firing_state start;
+public:
+  Src(sc_module_name name, int from)
+    : smoc_actor(name, start), i(from) {
+    
+      SMOC_REGISTER_CPARAM(from);
+      
+      start =
+        (VAR(i) <= NUM_MAX_ITERATIONS) >>
+        out(1)                         >>
+        CALL(Src::src)                 >> start
+      ;
+  }
+};
+
+// Definition of the SqrLoop actor class
+class SqrLoop
+  // All actor classes must be derived
+  // from the smoc_actor base class
+  : public smoc_actor {
+public:
+  // Declaration of input and output ports
+  smoc_port_in<double>  i1, i2;
+  smoc_port_out<double> o1, o2;
+private:
+  // Declaration of the actor functionality
+  // via member variables and methods
+  double tmp_i1;
+  
+  // action functions triggered by the
+  // FSM declared in the constructor
+  void copyStore()  { o1[0] = tmp_i1 = i1[0];  }
+  void copyInput()  { o1[0] = tmp_i1;          }
+  void copyApprox() { o2[0] = i2[0];           }
+  
+  // guard  functions used by the
+  // FSM declared in the constructor
+  bool check() const {
+    std::cout << "check: " << tmp_i1 << ", " << i2[0] << std::endl;
+    return std::fabs(tmp_i1 - i2[0]*i2[0]) < 0.0001;
+  }
+  
+  // Declaration of firing states for the FSM
+  smoc_firing_state start;
+  smoc_firing_state loop;
+public:
+  // Constructor responsible for declaring the
+  // communication FSM and initializing the actor
+  SqrLoop(sc_module_name name)
+    : smoc_actor( name, start ) {
+    start =
+        i1(1)                               >>
+        o1(1)                               >>
+        CALL(SqrLoop::copyStore)            >> loop
+      ;
+    loop  =
+        (i2(1) &&  GUARD(SqrLoop::check))   >>
+        o2(1)                               >>
+        CALL(SqrLoop::copyApprox)           >> start
+      | (i2(1) && !GUARD(SqrLoop::check))   >>
+        o1(1)                               >>
+        CALL(SqrLoop::copyInput)            >> loop
+      ;
+  }
+};
+
+class Approx: public smoc_actor {
+public:
+  smoc_port_in<double>  i1, i2;
+  smoc_port_out<double> o1;
+private:
+  // Square root successive approximation step of Newton
+  void approx(void) { o1[0] = (i1[0] / i2[0] + i2[0]) / 2; }
+  
+  smoc_firing_state start;
+public:
+  Approx(sc_module_name name)
+    : smoc_actor(name, start) {
+    start =
+        (i1(1) && i2(1))         >>
+        o1(1)                    >>
+        CALL(Approx::approx)     >> start
+      ;
+  }
+};
+
+class Dup: public smoc_actor {
+public:
+  smoc_port_in<double>  i1;
+  smoc_port_out<double> o1, o2;
+
+private:
+  void dup() { 
+    double in = i1[0];
+    o1[0] = in;
+    o2[0] = in;
+  }
+  
+  smoc_firing_state start;
+public:
+  Dup(sc_module_name name)
+    : smoc_actor(name, start) {
+    start =
+        i1(1)                    >>
+        (o1(1) && o2(1))         >>
+        CALL(Dup::dup)           >> start
+      ;
+  }
+};
+
+class Sink: public smoc_actor {
+public:
+  smoc_port_in<double> in;
+private:
+  void sink(void) {
+    std::cout << "sink: " << in[0] << std::endl;
+  }
+  
+  smoc_firing_state start;
+public:
+  Sink(sc_module_name name)
+    : smoc_actor(name, start) {
+    start =
+        in(1)             >>
+        CALL(Sink::sink)  >>
+	start
+      ;
+  }
+};
+
+class SqrRoot
+: public smoc_graph {
+public:
+protected:
+  Src      src;
+  SqrLoop  sqrloop;
+  Approx   approx;
+  Dup      dup;
+  Sink     sink;
+public:
+  SqrRoot( sc_module_name name, const int from = 1 )
+    : smoc_graph(name),
+      src("a1", from),
+      sqrloop("a2"),
+      approx("a3"),
+      dup("a4"),
+      sink("a5") {
+    connectNodePorts(src.out,    sqrloop.i1);
+    connectNodePorts(sqrloop.o1, approx.i1);
+    connectNodePorts(approx.o1,  dup.i1,
+                     smoc_fifo<double>(1));
+    connectNodePorts(dup.o1,     approx.i2,
+                     smoc_fifo<double>() << 2 );
+    connectNodePorts(dup.o2,     sqrloop.i2);
+    connectNodePorts(sqrloop.o2, sink.in);
+  }
+};
+    ]],
+    [[
+  int   argc   = 2;
+  char *argv[] = {"simulation-sqr", "1500", NULL};
+  int from = 1;
+  if (argc == 2) {
+    const int iterations = atoi(argv[1]);
+    assert(iterations < NUM_MAX_ITERATIONS);
+    from = NUM_MAX_ITERATIONS - iterations;
+  }
+  smoc_top_moc<SqrRoot> sqrroot("sqrroot", from);
+  sc_start();
+  return 0;
+    ]])])
+  acjf_var_systemoc_found=""
+  if test [x"${$2_type}" = x"bundled" -o \
+           x"${$2_type}" = x"pkg-config-bundled"]; then
     AC_MSG_CHECKING([if $1 from ${$2_desc} can compile an example])
-    if test x"$acjf_var_systemoc_error" != x""; then
-      AC_MSG_RESULT([$acjf_var_systemoc_error]);
-    else
-      AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
-#include <systemoc/smoc_config.h>
-#include <systemc.h>
-#define main _main
-int sc_main(int, char**) { return 0; }
-        ]], [[
-int x;
-        ]])],
-        [AC_MSG_RESULT([yes]); acjf_var_systemoc_found="yes"],
-        [AC_MSG_RESULT([no])])
-    fi
+    AC_COMPILE_IFELSE(
+      [ACJF_VAR_SYSTEMOC_TESTCODE],
+      [AC_MSG_RESULT([yes]); acjf_var_systemoc_found="yes"],
+      [AC_MSG_RESULT([no]);  acjf_var_systemoc_found="no"])
   else
     AC_MSG_CHECKING([if $1 from ${$2_desc} can compile and link an example])
-    if test x"$acjf_var_systemoc_error" != x""; then
-      AC_MSG_RESULT([$acjf_var_systemoc_error]);
-    else
-      AC_LINK_IFELSE([AC_LANG_PROGRAM([[
-#include <systemoc/smoc_config.h>
-#include <systemc.h>
-#define main _main
-int sc_main(int, char**) { return 0; }
-        ]], [[
-int x;
-        ]])],
-        [AC_MSG_RESULT([yes]); acjf_var_systemoc_found="yes"],
-        [AC_MSG_RESULT([no])])
-    fi
+    AC_LINK_IFELSE(
+      [ACJF_VAR_SYSTEMOC_TESTCODE],
+      [AC_MSG_RESULT([yes]); acjf_var_systemoc_found="yes"],
+      [AC_MSG_RESULT([no]);  acjf_var_systemoc_found="no"])
   fi
-fi
-
-dnl dnl unignore AM_CONDITIONAL
-dnl m4_popdef([AM_CONDITIONAL])
-
-unset acjf_var_systemoc_error
-if test x"$acjf_var_systemoc_found" = x"yes"; then
-  unset acjf_var_systemoc_found
-  m4_if([$3], [], [true], [$3])
-else
-  unset acjf_var_systemoc_found
-  unset acjf_cv_systemoc_sgx_support
-  unset acjf_cv_systemoc_enable_vpc
-  unset acjf_cv_systemoc_wsdf_support
-  m4_if([$4], [], [false], [$4])
-fi
+  m4_popdef([ACJF_VAR_SYSTEMOC_TESTCODE])dnl
+  if test x"$acjf_var_systemoc_found" = x"yes"; then
+    [$2_sgx_support=""]
+    [$2_enable_vp=""]
+    [$2_enable_maestromm=""]
+    # Checks for header files.
+    AC_MSG_CHECKING([for SGX support in $1 package])
+    AC_COMPILE_IFELSE(
+     [AC_LANG_PROGRAM(
+      [[
+  #include <systemoc/smoc_config.h>
+      ]],
+      [[
+  #ifndef SYSTEMOC_ENABLE_SGX
+  # error "NO SGX!"
+  #endif
+      ]])],
+     [AC_MSG_RESULT([yes]); $2_sgx_support="yes";],
+     [AC_MSG_RESULT([no]); $2_sgx_support="no";])
+    # Checks for header files.
+    AC_MSG_CHECKING([for VPC support in $1 package])
+    AC_COMPILE_IFELSE(
+     [AC_LANG_PROGRAM(
+      [[
+  #include <systemoc/smoc_config.h>
+      ]],
+      [[
+  #ifndef SYSTEMOC_ENABLE_VPC
+  # error "NO VPC!"
+  #endif
+      ]])],
+     [AC_MSG_RESULT([yes]); $2_enable_vpc="yes";],
+     [AC_MSG_RESULT([no]); $2_enable_vpc="no";])
+    # Checks for header files.
+    AC_MSG_CHECKING([for MaestroMM support in $1 package])
+    AC_COMPILE_IFELSE(
+     [AC_LANG_PROGRAM(
+      [[
+  #include <systemoc/smoc_config.h>
+      ]],
+      [[
+  #ifndef SYSTEMOC_ENABLE_MAESTROMM
+  # error "NO MAESTROMM!"
+  #endif
+      ]])],
+     [AC_MSG_RESULT([yes]); $2_enable_maestromm="yes";],
+     [AC_MSG_RESULT([no]); $2_enable_maestromm="no";])
+  fi
+  if test x"$acjf_var_systemoc_found" = x"yes"; then
+    unset acjf_var_systemoc_found
+    m4_if([$3], [], [true], [$3])
+  else
+    unset acjf_var_systemoc_found
+    m4_if([$4], [], [false], [$4])
+  fi
 ])
 
 dnl ACJF_CHECK_LIB_SYSTEMOC(
+dnl  [<tags>,]
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
-AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [
-  ACJF_ARG_WITHPKG([SysteMoC], [[intern],[extern]])
-  
-  SYSTEMOC_FOUND=""; acjf_var_systemoc_missing=""
-  if test x"$SYSTEMOC_FOUND" != x"no"; then
-    ACJF_CHECK_LIB_BOOST([],
-      [SYSTEMOC_FOUND="no"; acjf_var_systemoc_missing="boost library"])
-  fi
-  if test x"$SYSTEMOC_FOUND" != x"no"; then
-    ACJF_CHECK_LIB_SYSTEMC([],
-      [SYSTEMOC_FOUND="no"; acjf_var_systemoc_missing="SystemC library"])
-  fi
-  if test x"$SYSTEMOC_FOUND" != x"no"; then
-    ACJF_CHECK_LIB_TLM1([],
-      [SYSTEMOC_FOUND="no"; acjf_var_systemoc_missing="tlm1 headers"])
-  fi
-  if test x"$SYSTEMOC_FOUND" != x"no"; then
-    ACJF_CHECK_LIB_COSUPPORT([],
-      [SYSTEMOC_FOUND="no"; acjf_var_systemoc_missing="CoSupport library"])
-  fi
-  if test x"$SYSTEMOC_FOUND" != x"no"; then
-    ACJF_CHECK_LIB_SGX([], [false]) dnl may be needed but may also be optional
-    ACJF_CHECK_LIB_SYSTEMC_VPC([], [false]) dnl may be needed but may also be optional
-    ACJF_CHECK_LIB_MAESTROMM([], [false]) dnl may be needed but may also be optional
-  fi
-  if test x"$SYSTEMOC_FOUND" != x"no"; then
-    AC_LANG_PUSH([C++])
-    ACJF_CHECK_LIB_TESTER([SysteMoC], [SysteMoC],
-      [_ACJF_PKG_TESTMACRO_SYSTEMOC],
-      [true], [false])
-    AC_LANG_POP
-  fi
-  
-  if test x"$pkg_systemoc_builddir" != x""; then
-    SYSTEMOC_DEPENDENCIES="$pkg_systemoc_builddir/libsystemoc.la"
-  else
-    SYSTEMOC_DEPENDENCIES=""
-  fi
-  AC_SUBST([SYSTEMOC_DEPENDENCIES])
-  
-  m4_define([ACJF_VAR_SUBSTVARFIXUP], ACJF_M4_QUOTE(
-    ACJF_M4_LIST_PUSH_BACK([SYSTEMOC_DEPENDENCIES], ACJF_VAR_SUBSTVARFIXUP)))dnl
-  
+dnl
+dnl This macro defines all the stuff documented in ACJF_CHECK_LIB plus the following:
+dnl   SYSTEMOC_ENABLE_SGX       yes or no depending on the configuration in <systemoc/smoc_config.h>
+dnl   SYSTEMOC_ENABLE_VPC       yes or no depending on the configuration in <systemoc/smoc_config.h>
+dnl   SYSTEMOC_ENABLE_MAESTROMM yes or no depending on the configuration in <systemoc/smoc_config.h>
+dnl   AM_CONDITIONAL SYSTEMOC_ENABLE_SGX
+dnl   AM_CONDITIONAL SYSTEMOC_ENABLE_VPC
+dnl   AM_CONDITIONAL SYSTEMOC_ENABLE_MAESTROMM
+AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [ACJF_CHECK_HELPER_SET_VARS([$@], [
+  ACJF_ARG_WITHPKG([SysteMoC], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[extern],[pkgconfig:libsystemoc]]))dnl
+  AC_LANG_PUSH([C++])
+  ACJF_CHECK_LIB_TESTER([SysteMoC], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[pkgconfig:libsystemoc]]),
+    [_ACJF_CHECK_LIB_SYSTEMOC_TESTMACRO],
+    m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [true;]),
+    m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [true;]))
+  SYSTEMOC_ENABLE_SGX="$acjf_cv_systemoc_sgx_support"
   AM_CONDITIONAL([SYSTEMOC_ENABLE_SGX], test x"$acjf_cv_systemoc_sgx_support" = x"yes")
+  SYSTEMOC_ENABLE_VPC="$acjf_cv_systemoc_enable_vpc"
   AM_CONDITIONAL([SYSTEMOC_ENABLE_VPC], test x"$acjf_cv_systemoc_enable_vpc" = x"yes")
+  SYSTEMOC_ENABLE_MAESTROMM="$acjf_cv_systemoc_enable_maestromm"
   AM_CONDITIONAL([SYSTEMOC_ENABLE_MAESTROMM], test x"$acjf_cv_systemoc_enable_maestromm" = x"yes")
-  
-  if test x"$SYSTEMOC_FOUND" = x"yes"; then
-    SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $BOOST_INCLUDE $SYSTEMC_INCLUDE $TLM1_INCLUDE $COSUPPORT_INCLUDE"
-    SYSTEMOC_INCPATH="$SYSTEMOC_INCPATH $BOOST_INCPATH $SYSTEMC_INCPATH $TLM1_INCPATH $COSUPPORT_INCPATH"
-    if test x"$acjf_cv_systemoc_sgx_support" = x"yes"; then
-      SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $LIBSGX_INCLUDE"
-      SYSTEMOC_INCPATH="$SYSTEMOC_INCPATH $LIBSGX_INCPATH"
-    fi
-    if test x"$acjf_cv_systemoc_enable_maestromm" = x"yes"; then
-      SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $MAESTROMM_INCLUDE"
-      SYSTEMOC_INCPATH="$SYSTEMOC_INCPATH $MAESTROMM_INCPATH"
-    fi
-    if test x"$acjf_cv_systemoc_enable_vpc" = x"yes"; then
-      SYSTEMOC_INCLUDE="$SYSTEMOC_INCLUDE $SYSTEMC_VPC_INCLUDE"
-      SYSTEMOC_INCPATH="$SYSTEMOC_INCPATH $SYSTEMC_VPC_INCPATH"
-    fi
-    m4_if([$1], [], [true;], [$1])
+  if test [x"${SYSTEMOC_FOUND}" = x"yes";] then
+    m4_if(ACJF_VAR_CODE_IF_TRUE, [], 
+     [true;],
+     [dnl echo "ACJF_VAR_CODE_IF_TRUE";
+      ACJF_VAR_CODE_IF_TRUE])
   else
-    m4_if([$1$2], [],
-     [if test x"$acjf_var_systemoc_missing" != x""; then
-        AC_MSG_ERROR([Cannot find $acjf_var_systemoc_missing required by SysteMoC, bailing out!])
-       else
-        AC_MSG_ERROR([Cannot find SysteMoC, bailing out!])
-       fi
-     ], [m4_if([$2], [], [true;], [$2])])
+    m4_if(ACJF_VAR_CODE_IF_FALSE, [], 
+     [true;],
+     [dnl echo "ACJF_VAR_CODE_IF_FALSE";
+      ACJF_VAR_CODE_IF_FALSE])
   fi
-])
+  AC_LANG_POP
+])])
