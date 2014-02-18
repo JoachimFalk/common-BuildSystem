@@ -18,7 +18,7 @@ dnl Boston, MA 02111-1307, USA.
 
 dnl _ACJF_CHECK_PYTHON_SGX_TESTMACRO(
 dnl   <name of lib check (pkgname)>,
-dnl   <description shell variable>,
+dnl   <shell variable prefix set by ACJF_SEARCHLOC_EVALUATE>,
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 dnl
@@ -63,7 +63,9 @@ AC_DEFUN([ACJF_CHECK_PYTHON_SGX], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   ACJF_SEARCHLOC_COPY([LibSGX], [PySGX])dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([PySGX], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:LibSGX],[pkgconfig:pysgx]]),
-    [_ACJF_CHECK_PYTHON_SGX_TESTMACRO])
+    [_ACJF_CHECK_PYTHON_SGX_TESTMACRO],
+    m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [true;]),
+    m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [true;]))
   [pkg_pysgx_srctreemode_pymodulepath="${acjf_cv_pysgx_srctreemode_pymodulepath}"]
   [pkg_pysgx_pymodulepath="${acjf_cv_pysgx_pymodulepath}"]
   if test [x"${PYSGX_FOUND}" = x"yes";] then
