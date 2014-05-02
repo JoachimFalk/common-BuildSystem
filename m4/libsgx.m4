@@ -31,19 +31,17 @@ m4_define([_ACJF_CHECK_PYTHON_SGX_TESTMACRO], [
   fi
   if test [x"${$2_type}" = x"pkg-config-bundled" -o \
            x"${$2_type}" = x"pkg-config"]; then
-    acjf_var_old_PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
     if test x"$PKG_CONFIG_PATH" = x""; then
-      [PKG_CONFIG_PATH="${$2_pkg_config_path}"]
+      [acjf_var_pkg_config_path="${$2_pkg_config_path}"]
     else
-      [PKG_CONFIG_PATH="${$2_pkg_config_path}:${PKG_CONFIG_PATH}"]
+      [acjf_var_pkg_config_path="${$2_pkg_config_path}:${PKG_CONFIG_PATH}"]
     fi
-    export PKG_CONFIG_PATH
+    dnl echo "PKG_CONFIG_PATH: $acjf_var_pkg_config_path"
     if test [x"${$2_type}" = x"pkg-config-bundled"]; then
-      [$2_srctreemode_pymodulepath=`$PKG_CONFIG "${$2_modules}" --variable srctreemode_pymodulepath 2>/dev/null`]
+      [$2_srctreemode_pymodulepath=`PKG_CONFIG_PATH="$acjf_var_pkg_config_path"; export PKG_CONFIG_PATH; $PKG_CONFIG "${$2_modules}" --variable srctreemode_pymodulepath 2>/dev/null`]
     fi
-    [$2_pymodulepath=`$PKG_CONFIG "${$2_modules}" --variable pymodulepath 2>/dev/null`]
-    PKG_CONFIG_PATH=${acjf_var_old_PKG_CONFIG_PATH}
-    unset acjf_var_old_PKG_CONFIG_PATH
+    [$2_pymodulepath=`PKG_CONFIG_PATH="$acjf_var_pkg_config_path"; export PKG_CONFIG_PATH; $PKG_CONFIG "${$2_modules}" --variable pymodulepath 2>/dev/null`]
+    unset acjf_var_pkg_config_path
     AC_MSG_RESULT([yes]);
     m4_if([$3], [], [true], [$3])
   else

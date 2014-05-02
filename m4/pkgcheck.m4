@@ -273,39 +273,36 @@ dnl  echo ["  $1_deps=${$1_deps}"]
             [$1_desc="${$1_pkg_config_dir} to provide the pkg-config module ${$1_modules}"]
           fi
         fi
-        acjf_var_old_PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
         if test x"$PKG_CONFIG_PATH" = x""; then
-          [PKG_CONFIG_PATH="${$1_pkg_config_path}"]
+          [acjf_var_pkg_config_path="${$1_pkg_config_path}"]
         else
-          [PKG_CONFIG_PATH="${$1_pkg_config_path}:${PKG_CONFIG_PATH}"]
+          [acjf_var_pkg_config_path="${$1_pkg_config_path}:${PKG_CONFIG_PATH}"]
         fi
-        export PKG_CONFIG_PATH
-        dnl echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
-        if test -n "$PKG_CONFIG" && AC_RUN_LOG([$PKG_CONFIG --exists --print-errors "${$1_modules}"]); then
+        dnl echo "PKG_CONFIG_PATH: $acjf_var_pkg_config_path"
+        if test -n "$PKG_CONFIG" && AC_RUN_LOG([PKG_CONFIG_PATH="$acjf_var_pkg_config_path"; export PKG_CONFIG_PATH; $PKG_CONFIG --exists --print-errors "${$1_modules}";]); then
           dnl echo "yep"
           [$1_invalid="no"]
           [acjf_var_includedir=""]
           [acjf_var_include=""]
-          [acjf_var_cppflags=`$PKG_CONFIG --cflags "${$1_modules}" 2>/dev/null`]
+          [acjf_var_cppflags=`PKG_CONFIG_PATH="$acjf_var_pkg_config_path"; export PKG_CONFIG_PATH; $PKG_CONFIG --cflags "${$1_modules}" 2>/dev/null`]
           [acjf_var_cflags=""]
           [acjf_var_cxxflags=""]
           [acjf_var_libdir=""]
           [acjf_var_ldflags=""]
-          [acjf_var_libs=`$PKG_CONFIG --libs "${$1_modules}" 2>/dev/null`]
+          [acjf_var_libs=`PKG_CONFIG_PATH="$acjf_var_pkg_config_path"; export PKG_CONFIG_PATH; $PKG_CONFIG --libs "${$1_modules}" 2>/dev/null`]
         else
           dnl echo "nope"
           [$1_invalid="yes"]
           _PKG_SHORT_ERRORS_SUPPORTED
           if test [x"$_pkg_short_errors_supported" = x"yes";] then
-            acjf_var_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "$2"`
+            acjf_var_PKG_ERRORS=`PKG_CONFIG_PATH="$acjf_var_pkg_config_path"; export PKG_CONFIG_PATH; $PKG_CONFIG --short-errors --errors-to-stdout --print-errors "$2"`
           else 
-            acjf_var_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "$2"`
+            acjf_var_PKG_ERRORS=`PKG_CONFIG_PATH="$acjf_var_pkg_config_path"; export PKG_CONFIG_PATH; $PKG_CONFIG --errors-to-stdout --print-errors "$2"`
           fi
           # Put the nasty error message in config.log where it belongs
           echo "$acjf_var_PKG_ERRORS" >&AS_MESSAGE_LOG_FD
         fi
-        PKG_CONFIG_PATH=${acjf_var_old_PKG_CONFIG_PATH}
-        unset acjf_var_old_PKG_CONFIG_PATH
+        unset acjf_var_pkg_config_path
       else
         eval [$1_rel_configscript=\$${$2}_configscript]
         if test [x"${$1_rel_configscript}" = x"";] then
