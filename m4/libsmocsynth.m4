@@ -57,7 +57,8 @@ AC_DEFUN([ACJF_CHECK_LIB_SYNTHESIS_FRAMEWORK], [ACJF_CHECK_HELPER_SET_VARS([$@],
   ACJF_ARG_WITHPKG([Synthesis-Framework], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[extern],[pkgconfig:libsmocsynth-cxx]]))dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([Synthesis-Framework], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[pkgconfig:libsmocsynth libsmocsynth-cxx]]),
-    [_ACJF_CHECK_LIB_SYNTHESIS_XXX_TESTMACRO])dnl
+    [_ACJF_CHECK_LIB_SYNTHESIS_XXX_TESTMACRO],
+    m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [[true;]]))dnl
   [pkg_synthesis_framework_pkgdatadir="${acjf_cv_synthesis_framework_pkgdatadir}"]
   [pkg_synthesis_framework_bindir="${acjf_cv_synthesis_framework_bindir}"]
   AC_SUBST([pkg_synthesis_framework_pkgdatadir])
@@ -86,7 +87,8 @@ AC_DEFUN([ACJF_CHECK_LIB_SYNTHESIS_SW], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   ACJF_ARG_WITHPKG([Synthesis-SW], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[extern],[pkgconfig:libsmocsynth-cxx-sw]]))dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([Synthesis-SW], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[pkgconfig:libsmocsynth-cxx-sw]]),
-    [_ACJF_CHECK_LIB_SYNTHESIS_XXX_TESTMACRO])dnl
+    [_ACJF_CHECK_LIB_SYNTHESIS_XXX_TESTMACRO],
+    m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [[true;]]))dnl
   [pkg_synthesis_sw_pkgdatadir="${acjf_cv_synthesis_sw_pkgdatadir}"]
   [pkg_synthesis_sw_bindir="${acjf_cv_synthesis_sw_bindir}"]
   AC_SUBST([pkg_synthesis_sw_pkgdatadir])
@@ -115,7 +117,8 @@ AC_DEFUN([ACJF_CHECK_LIB_SYNTHESIS_PTHREAD], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   ACJF_ARG_WITHPKG([Synthesis-Pthread], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[extern],[pkgconfig:libsmocsynth-cxx-pthread]]))dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([Synthesis-Pthread], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[pkgconfig:libsmocsynth-cxx-pthread]]),
-    [_ACJF_CHECK_LIB_SYNTHESIS_XXX_TESTMACRO])dnl
+    [_ACJF_CHECK_LIB_SYNTHESIS_XXX_TESTMACRO],
+    m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [[true;]]))dnl
   [pkg_synthesis_pthread_pkgdatadir="${acjf_cv_synthesis_pthread_pkgdatadir}"]
   [pkg_synthesis_pthread_bindir="${acjf_cv_synthesis_pthread_bindir}"]
   AC_SUBST([pkg_synthesis_pthread_pkgdatadir])

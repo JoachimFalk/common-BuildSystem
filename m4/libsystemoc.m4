@@ -323,8 +323,7 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([SysteMoC], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[pkgconfig:libsystemoc]]),
     [_ACJF_CHECK_LIB_SYSTEMOC_TESTMACRO],
-    m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [true;]),
-    m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [true;]))
+    m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [[true;]]))dnl
   SYSTEMOC_ENABLE_SGX="$acjf_cv_systemoc_sgx_support"
   AM_CONDITIONAL([SYSTEMOC_ENABLE_SGX], test x"$acjf_cv_systemoc_sgx_support" = x"yes")
   SYSTEMOC_ENABLE_VPC="$acjf_cv_systemoc_enable_vpc"
