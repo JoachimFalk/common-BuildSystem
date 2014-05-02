@@ -28,17 +28,15 @@ m4_define([_ACJF_CHECK_LIB_SYNTHESIS_XXX_TESTMACRO], [
   AC_MSG_CHECKING([for $1 package in ${$2_desc}])
   if test [x"${$2_type}" = x"pkg-config-bundled" -o \
            x"${$2_type}" = x"pkg-config"]; then
-    acjf_var_old_PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
     if test x"$PKG_CONFIG_PATH" = x""; then
-      [PKG_CONFIG_PATH="${$2_pkg_config_path}"]
+      [acjf_var_pkg_config_path="${$2_pkg_config_path}"]
     else
-      [PKG_CONFIG_PATH="${$2_pkg_config_path}:${PKG_CONFIG_PATH}"]
+      [acjf_var_pkg_config_path="${$2_pkg_config_path}:${PKG_CONFIG_PATH}"]
     fi
-    export PKG_CONFIG_PATH
-    [$2_pkgdatadir=`$PKG_CONFIG "${$2_modules}" --variable pkgdatadir 2>/dev/null`]
-    [$2_bindir=`$PKG_CONFIG "${$2_modules}" --variable bindir 2>/dev/null`]
-    PKG_CONFIG_PATH=${acjf_var_old_PKG_CONFIG_PATH}
-    unset acjf_var_old_PKG_CONFIG_PATH
+    dnl echo "PKG_CONFIG_PATH: $acjf_var_pkg_config_path"
+    [$2_pkgdatadir=`PKG_CONFIG_PATH="$acjf_var_pkg_config_path"; export PKG_CONFIG_PATH; $PKG_CONFIG "${$2_modules}" --variable pkgdatadir 2>/dev/null`]
+    [$2_bindir=`PKG_CONFIG_PATH="$acjf_var_pkg_config_path"; export PKG_CONFIG_PATH; $PKG_CONFIG "${$2_modules}" --variable bindir 2>/dev/null`]
+    unset acjf_var_pkg_config_path
     AC_MSG_RESULT([yes]);
     m4_if([$3], [], [true], [$3])
   else
