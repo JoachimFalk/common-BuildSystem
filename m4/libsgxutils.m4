@@ -63,7 +63,8 @@ AC_DEFUN([ACJF_CHECK_PYTHON_SGXUTILS], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   ACJF_SEARCHLOC_COPY([LibSGXUtils], [PySGXUtils])dnl
   AC_LANG_PUSH([C++])
   ACJF_CHECK_LIB_TESTER([PySGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:LibSGXUtils],[pkgconfig:pysgxutils]]),
-    [_ACJF_CHECK_PYTHON_SGXUTILS_TESTMACRO])
+    [_ACJF_CHECK_PYTHON_SGXUTILS_TESTMACRO],
+    m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [[true;]]))dnl
   [pkg_pysgxutils_srctreemode_pymodulepath="${acjf_cv_pysgxutils_srctreemode_pymodulepath}"]
   [pkg_pysgxutils_pymodulepath="${acjf_cv_pysgxutils_pymodulepath}"]
   if test [x"${PYSGXUTILS_FOUND}" = x"yes";] then
