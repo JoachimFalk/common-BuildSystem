@@ -52,7 +52,7 @@ boost::regex_constants::match_flag_type x;
       if test x"$acjf_var_found_pkg_st" = x"yes" -a \
               x"$acjf_var_found_pkg_mt" != x"yes"; then
         acjf_cv_boost_libmtpostfix="${acjf_var_boostpostfix}${acjf_var_boostmtpostfix}${acjf_var_boostversion}"
-        LIBS="-lboost_thread$acjf_cv_boost_libmtpostfix $acjf_var_boost_old_LIBS"
+        LIBS="-lboost_thread$acjf_cv_boost_libmtpostfix -lboost_system$acjf_cv_boost_libmtpostfix $acjf_var_boost_old_LIBS"
         if test x"$acjf_cv_boost_libmtpostfix" != x""; then
           AC_MSG_CHECKING([for $1 multithreading support in ${$2_desc} with library postfix $acjf_cv_boost_libmtpostfix])
         else
