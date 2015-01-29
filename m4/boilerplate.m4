@@ -105,6 +105,28 @@ esac
 AC_SUBST([root_srcdir])dnl
 root_builddir='$(top_builddir)/'"$acjf_root_builddir";
 AC_SUBST([root_builddir])dnl
+if test -d pkgconfig; then
+  acjf_var_pkg_config_path="${acjf_abs_top_builddir}/pkgconfig"
+  if test -f pkgconfig/.pkg_config_path; then
+    while read line; do
+      case "$line" in
+        "") # ignore
+          ;;
+        /*) # abs path
+          [acjf_var_pkg_config_path="${acjf_var_pkg_config_path}:${line}"]
+          ;;
+        *) # rel path
+          [acjf_var_pkg_config_path="${acjf_var_pkg_config_path}:${acjf_abs_top_builddir}/pkgconfig/${line}"]
+          ;;
+      esac
+    done < pkgconfig/.pkg_config_path
+    if test x"$PKG_CONFIG_PATH" != x""; then
+      [acjf_var_pkg_config_path="${acjf_var_pkg_config_path}:${PKG_CONFIG_PATH}"]
+    fi
+  fi
+  PKG_CONFIG_PATH="${acjf_var_pkg_config_path}"
+fi
+ACJF_M4_LISTVAR_PUSH_BACK([ACJF_VAR_SUBSTVARFIXUP], [PKG_CONFIG_PATH])dnl
 ACJF_M4_FOREACH([ACJF_VAR_SUBSTVAR], ACJF_VAR_SUBSTVARFIXUP,
  [dnl FIXME: The ':' is a hardcoded unix path seperator!!!
   ACJF_VAR_SUBSTVAR=`echo "$ACJF_VAR_SUBSTVAR" | sed dnl Note that [: 	] contains a TAB character!!!
