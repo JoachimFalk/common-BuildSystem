@@ -105,7 +105,7 @@ esac
 AC_SUBST([root_srcdir])dnl
 root_builddir='$(top_builddir)/'"$acjf_root_builddir";
 AC_SUBST([root_builddir])dnl
-if test -d pkgconfig; then
+if test -d "$srcdir/pkgconfig"; then
   acjf_var_pkg_config_path="${acjf_abs_top_builddir}/pkgconfig"
   if test -f pkgconfig/.pkg_config_path; then
     while read line; do
