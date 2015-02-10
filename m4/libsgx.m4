@@ -39,8 +39,10 @@ m4_define([_ACJF_CHECK_PYTHON_SGX_TESTMACRO], [
     dnl echo "PKG_CONFIG_PATH: $acjf_var_pkg_config_path"
     if test [x"${$2_type}" = x"pkg-config-bundled"]; then
       [$2_srctreemode_pymodulepath=`PKG_CONFIG_PATH="$acjf_var_pkg_config_path"; export PKG_CONFIG_PATH; $PKG_CONFIG "${$2_modules}" --variable srctreemode_pymodulepath 2>/dev/null`]
+      [$2_srctreemode_bindir=`PKG_CONFIG_PATH="$acjf_var_pkg_config_path"; export PKG_CONFIG_PATH; $PKG_CONFIG "${$2_modules}" --variable srctreemode_bindir 2>/dev/null`]
     fi
     [$2_pymodulepath=`PKG_CONFIG_PATH="$acjf_var_pkg_config_path"; export PKG_CONFIG_PATH; $PKG_CONFIG "${$2_modules}" --variable pymodulepath 2>/dev/null`]
+    [$2_bindir=`PKG_CONFIG_PATH="$acjf_var_pkg_config_path"; export PKG_CONFIG_PATH; $PKG_CONFIG "${$2_modules}" --variable bindir 2>/dev/null`]
     unset acjf_var_pkg_config_path
     AC_MSG_RESULT([yes]);
     m4_if([$3], [], [true], [$3])
@@ -64,7 +66,9 @@ AC_DEFUN([ACJF_CHECK_PYTHON_SGX], [ACJF_CHECK_HELPER_SET_VARS([$@], [
     [_ACJF_CHECK_PYTHON_SGX_TESTMACRO],
     m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [[true;]]))dnl
   [pkg_pysgx_srctreemode_pymodulepath="${acjf_cv_pysgx_srctreemode_pymodulepath}"]
+  [pkg_pysgx_srctreemode_bindir="${acjf_cv_pysgx_srctreemode_bindir}"]
   [pkg_pysgx_pymodulepath="${acjf_cv_pysgx_pymodulepath}"]
+  [pkg_pysgx_bindir="${acjf_cv_pysgx_bindir}"]
   if test [x"${PYSGX_FOUND}" = x"yes";] then
     m4_if(ACJF_VAR_CODE_IF_TRUE, [], 
      [true;],
