@@ -1069,9 +1069,9 @@ AC_DEFUN([ACJF_CHECK_LIB_TESTER], [AC_REQUIRE([ACJF_INIT])dnl
           fi
           LDFLAGS="$LDFLAGS ${[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_ldflags_other]}";
           LIBS="$ACJF_VAR_ANON_SHELLVARPREFIX[LIBS] ${[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_libs]}";
-dnl       echo "CPPFLAGS: $CPPFLAGS"
-dnl       echo "LDFLAGS: $LDFLAGS"
-dnl       echo "LIBS: $LIBS"
+          echo "CPPFLAGS: $CPPFLAGS"
+          echo "LDFLAGS: $LDFLAGS"
+          echo "LIBS: $LIBS"
           ACJF_M4_UNQUOTE(ACJF_VAR_TEST_MACRO[(
            ACJF_VAR_PKGNAME,
            [acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME),
