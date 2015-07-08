@@ -1225,9 +1225,8 @@ dnl echo "[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_deps]: $[acjf_cv_]ACJF_M
      ])dnl
 
     m4_if(ACJF_VAR_PKGCONFIGMOD, [], [],
-     [if test \( x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config" -o \
-                 x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled" \) -a \
-              -d "$srcdir/pkgconfig"; then
+     [if test x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config" -o \
+              x"$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_type]" = x"pkg-config-bundled"; then
         test -d pkgconfig || mkdir pkgconfig
         touch pkgconfig/.pkg_config_path
         echo "$[acjf_cv_]ACJF_M4_CANON_DC(ACJF_VAR_PKGNAME)[_pkg_config_path]" | tr ':' '\n' | while read line; do
