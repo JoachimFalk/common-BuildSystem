@@ -134,3 +134,33 @@ AC_DEFUN([ACJF_CHECK_LIB_SYNTHESIS_PTHREAD], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   fi
   AC_LANG_POP
 ])])
+
+dnl ACJF_CHECK_LIB_SYNTHESIS_TLM check for Synthesis TLM
+dnl
+dnl ACJF_CHECK_LIB_SYNTHESIS_TLM(
+dnl  [<tags>,]
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+AC_DEFUN([ACJF_CHECK_LIB_SYNTHESIS_TLM], [ACJF_CHECK_HELPER_SET_VARS([$@], [
+  ACJF_ARG_WITHPKG([Synthesis-TLM], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[extern],[pkgconfig:libsmocsynth-cxx-tlm]]))dnl
+  AC_LANG_PUSH([C++])
+  ACJF_CHECK_LIB_TESTER([Synthesis-TLM], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[pkgconfig:libsmocsynth-cxx-tlm]]),
+    [_ACJF_CHECK_LIB_SYNTHESIS_XXX_TESTMACRO],
+    m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [[true;]]))dnl
+  [pkg_synthesis_tlm_pkgdatadir="${acjf_cv_synthesis_tlm_pkgdatadir}"]
+  [pkg_synthesis_tlm_bindir="${acjf_cv_synthesis_tlm_bindir}"]
+  AC_SUBST([pkg_synthesis_tlm_pkgdatadir])
+  AC_SUBST([pkg_synthesis_tlm_bindir])
+  if test [x"${SYNTHESIS_TLM_FOUND}" = x"yes";] then
+    m4_if(ACJF_VAR_CODE_IF_TRUE, [], 
+     [true;],
+     [dnl echo "ACJF_VAR_CODE_IF_TRUE";
+      ACJF_VAR_CODE_IF_TRUE])
+  else
+    m4_if(ACJF_VAR_CODE_IF_FALSE, [], 
+     [true;],
+     [dnl echo "ACJF_VAR_CODE_IF_FALSE";
+      ACJF_VAR_CODE_IF_FALSE])
+  fi
+  AC_LANG_POP
+])])
