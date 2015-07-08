@@ -25,17 +25,17 @@ AC_DEFUN([ACJF_CHECK_LIB_BOOSTTESTMACRO], [
 acjf_var_boost_old_LIBS="$LIBS"
 acjf_var_found_pkg_st=""
 acjf_var_found_pkg_mt=""
-for acjf_var_boostversion in "" "-1_54" "-1_53" "-1_52" "-1_51" "-1_50" "-1_49" "-1_48" "-1_47" "-1_46" "-1_45"; do
-  for acjf_var_boostpostfix in "" "-gcc" "-gcc45" "-gcc44" "-gcc43" "-xlc"; do
+for acjf_var_boostversion in "" "-1_58" "-1_57" "-1_56" "-1_55" "-1_54" "-1_53" "-1_52" "-1_51" "-1_50" "-1_49" "-1_48"; do
+  for acjf_var_boostpostfix in "" "-gcc" "-gcc49" "-gcc48" "-gcc47" "-gcc46" "-gcc45"; do
     for acjf_var_boostmtpostfix in "" "-mt"; do
 dnl   echo "-lboost${acjf_var_boostpostfix}${acjf_var_boostmtpostfix}${acjf_var_boostversion}: $acjf_var_found_pkg"
       if test x"$acjf_var_found_pkg_st" != x"yes"; then
         acjf_cv_boost_libpostfix="${acjf_var_boostpostfix}${acjf_var_boostmtpostfix}${acjf_var_boostversion}"
         LIBS="-lboost_regex$acjf_cv_boost_libpostfix $acjf_var_boost_old_LIBS"
         if test x"$acjf_cv_boost_libpostfix" != x""; then
-          AC_MSG_CHECKING([for $1 (>= 1.45) package in ${$2_desc} with library postfix $acjf_cv_boost_libpostfix])
+          AC_MSG_CHECKING([for $1 (>= 1.48) package in ${$2_desc} with library postfix $acjf_cv_boost_libpostfix])
         else
-          AC_MSG_CHECKING([for $1 (>= 1.45) package in ${$2_desc}])
+          AC_MSG_CHECKING([for $1 (>= 1.48) package in ${$2_desc}])
         fi
         AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <boost/version.hpp>
@@ -63,7 +63,7 @@ boost::regex_constants::match_flag_type x;
 #include <boost/thread.hpp>
 void dummy() { return; }
           ]], [[
-#if !defined(BOOST_VERSION) || BOOST_VERSION < 104500
+#if !defined(BOOST_VERSION) || BOOST_VERSION < 104800
 # error "not boost or boost too old!"
 #endif
 boost::thread th(dummy);
