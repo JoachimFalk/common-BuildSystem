@@ -16,6 +16,28 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
+dnl ACJF_CHECK_LIB_MAESTROBR check for libmeastro_mm
+dnl
+dnl ACJF_CHECK_LIB_MAESTROBR(
+dnl  [<tags>,]
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>])
+AC_DEFUN([ACJF_CHECK_LIB_MAESTROBR], [ACJF_CHECK_HELPER_SET_VARS([$@], [
+  AC_LANG_PUSH([C++])
+  ACJF_ARG_WITHPKG([Maestro], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern],[extern],[pkgconfig:libmaestro]]))dnl
+  ACJF_SEARCHLOC_COPY([Maestro], [MaestroBR])
+  ACJF_CHECK_LIB_TESTER([MaestroBR], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern:Maestro/Bruckner],[extern],[pkgconfig:libmaestro_bruckner]]),
+    ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
+     [
+//    #include <FSMTransition.h>
+     ],[
+      int x;
+     ]),
+    ACJF_VAR_CODE_IF_TRUE,
+    ACJF_VAR_CODE_IF_FALSE)dnl
+  AC_LANG_POP
+])])
+
 dnl ACJF_CHECK_LIB_MAESTROMM check for libmeastro_mm
 dnl
 dnl ACJF_CHECK_LIB_MAESTROMM(
@@ -29,7 +51,7 @@ AC_DEFUN([ACJF_CHECK_LIB_MAESTROMM], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   ACJF_CHECK_LIB_TESTER([MaestroMM], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern:Maestro/MetaMap],[extern],[pkgconfig:libmaestro_mm]]),
     ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
      [
-      #include <MetaMap/Elements.hpp>
+      #include <MetaMap/Node.h>
      ],[
       MetaMap::Node node("flups");
      ]),
