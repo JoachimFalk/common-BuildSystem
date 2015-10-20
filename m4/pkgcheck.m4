@@ -1544,7 +1544,8 @@ AC_DEFUN([ACJF_CONFIG_PKG], [dnl
       acjf_var_alt=yes
     fi
   done
-  if test -d "$srcdir/ACJF_VAR_SUBDIR"; then
+  if test -f "$srcdir/ACJF_VAR_SUBDIR/configure.in" \
+       -o -f "$srcdir/ACJF_VAR_SUBDIR/configure.ac" ; then
     if test x"$acjf_var_bundled" = x"yes"; then
       AC_CONFIG_SUBDIRS(ACJF_VAR_SUBDIR)
     fi
