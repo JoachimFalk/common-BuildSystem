@@ -16,6 +16,21 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
+dnl ACJF_CHECK_LIB_COSUPPORT_BASE(
+dnl  [<tags>,]
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>]])
+AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT_BASE], [ACJF_CHECK_HELPER_SET_VARS([$@], [
+  ACJF_ARG_WITHPKG([CoSupport], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:Support],[extern],[pkgconfig:libcosupport]]))dnl
+  ACJF_SEARCHLOC_COPY([CoSupport], [CoSupport-Base])dnl
+  AC_LANG_PUSH([C++])
+  ACJF_CHECK_LIB_TESTER([CoSupport-Base], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:Support],[pkgconfig:libcosupport-base]]),
+    ACJF_PKG_TESTMACROGEN_DUMMY,
+    ACJF_VAR_CODE_IF_TRUE,
+    ACJF_VAR_CODE_IF_FALSE)dnl
+  AC_LANG_POP
+])])
+
 dnl ACJF_CHECK_LIB_COSUPPORT_ALLOCATORS(
 dnl  [<tags>,]
 dnl  [<code if found, default does nothing>,
@@ -195,6 +210,7 @@ AC_DEFUN([ACJF_CHECK_LIB_COSUPPORT], [ACJF_CHECK_HELPER_SET_VARS([$@], [
    [m4_pushdef([ACJF_VAR_CHILD_CODE_IF_FALSE], [[acjf_var_cosupport_found="no"; break;]])])dnl
   AC_LANG_PUSH([C++])
   while true; do
+    ACJF_CHECK_LIB_COSUPPORT_BASE(ACJF_VAR_TAGS,[],ACJF_VAR_CHILD_CODE_IF_FALSE)dnl
     ACJF_CHECK_LIB_COSUPPORT_ALLOCATORS(ACJF_VAR_TAGS,[],ACJF_VAR_CHILD_CODE_IF_FALSE)dnl
     ACJF_CHECK_LIB_COSUPPORT_INITIALIZER(ACJF_VAR_TAGS,[],ACJF_VAR_CHILD_CODE_IF_FALSE)dnl
     ACJF_CHECK_LIB_COSUPPORT_MATH(ACJF_VAR_TAGS,[],ACJF_VAR_CHILD_CODE_IF_FALSE)dnl
