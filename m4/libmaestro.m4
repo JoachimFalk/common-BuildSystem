@@ -16,20 +16,20 @@ dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-dnl ACJF_CHECK_LIB_MAESTROBR check for libmeastro_mm
+dnl ACJF_CHECK_LIB_MAESTRO_BRUCKNER check for libmeastro-bruckner
 dnl
-dnl ACJF_CHECK_LIB_MAESTROBR(
+dnl ACJF_CHECK_LIB_MAESTRO_BRUCKNER(
 dnl  [<tags>,]
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>])
-AC_DEFUN([ACJF_CHECK_LIB_MAESTROBR], [ACJF_CHECK_HELPER_SET_VARS([$@], [
+AC_DEFUN([ACJF_CHECK_LIB_MAESTRO_BRUCKNER], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   AC_LANG_PUSH([C++])
   ACJF_ARG_WITHPKG([Maestro], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern],[extern],[pkgconfig:libmaestro]]))dnl
-  ACJF_SEARCHLOC_COPY([Maestro], [MaestroBR])
-  ACJF_CHECK_LIB_TESTER([MaestroBR], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern:Maestro/Bruckner],[extern],[pkgconfig:libmaestro_bruckner]]),
+  ACJF_SEARCHLOC_COPY([Maestro], [Maestro-Bruckner])
+  ACJF_CHECK_LIB_TESTER([Maestro-Bruckner], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern:Maestro/Bruckner],[extern],[pkgconfig:libmaestro-bruckner]]),
     ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
      [
-//    #include <FSMTransition.h>
+//    #include <Maestro/Bruckner/FSMTransition.hpp>
      ],[
       int x;
      ]),
@@ -38,20 +38,42 @@ AC_DEFUN([ACJF_CHECK_LIB_MAESTROBR], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   AC_LANG_POP
 ])])
 
-dnl ACJF_CHECK_LIB_MAESTROMM check for libmeastro_mm
+dnl ACJF_CHECK_LIB_MAESTRO_CRESCENDO check for libmaestro_il
 dnl
-dnl ACJF_CHECK_LIB_MAESTROMM(
+dnl ACJF_CHECK_LIB_MAESTRO_CRESCENDO(
 dnl  [<tags>,]
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>])
-AC_DEFUN([ACJF_CHECK_LIB_MAESTROMM], [ACJF_CHECK_HELPER_SET_VARS([$@], [
+AC_DEFUN([ACJF_CHECK_LIB_MAESTRO_CRESCENDO], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   AC_LANG_PUSH([C++])
   ACJF_ARG_WITHPKG([Maestro], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern],[extern],[pkgconfig:libmaestro]]))dnl
-  ACJF_SEARCHLOC_COPY([Maestro], [MaestroMM])
-  ACJF_CHECK_LIB_TESTER([MaestroMM], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern:Maestro/MetaMap],[extern],[pkgconfig:libmaestro_mm]]),
+  ACJF_SEARCHLOC_COPY([Maestro], [Maestro-Crescendo])
+  ACJF_CHECK_LIB_TESTER([Maestro-Crescendo], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern:Maestro/Crescendo],[extern],[pkgconfig:libmaestro-crescendo]]),
     ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
      [
-      #include <MetaMap/Node.h>
+      #include <Maestro/Crescendo/DynamicActor.hpp>
+     ],[
+      int x;
+     ]),
+    ACJF_VAR_CODE_IF_TRUE,
+    ACJF_VAR_CODE_IF_FALSE)dnl
+  AC_LANG_POP
+])])
+
+dnl ACJF_CHECK_LIB_MAESTRO_METAMAP check for libmeastro-metamap
+dnl
+dnl ACJF_CHECK_LIB_MAESTRO_METAMAP(
+dnl  [<tags>,]
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default is bailout>])
+AC_DEFUN([ACJF_CHECK_LIB_MAESTRO_METAMAP], [ACJF_CHECK_HELPER_SET_VARS([$@], [
+  AC_LANG_PUSH([C++])
+  ACJF_ARG_WITHPKG([Maestro], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern],[extern],[pkgconfig:libmaestro]]))dnl
+  ACJF_SEARCHLOC_COPY([Maestro], [Maestro-MetaMap])
+  ACJF_CHECK_LIB_TESTER([Maestro-MetaMap], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern:Maestro/MetaMap],[extern],[pkgconfig:libmaestro-metamap]]),
+    ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
+     [
+      #include <Maestro/MetaMap/Node.hpp>
      ],[
       MetaMap::Node node("flups");
      ]),
@@ -60,39 +82,17 @@ AC_DEFUN([ACJF_CHECK_LIB_MAESTROMM], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   AC_LANG_POP
 ])])
 
-dnl ACJF_CHECK_LIB_MAESTROIL check for libmaestro_il
+dnl ACJF_CHECK_LIB_MAESTRO_MODELLIBRARY check for libmaestro-modellibrary
 dnl
-dnl ACJF_CHECK_LIB_MAESTROIL(
+dnl ACJF_CHECK_LIB_MAESTRO_MODELLIBRARY(
 dnl  [<tags>,]
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>])
-AC_DEFUN([ACJF_CHECK_LIB_MAESTROIL], [ACJF_CHECK_HELPER_SET_VARS([$@], [
+AC_DEFUN([ACJF_CHECK_LIB_MAESTRO_MODELLIBRARY], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   AC_LANG_PUSH([C++])
   ACJF_ARG_WITHPKG([Maestro], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern],[extern],[pkgconfig:libmaestro]]))dnl
-  ACJF_SEARCHLOC_COPY([Maestro], [MaestroIL])
-  ACJF_CHECK_LIB_TESTER([MaestroIL], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern:Maestro/InterfaceLibrary],[extern],[pkgconfig:libmaestro_il]]),
-    ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
-     [
-      #include <InterfaceLibrary/includes.hpp>
-     ],[
-      Request<bool> foo(false);
-     ]),
-    ACJF_VAR_CODE_IF_TRUE,
-    ACJF_VAR_CODE_IF_FALSE)dnl
-  AC_LANG_POP
-])])
-
-dnl ACJF_CHECK_LIB_MAESTROML check for libmaestro_ml
-dnl
-dnl ACJF_CHECK_LIB_MAESTROML(
-dnl  [<tags>,]
-dnl  [<code if found, default does nothing>,
-dnl  [<code if not found, default is bailout>])
-AC_DEFUN([ACJF_CHECK_LIB_MAESTROML], [ACJF_CHECK_HELPER_SET_VARS([$@], [
-  AC_LANG_PUSH([C++])
-  ACJF_ARG_WITHPKG([Maestro], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern],[extern],[pkgconfig:libmaestro]]))dnl
-  ACJF_SEARCHLOC_COPY([Maestro], [MaestroML])
-  ACJF_CHECK_LIB_TESTER([MaestroML], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern:Maestro/ModelLibrary],[extern],[pkgconfig:libmaestro_ml]]),
+  ACJF_SEARCHLOC_COPY([Maestro], [Maestro-ModelLibrary])
+  ACJF_CHECK_LIB_TESTER([Maestro-ModelLibrary], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern:Maestro/ModelLibrary],[extern],[pkgconfig:libmaestro-modellibrary]]),
     dnl FIXME: Replace this with code that really checks for the presence of the model library!
     ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
      [
