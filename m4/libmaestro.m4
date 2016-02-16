@@ -24,8 +24,8 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>])
 AC_DEFUN([ACJF_CHECK_LIB_MAESTRO_BRUCKNER], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   AC_LANG_PUSH([C++])
-  ACJF_ARG_WITHPKG([Maestro], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern],[extern],[pkgconfig:libmaestro]]))dnl
-  ACJF_SEARCHLOC_COPY([Maestro], [Maestro-Bruckner])
+  ACJF_ARG_WITHPKG([Maestro-Crescendo], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern],[extern],[pkgconfig:libmaestro-crescendo]]))dnl
+  ACJF_SEARCHLOC_COPY([Maestro-Crescendo], [Maestro-Bruckner])
   ACJF_CHECK_LIB_TESTER([Maestro-Bruckner], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern:Maestro/Bruckner],[extern],[pkgconfig:libmaestro-bruckner]]),
     ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
      [
@@ -46,8 +46,7 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>])
 AC_DEFUN([ACJF_CHECK_LIB_MAESTRO_CRESCENDO], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   AC_LANG_PUSH([C++])
-  ACJF_ARG_WITHPKG([Maestro], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern],[extern],[pkgconfig:libmaestro]]))dnl
-  ACJF_SEARCHLOC_COPY([Maestro], [Maestro-Crescendo])
+  ACJF_ARG_WITHPKG([Maestro-Crescendo], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern],[extern],[pkgconfig:libmaestro-crescendo]]))dnl
   ACJF_CHECK_LIB_TESTER([Maestro-Crescendo], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern:Maestro/Crescendo],[extern],[pkgconfig:libmaestro-crescendo]]),
     ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
      [
