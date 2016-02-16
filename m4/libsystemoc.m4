@@ -264,7 +264,7 @@ public:
       [[
   #ifndef SYSTEMOC_ENABLE_SGX
   # error "NO SGX!"
-  #endif
+  #endif //SYSTEMOC_ENABLE_SGX
       ]])],
      [AC_MSG_RESULT([yes]); $2_sgx_support="yes";],
      [AC_MSG_RESULT([no]); $2_sgx_support="no";])
@@ -278,7 +278,7 @@ public:
       [[
   #ifndef SYSTEMOC_ENABLE_VPC
   # error "NO VPC!"
-  #endif
+  #endif //SYSTEMOC_ENABLE_VPC
       ]])],
      [AC_MSG_RESULT([yes]); $2_enable_vpc="yes";],
      [AC_MSG_RESULT([no]); $2_enable_vpc="no";])
@@ -290,9 +290,9 @@ public:
   #include <systemoc/smoc_config.h>
       ]],
       [[
-  #ifndef SYSTEMOC_ENABLE_MAESTRO_METAMAP
+  #ifndef SYSTEMOC_ENABLE_MAESTRO
   # error "NO MAESTRO SUPPORT!"
-  #endif
+  #endif //SYSTEMOC_ENABLE_MAESTRO
       ]])],
      [AC_MSG_RESULT([yes]); $2_enable_maestro="yes";],
      [AC_MSG_RESULT([no]); $2_enable_maestro="no";])
