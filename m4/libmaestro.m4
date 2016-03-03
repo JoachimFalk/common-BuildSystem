@@ -59,6 +59,81 @@ AC_DEFUN([ACJF_CHECK_LIB_MAESTRO_CRESCENDO], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   AC_LANG_POP
 ])])
 
+dnl _ACJF_CHECK_LIB_MAESTRO_METAMAP_TESTMACRO(
+dnl   <name of lib check (pkgname)>,
+dnl   <shell variable prefix set by ACJF_SEARCHLOC_EVALUATE>,
+dnl  [<code if found, default does nothing>,
+dnl  [<code if not found, default does nothing>]])
+m4_define([_ACJF_CHECK_LIB_MAESTRO_METAMAP_TESTMACRO], [
+  if test [x"$2" != x"acjf_cv_maestro_metamap"]; then
+    AC_MSG_ERROR([Internal error: Hardcoded variable prefix is different from expected one!])
+  fi
+  m4_pushdef([ACJF_VAR_MAESTRO_METAMAP_TESTCODE], [AC_LANG_PROGRAM(
+    [[
+      #include <Maestro/MetaMap/Node.hpp>
+    ]],
+    [[
+      MetaMap::Node node("flups");
+      return 0;
+    ]])])
+  acjf_var_maestro_metamap_found=""
+  if test [x"${$2_type}" = x"bundled" -o \
+           x"${$2_type}" = x"pkg-config-bundled"]; then
+    AC_MSG_CHECKING([if $1 from ${$2_desc} can compile an example])
+    AC_COMPILE_IFELSE(
+      [ACJF_VAR_MAESTRO_METAMAP_TESTCODE],
+      [AC_MSG_RESULT([yes]); acjf_var_maestro_metamap_found="yes"],
+      [AC_MSG_RESULT([no]);  acjf_var_maestro_metamap_found="no"])
+  else
+    AC_MSG_CHECKING([if $1 from ${$2_desc} can compile and link an example])
+    AC_LINK_IFELSE(
+      [ACJF_VAR_MAESTRO_METAMAP_TESTCODE],
+      [AC_MSG_RESULT([yes]); acjf_var_maestro_metamap_found="yes"],
+      [AC_MSG_RESULT([no]);  acjf_var_maestro_metamap_found="no"])
+  fi
+  m4_popdef([ACJF_VAR_MAESTRO_METAMAP_TESTCODE])dnl
+  if test x"$acjf_var_maestro_metamap_found" = x"yes"; then
+    [acjf_cv_maestro_enable_bruckner=""]
+    [acjf_cv_maestro_enable_polyphonic=""]
+    [acjf_cv_maestro_enable_crescendo=""]
+    # Checks for header files.
+    AC_MSG_CHECKING([for Bruckner support in $1 package])
+    AC_COMPILE_IFELSE(
+     [AC_LANG_PROGRAM(
+      [[
+  #include <Maestro/maestro_config.h>
+      ]],
+      [[
+  #ifndef MAESTRO_ENABLE_BRUCKNER
+  # error "NO BRUCKNER!"
+  #endif //MAESTRO_ENABLE_BRUCKNER
+      ]])],
+     [AC_MSG_RESULT([yes]); acjf_cv_maestro_enable_bruckner="yes";],
+     [AC_MSG_RESULT([no]); acjf_cv_maestro_enable_bruckner="no";])
+    # Checks for header files.
+    AC_MSG_CHECKING([for Crescendo support in $1 package])
+    AC_COMPILE_IFELSE(
+     [AC_LANG_PROGRAM(
+      [[
+  #include <Maestro/maestro_config.h>
+      ]],
+      [[
+  #ifndef MAESTRO_ENABLE_CRESCENDO
+  # error "NO CRESCENDO!"
+  #endif //MAESTRO_ENABLE_CRESCENDO
+      ]])],
+     [AC_MSG_RESULT([yes]); acjf_cv_maestro_enable_crescendo="yes";],
+     [AC_MSG_RESULT([no]); acjf_cv_maestro_enable_crescendo="no";])
+  fi
+  if test x"$acjf_var_maestro_metamap_found" = x"yes"; then
+    unset acjf_var_maestro_metamap_found
+    m4_if([$3], [], [true], [$3])
+  else
+    unset acjf_var_maestro_metamap_found
+    m4_if([$4], [], [false], [$4])
+  fi
+])
+
 dnl ACJF_CHECK_LIB_MAESTRO_METAMAP check for libmeastro-metamap
 dnl
 dnl ACJF_CHECK_LIB_MAESTRO_METAMAP(
@@ -70,14 +145,23 @@ AC_DEFUN([ACJF_CHECK_LIB_MAESTRO_METAMAP], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   ACJF_ARG_WITHPKG([Maestro], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern],[extern],[pkgconfig:libmaestro]]))dnl
   ACJF_SEARCHLOC_COPY([Maestro], [Maestro-MetaMap])
   ACJF_CHECK_LIB_TESTER([Maestro-MetaMap], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[disabled],[intern:Maestro/MetaMap],[extern],[pkgconfig:libmaestro-metamap]]),
-    ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
-     [
-      #include <Maestro/MetaMap/Node.hpp>
-     ],[
-      MetaMap::Node node("flups");
-     ]),
-    ACJF_VAR_CODE_IF_TRUE,
-    ACJF_VAR_CODE_IF_FALSE)dnl
+    [_ACJF_CHECK_LIB_MAESTRO_METAMAP_TESTMACRO],
+    m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [[true;]]))dnl
+  MAESTRO_ENABLE_BRUCKNER="$acjf_cv_maestro_enable_bruckner"
+  AM_CONDITIONAL([MAESTRO_ENABLE_BRUCKNER], test x"acjf_cv_maestro_enable_bruckner" = x"yes")
+  MAESTRO_ENABLE_CRESCENDO="$acjf_cv_maestro_enable_crescendo"
+  AM_CONDITIONAL([MAESTRO_ENABLE_CRESCENDO], test x"$acjf_cv_maestro_enable_crescendo" = x"yes")
+  if test [x"${MAESTRO_METAMAP_FOUND}" = x"yes";] then
+    m4_if(ACJF_VAR_CODE_IF_TRUE, [], 
+     [true;],
+     [dnl echo "ACJF_VAR_CODE_IF_TRUE";
+      ACJF_VAR_CODE_IF_TRUE])
+  else
+    m4_if(ACJF_VAR_CODE_IF_FALSE, [], 
+     [true;],
+     [dnl echo "ACJF_VAR_CODE_IF_FALSE";
+      ACJF_VAR_CODE_IF_FALSE])
+  fi
   AC_LANG_POP
 ])])
 
