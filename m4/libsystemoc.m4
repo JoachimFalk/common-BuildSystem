@@ -33,7 +33,8 @@ m4_define([_ACJF_CHECK_LIB_SYSTEMOC_TESTMACRO], [
 #include <systemoc/smoc_moc.hpp>
 #include <systemoc/smoc_port.hpp>
 #include <systemoc/smoc_fifo.hpp>
-#include <systemoc/smoc_node_types.hpp>
+#include <systemoc/smoc_actor.hpp>
+#include <systemoc/smoc_graph.hpp>
 #include <systemoc/smoc_config.h>
 
 #ifndef SYSTEMOC_VERSION
@@ -73,7 +74,7 @@ public:
       start =
         (VAR(i) <= NUM_MAX_ITERATIONS) >>
         out(1)                         >>
-        CALL(Src::src)                 >> start
+        SMOC_CALL(Src::src)            >> start
       ;
   }
 };
@@ -111,20 +112,20 @@ private:
 public:
   // Constructor responsible for declaring the
   // communication FSM and initializing the actor
-  SqrLoop(sc_module_name name)
-    : smoc_actor( name, start ) {
+  SqrLoop(sc_core::sc_module_name name)
+    : smoc_actor(name, start) {
     start =
-        i1(1)                               >>
-        o1(1)                               >>
-        CALL(SqrLoop::copyStore)            >> loop
+        i1(1)                               	>>
+        o1(1)                               	>>
+        SMOC_CALL(SqrLoop::copyStore)           >> loop
       ;
     loop  =
-        (i2(1) &&  GUARD(SqrLoop::check))   >>
-        o2(1)                               >>
-        CALL(SqrLoop::copyApprox)           >> start
-      | (i2(1) && !GUARD(SqrLoop::check))   >>
-        o1(1)                               >>
-        CALL(SqrLoop::copyInput)            >> loop
+        (i2(1) &&  SMOC_GUARD(SqrLoop::check))  >>
+        o2(1)                               	>>
+        SMOC_CALL(SqrLoop::copyApprox)          >> start
+      | (i2(1) && !SMOC_GUARD(SqrLoop::check))  >>
+        o1(1)                               	>>
+        SMOC_CALL(SqrLoop::copyInput)           >> loop
       ;
   }
 };
