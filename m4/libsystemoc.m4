@@ -31,11 +31,6 @@ m4_define([_ACJF_CHECK_LIB_SYSTEMOC_TESTMACRO], [
 #include <iostream>
 
 #include <systemoc/smoc_moc.hpp>
-#include <systemoc/smoc_port.hpp>
-#include <systemoc/smoc_fifo.hpp>
-#include <systemoc/smoc_actor.hpp>
-#include <systemoc/smoc_graph.hpp>
-#include <systemoc/smoc_config.h>
 
 #ifndef SYSTEMOC_VERSION
 # error "NO SysteMoC!"
