@@ -794,19 +794,18 @@ m4_define(ACJF_VAR_ANONYMOUS_M4_MACRO, ACJF_M4_QUOTEDARGS([
         [AC_MSG_RESULT([yes]); §3],
         [AC_MSG_RESULT([no]); §4])
     else
-      acjf_old_LIBS="$LIBS"
-      LIBS=""
+      acjf_var_LIBS=""
       for acjf_var_item2 in $3; do
         if echo "$acjf_var_item2" | grep "^-l" 1>/dev/null; then
-          LIBS="$LIBS $acjf_var_item2";
+          acjf_var_LIBS="$acjf_var_LIBS $acjf_var_item2";
         else
-          LIBS="$LIBS -l$acjf_var_item2";
+          acjf_var_LIBS="$acjf_var_LIBS -l$acjf_var_item2";
         fi
       done
-      LIBS="$LIBS $acjf_old_LIBS";
+      LIBS="$LIBS $acjf_var_LIBS";
       AC_LINK_IFELSE(
         [AC_LANG_PROGRAM([[$1]], [[$2]])],
-        [AC_MSG_RESULT([yes]); §3],
+        [AC_MSG_RESULT([yes]); [acjf_cv_]ACJF_M4_CANON_DC(§1)[_libs]="${[acjf_var_LIBS]}"; §3],
         [AC_MSG_RESULT([no]); §4])
     fi
   ])
