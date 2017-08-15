@@ -71,8 +71,9 @@ compileheader.mk: $(HEADERS)
 	{ rm -f $@; false; }
 
 doxygen-doc: doxygen-doc-recursive
+doxygen-run: doxygen-run-recursive
 
-doxygen-doc-recursive:
+doxygen-doc-recursive doxygen-run-recursive:
 	@failcom='exit 1'; \
 	for f in x $$MAKEFLAGS; do \
 	  case $$f in \
@@ -98,5 +99,6 @@ doxygen-doc-recursive:
 	fi; test -z "$$fail"
 
 doxygen-doc-am: $(DX_RUN_GOAL) $(DX_PS_GOAL) $(DX_PDF_GOAL)
+doxygen-run-am: $(DX_RUN_GOAL)
 
-.PHONY:  clean-pkginclude  clean-re2c doxygen-doc-am
+.PHONY:  clean-pkginclude  clean-re2c doxygen-doc-am doxygen-doc-recursive doxygen-run-am doxygen-run-recursive
