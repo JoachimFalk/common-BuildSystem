@@ -67,9 +67,9 @@ public:
       SMOC_REGISTER_CPARAM(from);
       
       start =
-        (VAR(i) <= NUM_MAX_ITERATIONS) >>
-        out(1)                         >>
-        SMOC_CALL(Src::src)            >> start
+        (SMOC_VAR(i) <= NUM_MAX_ITERATIONS) >>
+        out(1)                              >>
+        SMOC_CALL(Src::src)                 >> start
       ;
   }
 };
@@ -138,9 +138,9 @@ public:
   Approx(sc_core::sc_module_name name)
     : smoc_actor(name, start) {
     start =
-        (i1(1) && i2(1))         >>
-        o1(1)                    >>
-        CALL(Approx::approx)     >> start
+        (i1(1) && i2(1))          >>
+        o1(1)                     >>
+        SMOC_CALL(Approx::approx) >> start
       ;
   }
 };
@@ -164,7 +164,7 @@ public:
     start =
         i1(1)                    >>
         (o1(1) && o2(1))         >>
-        CALL(Dup::dup)           >> start
+        SMOC_CALL(Dup::dup)      >> start
       ;
   }
 };
@@ -182,9 +182,8 @@ public:
   Sink(sc_core::sc_module_name name)
     : smoc_actor(name, start) {
     start =
-        in(1)             >>
-        CALL(Sink::sink)  >>
-	start
+        in(1)                  >>
+        SMOC_CALL(Sink::sink)  >> start
       ;
   }
 };
