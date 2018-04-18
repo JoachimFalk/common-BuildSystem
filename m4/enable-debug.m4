@@ -30,7 +30,7 @@ AC_ARG_ENABLE(
   [case "$enableval" in
      yes) enable_debug=yes ;;
      no)  enable_debug=no  ;;
-     *)   enable_debug=no  ;;
+     *)   AC_MSG_ERROR(bad value ${enableval} for --enable-debug) ;;
    esac],
   [enable_debug=$1]
 )
