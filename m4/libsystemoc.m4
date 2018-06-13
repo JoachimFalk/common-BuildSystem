@@ -247,8 +247,23 @@ public:
   m4_popdef([ACJF_VAR_SYSTEMOC_TESTCODE])dnl
   if test x"$acjf_var_systemoc_found" = x"yes"; then
     [$2_sgx_support=""]
+    [$2_enable_hooking=""]
     [$2_enable_vp=""]
     [$2_enable_maestro=""]
+    # Checks for header files.
+    AC_MSG_CHECKING([for hooking support in $1 package])
+    AC_COMPILE_IFELSE(
+     [AC_LANG_PROGRAM(
+      [[
+  #include <systemoc/smoc_config.h>
+      ]],
+      [[
+  #ifndef SYSTEMOC_ENABLE_HOOKING
+  # error "NO HOOKING!"
+  #endif //SYSTEMOC_ENABLE_HOOKING
+      ]])],
+     [AC_MSG_RESULT([yes]); $2_enable_hooking="yes";],
+     [AC_MSG_RESULT([no]); $2_enable_hooking="no";])
     # Checks for header files.
     AC_MSG_CHECKING([for SGX support in $1 package])
     AC_COMPILE_IFELSE(
@@ -319,6 +334,8 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   ACJF_CHECK_LIB_TESTER([SysteMoC], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[pkgconfig:libsystemoc]]),
     [_ACJF_CHECK_LIB_SYSTEMOC_TESTMACRO],
     m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [[true;]]))dnl
+  SYSTEMOC_ENABLE_HOOKING="$acjf_cv_systemoc_enable_hooking"
+  AM_CONDITIONAL([SYSTEMOC_ENABLE_HOOKING], test x"$acjf_cv_systemoc_enable_hooking" = x"yes")
   SYSTEMOC_ENABLE_SGX="$acjf_cv_systemoc_sgx_support"
   AM_CONDITIONAL([SYSTEMOC_ENABLE_SGX], test x"$acjf_cv_systemoc_sgx_support" = x"yes")
   SYSTEMOC_ENABLE_VPC="$acjf_cv_systemoc_enable_vpc"
