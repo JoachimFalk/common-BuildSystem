@@ -32,7 +32,7 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMC_VPC], [ACJF_CHECK_HELPER_SET_VARS([$@], [
 #define  main _main
 
 int sc_main(int argc, char *argv[]) { return 0; }],
-    [SystemC_VPC::FastLink f;],
+    [SystemC_VPC::VpcTask *vpcTask;],
     ACJF_VAR_CODE_IF_TRUE,
     ACJF_VAR_CODE_IF_FALSE)dnl
   AC_LANG_POP
