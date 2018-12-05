@@ -33,7 +33,7 @@ AC_DEFUN([ACJF_CHECK_DIALECTS_C99_CXX11],
   AC_CACHE_VAL([acjf_cv_C99FLAGS],
    [AC_LANG_PUSH([C])
     acjf_var_CFLAGS="${CFLAGS}"
-    for acjf_cv_C99FLAGS in "" "-std=gnu99"; do
+    for acjf_cv_C99FLAGS in "-std=gnu99" ""; do
       if test x"${acjf_cv_C99FLAGS}" = x""; then
         AC_MSG_CHECKING([if the C compiler ${CC} supports C99 without any additional flags])
       else
@@ -75,7 +75,7 @@ bool testbool = true;
   AC_CACHE_VAL([acjf_cv_CXX11FLAGS],
    [AC_LANG_PUSH([C++])
     acjf_var_CXXFLAGS="${CXXFLAGS}"
-    for acjf_cv_CXX11FLAGS in "" "-std=gnu++11" "-std=gnu++0x"; do
+    for acjf_cv_CXX11FLAGS in "-std=gnu++11" "-std=gnu++0x" ""; do
       if test x"${acjf_cv_CXX11FLAGS}" = x""; then
         AC_MSG_CHECKING([if the C++ compiler ${CXX} supports C++11 without any additional flags])
       else
