@@ -148,6 +148,8 @@ AC_DEFUN([ACJF_CHECK_PYTHON], [ACJF_CHECK_HELPER_SET_VARS([$@], [
      [
 #include <Python.h>
 
+int main(void);
+
 static PyObject *FooError;
 
 static PyObject *
