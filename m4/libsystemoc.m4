@@ -217,8 +217,8 @@ public:
 };
     ]],
     [[
-  int   argc   = 2;
-  char *argv[] = {"simulation-sqr", "1500", NULL};
+  int         argc   = 2;
+  char const *argv[] = {"simulation-sqr", "1500", NULL};
   int from = 1;
   if (argc == 2) {
     const int iterations = atoi(argv[1]);
