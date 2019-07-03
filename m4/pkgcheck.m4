@@ -380,6 +380,15 @@ dnl  echo ["  $1_deps=${$1_deps}"]
             [$1_incpath="$acjf_var_includedir"]
           fi
         fi
+        if test x"$acjf_var_libdir" != x""; then
+          if test [x"${$1_libpath}" != x"";] then
+            if ! expr [x" ${$1_libpath} " : x".*[ 	]$acjf_var_libdir[ 	]" > /dev/null;] then
+              [$1_libpath="${$1_libpath} $acjf_var_libdir"]
+            fi
+          else
+            [$1_libpath="$acjf_var_libdir"]
+          fi
+        fi
         set dummy $acjf_var_libs $acjf_var_ldflags
         shift
         while test $[]# != 0
@@ -413,7 +422,21 @@ dnl  echo ["  $1_deps=${$1_deps}"]
               $acjf_var_shift
               ;;
             -l)
-              [$1_libs="${$1_libs} -l$acjf_var_optarg"; $acjf_var_shift]
+              for acjf_var_item in [${$1_libpath}]; do
+                if test -f "${acjf_var_item}/lib${acjf_var_optarg}.la"; then
+                  [$1_deps="${$1_deps} ${acjf_var_item}/lib${acjf_var_optarg}.la"]
+                  break;
+                elif test -f "${acjf_var_item}/lib${acjf_var_optarg}.so"; then
+                  [$1_deps="${$1_deps} ${acjf_var_item}/lib${acjf_var_optarg}.so"]
+                  break;
+                elif test -f "${acjf_var_item}/lib${acjf_var_optarg}.a"; then
+                  [$1_deps="${$1_deps} ${acjf_var_item}/lib${acjf_var_optarg}.a"]
+                  break;
+                fi
+              done
+              unset acjf_var_item
+              [$1_libs="${$1_libs} -l$acjf_var_optarg"]
+              $acjf_var_shift
               ;;
             lib*.la|lib*.a|lib*.so|*/lib*.la|*/lib*.a|*/lib*.so)
               [$1_deps="${$1_deps} $acjf_var_option"]
@@ -437,15 +460,6 @@ dnl  echo ["  $1_deps=${$1_deps}"]
           esac
           shift
         done
-        if test x"$acjf_var_libdir" != x""; then
-          if test [x"${$1_libpath}" != x"";] then
-            if ! expr [x" ${$1_libpath} " : x".*[ 	]$acjf_var_libdir[ 	]" > /dev/null;] then
-              [$1_libpath="${$1_libpath} $acjf_var_libdir"]
-            fi
-          else
-            [$1_libpath="$acjf_var_libdir"]
-          fi
-        fi
       fi
       unset acjf_var_option
       unset acjf_var_optarg
