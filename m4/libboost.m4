@@ -25,8 +25,8 @@ AC_DEFUN([ACJF_CHECK_LIB_BOOSTTESTMACRO], [
 acjf_var_boost_old_LIBS="$LIBS"
 acjf_var_found_pkg_st=""
 acjf_var_found_pkg_mt=""
-for acjf_var_boostversion in "" "-1_58" "-1_57" "-1_56" "-1_55" "-1_54" "-1_53" "-1_52" "-1_51" "-1_50" "-1_49" "-1_48"; do
-  for acjf_var_boostpostfix in "" "-gcc" "-gcc49" "-gcc48" "-gcc47" "-gcc46" "-gcc45"; do
+for acjf_var_boostversion in "" "-1_67" "-1_66" "-1_65"; do
+  for acjf_var_boostpostfix in "" "-gcc" "-gcc84" "-gcc83" "-gcc82" "-gcc75" "-gcc74" "-gcc73"; do
     for acjf_var_boostmtpostfix in "" "-mt"; do
 dnl   echo "-lboost${acjf_var_boostpostfix}${acjf_var_boostmtpostfix}${acjf_var_boostversion}: $acjf_var_found_pkg"
       if test x"$acjf_var_found_pkg_st" != x"yes"; then
@@ -53,6 +53,7 @@ boost::regex_constants::match_flag_type x;
               x"$acjf_var_found_pkg_mt" != x"yes"; then
         acjf_cv_boost_libmtpostfix="${acjf_var_boostpostfix}${acjf_var_boostmtpostfix}${acjf_var_boostversion}"
         LIBS="-lboost_thread$acjf_cv_boost_libmtpostfix -lboost_system$acjf_cv_boost_libmtpostfix $acjf_var_boost_old_LIBS"
+        CPPFLAGS="${CPPFLAGS} -pthread"
         if test x"$acjf_cv_boost_libmtpostfix" != x""; then
           AC_MSG_CHECKING([for $1 multithreading support in ${$2_desc} with library postfix $acjf_cv_boost_libmtpostfix])
         else
