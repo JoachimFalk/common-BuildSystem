@@ -1,5 +1,11 @@
-dnl vim: set sw=2 ts=8 syn=config:
-dnl Copyright (C) 2001 - 2009 Joachim Falk <joachim.falk@gmx.de>
+dnl -*- tab-width:8; indent-tabs-mode:nil; -*-
+dnl vim: set sw=2 ts=8 sts=2 syn=config et:
+dnl
+dnl Copyright (c)
+dnl   2001 - 2009 Joachim Falk <joachim.falk@gmx.de>
+dnl   2010 FAU -- Joachim Falk <joachim.falk@fau.de>
+dnl   2013 FAU -- Joachim Falk <joachim.falk@fau.de>
+dnl   2014 FAU -- Joachim Falk <joachim.falk@fau.de>
 dnl 
 dnl This file is part of the BuildSystem distribution of Joachim Falk;
 dnl you can redistribute it and/or modify it under the terms of the
@@ -15,10 +21,11 @@ dnl You should have received a copy of the GNU General Public
 dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
-dnl
+
 dnl
 dnl Miscellaneous helper macros
 dnl
+
 m4_define([_ACJF_M4_OPENSQUAREBRACKET],
   m4_changequote(<,>)<m4_changequote(<,>)<[>m4_changequote([,])>m4_changequote([,]))dnl
 m4_define([_ACJF_M4_CLOSESQUAREBRACKET],

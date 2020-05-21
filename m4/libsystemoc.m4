@@ -1,5 +1,16 @@
-dnl vim: set sw=2 ts=8 syn=config:
-dnl Copyright (C) 2001 - 2006 Joachim Falk <joachim.falk@gmx.de>
+dnl -*- tab-width:8; indent-tabs-mode:nil; -*-
+dnl vim: set sw=2 ts=8 sts=2 syn=config et:
+dnl
+dnl Copyright (c)
+dnl   2010 FAU -- Joachim Falk <joachim.falk@fau.de>
+dnl   2011 FAU -- Martin Streubuehr <martin.streubuehr@fau.de>
+dnl   2012 FAU -- Rafael Rosales <rafael.rosales@fau.de>
+dnl   2013 FAU -- Joachim Falk <joachim.falk@fau.de>
+dnl   2014 FAU -- Joachim Falk <joachim.falk@fau.de>
+dnl   2014 Joachim Falk <joachim.falk@gmx.de>
+dnl   2016 FAU -- Joachim Falk <joachim.falk@fau.de>
+dnl   2016 Jonathan Ah Sue <jonathan.ah.sue@intel.com>
+dnl   2018 FAU -- Joachim Falk <joachim.falk@fau.de>
 dnl 
 dnl This file is part of the BuildSystem distribution of Joachim Falk;
 dnl you can redistribute it and/or modify it under the terms of the
@@ -15,7 +26,6 @@ dnl You should have received a copy of the GNU General Public
 dnl License along with this program; If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
-
 
 dnl _ACJF_CHECK_LIB_SYSTEMOC_TESTMACRO(
 dnl   <name of lib check (pkgname)>,

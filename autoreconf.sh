@@ -1,5 +1,11 @@
 #! /bin/sh
-# Copyright (C) 2001 - 2009 Joachim Falk <joachim.falk@gmx.de>
+# -*- tab-width:8; indent-tabs-mode:nil; -*-
+# vim: set sw=2 ts=8 sts=2 et:
+#
+# Copyright (c)
+#   2001 - 2009 Joachim Falk <joachim.falk@gmx.de>
+#   2010 FAU -- Joachim Falk <joachim.falk@fau.de>
+#   2011 FAU -- Jens Gladigau <jens.gladigau@cs.fau.de>
 # 
 # This file is part of the BuildSystem distribution of Joachim Falk;
 # you can redistribute it and/or modify it under the terms of the
