@@ -1,8 +1,11 @@
+# -*- tab-width:8; indent-tabs-mode:true; -*-
 # vim: set sw=2 ts=8 sts=0 noet:
-
-# Copyright (C) 2004 Oren Ben-Kiki
-# Copyright (C) 2006 Joachim Falk <joachim.falk@gmx.de>
 #
+# Copyright (c)
+#   2004 Oren Ben-Kiki
+#   2006 Joachim Falk <joachim.falk@gmx.de>
+#   2010 Joachim Falk <joachim.falk@gmx.de>
+# 
 # This file is part of the BuildSystem distribution of Joachim Falk;
 # you can redistribute it and/or modify it under the terms of the
 # GNU General Public License as published by the Free Software Foundation;

@@ -1,5 +1,10 @@
-# vim: set noet sw=2 sts=0 ts=8:
-# Copyright (C) 2001 - 2006 Joachim Falk <joachim.falk@gmx.de>
+# -*- tab-width:8; indent-tabs-mode:true; -*-
+# vim: set sw=2 ts=8 sts=0 noet:
+#
+# Copyright (c)
+#   2001 - 2006 Joachim Falk <joachim.falk@gmx.de>
+#   2010 Joachim Falk <joachim.falk@gmx.de>
+#   2017 FAU -- Simone Müller <simone.mueller@fau.de>
 # 
 # This file is part of the BuildSystem distribution of Joachim Falk;
 # you can redistribute it and/or modify it under the terms of the

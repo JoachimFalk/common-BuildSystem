@@ -1,5 +1,9 @@
-dnl vim: set sw=2 ts=8 syn=config:
-dnl Copyright (C) 2001 - 2006 Joachim Falk <joachim.falk@gmx.de>
+dnl -*- tab-width:8; indent-tabs-mode:nil; -*-
+dnl vim: set sw=2 ts=8 sts=2 syn=config et:
+dnl
+dnl Copyright (c)
+dnl   2010 FAU -- Joachim Falk <joachim.falk@fau.de>
+dnl   2014 FAU -- Joachim Falk <joachim.falk@fau.de>
 dnl 
 dnl This file is part of the BuildSystem distribution of Joachim Falk;
 dnl you can redistribute it and/or modify it under the terms of the
