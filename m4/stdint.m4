@@ -27,7 +27,7 @@ dnl		     <action if yes>,
 dnl		     <action if no> )
 AC_DEFUN([ACJF_CHECK_TYPE],
 [acjf_check_type_headers=""
-AC_FOREACH(acjf_header,[$2],
+m4_foreach_w(acjf_header,[$2],
  [AC_CHECK_HEADER(acjf_header,
    [acjf_check_type_headers="$acjf_check_type_headers
 #include \"]acjf_header[\""]

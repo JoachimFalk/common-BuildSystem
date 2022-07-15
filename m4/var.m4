@@ -38,7 +38,7 @@ AS_VAR_POPDEF([ac_var])dnl
 # ACJF_CHECK_VARS(VARIABLE..., [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
 # ---------------------------------------------------------------------
 AC_DEFUN([ACJF_CHECK_VARS],
-[AC_FOREACH([AC_Var], [$1],
+[m4_foreach_w([AC_Var], [$1],
   [AH_TEMPLATE(AS_TR_CPP(HAVE_[]AC_Var),
                [Define to 1 if you have the ']AC_Var[' variable.])])dnl
 for ac_variable in $1
