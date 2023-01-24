@@ -5,6 +5,7 @@ dnl Copyright (c)
 dnl   2010 FAU -- Joachim Falk <joachim.falk@fau.de>
 dnl   2014 FAU -- Joachim Falk <joachim.falk@fau.de>
 dnl   2015 FAU -- Joachim Falk <joachim.falk@fau.de>
+dnl   2023 FAU -- Joachim Falk <joachim.falk@fau.de>
 dnl 
 dnl This file is part of the BuildSystem distribution of Joachim Falk;
 dnl you can redistribute it and/or modify it under the terms of the
@@ -30,22 +31,38 @@ AC_DEFUN([ACJF_CHECK_LIB_OPENCV], [
 AC_LANG_PUSH([C++])
 ACJF_CHECK_LIB(
   [OpenCV],
-  [[extern],[pkgconfig:opencv >= 2.3]],
+  [[extern],[pkgconfig:opencv4 >= 4.5]],
   [
-  #include <opencv/cv.h>
-  #include <opencv/cvaux.h>
-  #include <opencv/cxcore.h>
-  #include <opencv/highgui.h>
-  ],
-  [
-  CvCapture *capture = cvCaptureFromAVI("flummy.avi");
-  if (capture) {
-    cvGrabFrame(capture);
-    IplImage *img =cvRetrieveFrame(capture);
-    size_t width  = img->width;
-    size_t height = img->height;
-    cvReleaseCapture(&capture);
+#include <opencv2/videoio.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
+
+#include <iostream>
+#include <cerrno>
+#include <cstring>
+  ],[
+  cv::VideoCapture capture;
+
+  const char *input = "flummy.avi";
+  capture.open(input);
+  if (!capture.isOpened()) {
+    std::cerr << "Can't open file \"" << input << "\": " << strerror(errno) << std::endl;
+    return -1;
   }
+  cv::namedWindow("output", cv::WINDOW_AUTOSIZE);
+  cv::Mat img;
+  while (true) {
+    capture >> img;
+    size_t width  = img.cols;
+    size_t height = img.rows;
+    std::cout << "Got image of dimension " << width << "x" << height << "!" << std::endl;
+    if (img.empty())
+      break;
+    cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
+    cv::imshow("output", img);
+    cv::waitKey(25);
+  }
+  return 0;
   ],
   [$1], [$2])
 AC_LANG_POP
