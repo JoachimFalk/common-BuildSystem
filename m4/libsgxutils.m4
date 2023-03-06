@@ -63,10 +63,10 @@ dnl  [<tags>,]
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_PYTHON_SGXUTILS], [ACJF_CHECK_HELPER_SET_VARS([$@], [
-  ACJF_ARG_WITHPKG([LibSGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[extern],[pkgconfig:libsgxutils]]))dnl
-  ACJF_SEARCHLOC_COPY([LibSGXUtils], [PySGXUtils])dnl
+  ACJF_ARG_WITHPKG([SGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:SGXUtils],[extern],[pkgconfig:libsgxutils]]))dnl
+  ACJF_SEARCHLOC_COPY([SGXUtils], [PySGXUtils])dnl
   AC_LANG_PUSH([C++])
-  ACJF_CHECK_LIB_TESTER([PySGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:LibSGXUtils],[pkgconfig:pysgxutils]]),
+  ACJF_CHECK_LIB_TESTER([PySGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:SGXUtils],[pkgconfig:pysgxutils]]),
     [_ACJF_CHECK_PYTHON_SGXUTILS_TESTMACRO],
     m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [[true;]]))dnl
   [pkg_pysgxutils_srctreemode_pymodulepath="${acjf_cv_pysgxutils_srctreemode_pymodulepath}"]
@@ -92,9 +92,10 @@ dnl  [<tags>,]
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_SGXUTILS], [ACJF_CHECK_HELPER_SET_VARS([$@], [
-  ACJF_ARG_WITHPKG([LibSGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[extern],[pkgconfig:libsgxutils]]))dnl
+  ACJF_ARG_WITHPKG([SGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:SGXUtils],[extern],[pkgconfig:libsgxutils]]))dnl
+  ACJF_SEARCHLOC_COPY([SGXUtils], [LibSGXUtils])dnl
   AC_LANG_PUSH([C++])
-  ACJF_CHECK_LIB_TESTER([LibSGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:LibSGXUtils],[pkgconfig:libsgxutils]]),
+  ACJF_CHECK_LIB_TESTER([LibSGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:SGXUtils],[pkgconfig:libsgxutils]]),
     ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
      [#include <sgx.hpp>
       #include <sgxutils/RecursiveProblemGraphObjVisitor.hpp>

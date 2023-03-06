@@ -66,10 +66,10 @@ dnl  [<tags>,]
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_PYTHON_SGX], [ACJF_CHECK_HELPER_SET_VARS([$@], [
-  ACJF_ARG_WITHPKG([LibSGX], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[extern],[pkgconfig:libsgx]]))dnl
-  ACJF_SEARCHLOC_COPY([LibSGX], [PySGX])dnl
+  ACJF_ARG_WITHPKG([SGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:SGXUtils],[extern],[pkgconfig:libsgx]]))dnl
+  ACJF_SEARCHLOC_COPY([SGXUtils], [PySGX])dnl
   AC_LANG_PUSH([C++])
-  ACJF_CHECK_LIB_TESTER([PySGX], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:LibSGX],[pkgconfig:pysgx]]),
+  ACJF_CHECK_LIB_TESTER([PySGX], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:SGXUtils],[pkgconfig:pysgx]]),
     [_ACJF_CHECK_PYTHON_SGX_TESTMACRO],
     m4_if(ACJF_VAR_CODE_IF_TRUE[]ACJF_VAR_CODE_IF_FALSE, [], [], [[true;]]))dnl
   [pkg_pysgx_srctreemode_pymodulepath="${acjf_cv_pysgx_srctreemode_pymodulepath}"]
@@ -97,9 +97,10 @@ dnl  [<tags>,]
 dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 AC_DEFUN([ACJF_CHECK_LIB_SGX], [ACJF_CHECK_HELPER_SET_VARS([$@], [
-  ACJF_ARG_WITHPKG([LibSGX], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[extern],[pkgconfig:libsgx]]))dnl
+  ACJF_ARG_WITHPKG([SGXUtils], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:SGXUtils],[extern],[pkgconfig:libsgx]]))dnl
+  ACJF_SEARCHLOC_COPY([SGXUtils], [LibSGX])dnl
   AC_LANG_PUSH([C++])
-  ACJF_CHECK_LIB_TESTER([LibSGX], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:LibSGX],[pkgconfig:libsgx]]),
+  ACJF_CHECK_LIB_TESTER([LibSGX], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern:SGXUtils],[pkgconfig:libsgx]]),
     ACJF_PKG_TESTMACROGEN_COMPILE_OR_LINK_CHECK(
      [#include <sgx.hpp>
      ],
