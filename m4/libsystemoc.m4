@@ -11,6 +11,7 @@ dnl   2014 Joachim Falk <joachim.falk@gmx.de>
 dnl   2016 FAU -- Joachim Falk <joachim.falk@fau.de>
 dnl   2016 Jonathan Ah Sue <jonathan.ah.sue@intel.com>
 dnl   2018 FAU -- Joachim Falk <joachim.falk@fau.de>
+dnl   2023 FAU -- Joachim Falk <joachim.falk@fau.de>
 dnl 
 dnl This file is part of the BuildSystem distribution of Joachim Falk;
 dnl you can redistribute it and/or modify it under the terms of the
@@ -288,34 +289,6 @@ public:
       ]])],
      [AC_MSG_RESULT([yes]); $2_sgx_support="yes";],
      [AC_MSG_RESULT([no]); $2_sgx_support="no";])
-    # Checks for header files.
-    AC_MSG_CHECKING([for VPC support in $1 package])
-    AC_COMPILE_IFELSE(
-     [AC_LANG_PROGRAM(
-      [[
-  #include <systemoc/smoc_config.h>
-      ]],
-      [[
-  #ifndef SYSTEMOC_ENABLE_VPC
-  # error "NO VPC!"
-  #endif //SYSTEMOC_ENABLE_VPC
-      ]])],
-     [AC_MSG_RESULT([yes]); $2_enable_vpc="yes";],
-     [AC_MSG_RESULT([no]); $2_enable_vpc="no";])
-    # Checks for header files.
-    AC_MSG_CHECKING([for Maestro support in $1 package])
-    AC_COMPILE_IFELSE(
-     [AC_LANG_PROGRAM(
-      [[
-  #include <systemoc/smoc_config.h>
-      ]],
-      [[
-  #ifndef SYSTEMOC_ENABLE_MAESTRO
-  # error "NO MAESTRO SUPPORT!"
-  #endif //SYSTEMOC_ENABLE_MAESTRO
-      ]])],
-     [AC_MSG_RESULT([yes]); $2_enable_maestro="yes";],
-     [AC_MSG_RESULT([no]); $2_enable_maestro="no";])
   fi
   if test x"$acjf_var_systemoc_found" = x"yes"; then
     unset acjf_var_systemoc_found
@@ -332,12 +305,10 @@ dnl  [<code if found, default does nothing>,
 dnl  [<code if not found, default is bailout>]])
 dnl
 dnl This macro defines all the stuff documented in ACJF_CHECK_LIB plus the following:
+dnl   SYSTEMOC_ENABLE_HOOKING yes or no depending on the configuration in <systemoc/smoc_config.h>
 dnl   SYSTEMOC_ENABLE_SGX     yes or no depending on the configuration in <systemoc/smoc_config.h>
-dnl   SYSTEMOC_ENABLE_VPC     yes or no depending on the configuration in <systemoc/smoc_config.h>
-dnl   SYSTEMOC_ENABLE_MAESTRO yes or no depending on the configuration in <systemoc/smoc_config.h>
+dnl   AM_CONDITIONAL SYSTEMOC_ENABLE_HOOKING
 dnl   AM_CONDITIONAL SYSTEMOC_ENABLE_SGX
-dnl   AM_CONDITIONAL SYSTEMOC_ENABLE_VPC
-dnl   AM_CONDITIONAL SYSTEMOC_ENABLE_MAESTRO
 AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   ACJF_ARG_WITHPKG([SysteMoC], ACJF_TAGS_OVERRIDE(ACJF_VAR_TAGS,[[intern],[extern],[pkgconfig:libsystemoc]]))dnl
   AC_LANG_PUSH([C++])
@@ -348,10 +319,6 @@ AC_DEFUN([ACJF_CHECK_LIB_SYSTEMOC], [ACJF_CHECK_HELPER_SET_VARS([$@], [
   AM_CONDITIONAL([SYSTEMOC_ENABLE_HOOKING], test x"$acjf_cv_systemoc_enable_hooking" = x"yes")
   SYSTEMOC_ENABLE_SGX="$acjf_cv_systemoc_sgx_support"
   AM_CONDITIONAL([SYSTEMOC_ENABLE_SGX], test x"$acjf_cv_systemoc_sgx_support" = x"yes")
-  SYSTEMOC_ENABLE_VPC="$acjf_cv_systemoc_enable_vpc"
-  AM_CONDITIONAL([SYSTEMOC_ENABLE_VPC], test x"$acjf_cv_systemoc_enable_vpc" = x"yes")
-  SYSTEMOC_ENABLE_MAESTRO="$acjf_cv_systemoc_enable_maestro"
-  AM_CONDITIONAL([SYSTEMOC_ENABLE_MAESTRO], test x"$acjf_cv_systemoc_enable_maestro" = x"yes")
   if test [x"${SYSTEMOC_FOUND}" = x"yes";] then
     m4_if(ACJF_VAR_CODE_IF_TRUE, [], 
      [true;],
