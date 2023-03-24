@@ -324,7 +324,18 @@ dnl  echo ["  $1_deps=${$1_deps}"]
         if test [x"${$1_rel_configscript}" = x"";] then
           [$1_rel_configscript]="ACJF_VAR_CONFIGSCRIPT"
         fi
-        AC_PATH_PROG([$1_configscript], [${$1_rel_configscript}], [not found])
+        [$1_configscript=""]
+        for acjf_var_item in [${$1_rel_configscript}]; do
+          if test [x"${$1_configscript}" = x""]; then
+            AC_PATH_PROG([$1_configscript], [${acjf_var_item}], [not found])
+            if test [x"${$1_configscript}" = x"not found";] then
+              break
+            fi
+          else
+            [$1_configscript="${$1_configscript} ${acjf_var_item}"]
+          fi
+        done
+        unset acjf_var_item
         if test [x"${$1_configscript}" != x"not found";] then
           [$1_invalid="no"]
           [$1_desc="configuration from ${$1_configscript}"]
