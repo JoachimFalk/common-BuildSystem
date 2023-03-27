@@ -865,7 +865,7 @@ m4_define(ACJF_VAR_ANONYMOUS_M4_MACRO, ACJF_M4_QUOTEDARGS([
       LIBS="$LIBS $acjf_var_LIBS";
       AC_LINK_IFELSE(
         [AC_LANG_PROGRAM([[$1]], [[$2]])],
-        [AC_MSG_RESULT([yes]); [acjf_cv_]ACJF_M4_CANON_DC(§1)[_libs]="${[acjf_var_LIBS]}"; §3],
+        [AC_MSG_RESULT([yes]); [acjf_cv_]ACJF_M4_CANON_DC(§1)[_libs]="${LIBS}"; §3],
         [AC_MSG_RESULT([no]); §4])
     fi
   ])
